@@ -1,9 +1,10 @@
 # Advanced Algorithms After-Class Exercise Solutions
 
-本文件根据三个 PPT 末页的 `Home Assignment` 题号整理：
+本文件根据四个 PPT 末页的 `Home Assignment` 题号整理：
 
 - `06-HeapSort.ppt`: 4.37, 4.38, 4.39, 4.44
 - `07-Selection.ppt`: 5.2, 5.4, 5.6, 5.8, 5.12, 5.13, 5.14, 5.17
+- `08-HashTable.ppt`: 6.1, 6.2, 6.18, 6.19
 - `09-GTraverse.ppt`: 7.12, 7.14, 7.15, 7.16
 
 ## 06-HeapSort
@@ -295,6 +296,151 @@ ceil(lg(n + 1))
 4. 若 `n = F_k`，可使用 Fibonacci search。维护一个已知包含 `M` 的区间，其长度按 Fibonacci 数记为 `F_m`。在区间内选择两个 Fibonacci 比例的探测点，比较它们；若左探测点较小，峰值在右侧，否则在左侧。下一轮保留一个旧探测点，只新增一个探测点，于是参数从 `m` 降到 `m - 1`。从 `F_k` 开始，经过 `k - 1` 次比较即可把区间缩到一个位置。
 
 5. 敌手下界思路：维护一个仍可能包含峰值的活动区间。对算法提出的任意比较，敌手选择能保留更多峰值候选位置的回答，并保持区间两端仍可被构造成单峰数组。每次比较最多使活动区间按常数因子缩小，并且还必须额外确定峰值相对两侧的上升/下降边界信息。由此可强迫至少 `lg n + 2` 次比较（`n >= 4`），说明该问题比普通有序数组搜索略难。
+
+## 08-HashTable
+
+### 6.1
+
+若扩容时把数组大小乘以 4，而不是乘以 2，则扩容次数更少，拷贝元素的总次数常数因子更低。
+
+设最终插入 `n` 个元素，扩容因子为 `g`。扩容时被搬移的数组容量为：
+
+```text
+1 + g + g^2 + ... < g n / (g - 1)
+```
+
+因此乘以 2 时，总搬移量小于 `2n`；乘以 4 时，总搬移量小于 `4n/3`。两者摊还插入时间都仍为 `Θ(1)`，但乘以 4 的时间常数更小。
+
+空间代价相反。乘以 2 时，刚扩容后装载率约为 `1/2`，最多约一半空间空闲；乘以 4 时，刚扩容后装载率约为 `1/4`，最多约四分之三空间空闲。因此乘以 4 用更多内存换更少扩容和更低拷贝常数。
+
+### 6.2
+
+记当前数组容量为 `N`，扩容策略仍为“满时扩为 `2N`”，一次搬移 `n` 个栈元素的代价为 `tn`。
+
+1. 若 pop 后元素个数少于 `N/2` 就缩为 `N/2`，不能保证常数摊还时间。容量为 `N`、元素数接近 `N/2` 时，少量 pop 会触发缩容，随后少量 push 又会触发扩容；可以构造反复缩容/扩容的序列，使少数操作承担 `Θ(N)` 搬移代价。
+
+2. 若 pop 后元素个数少于 `N/4` 就缩为 `N/4`，可以做到 `O(1)` 摊还时间。一次从容量 `N` 缩到 `N/4` 之前，必须已经发生了线性数量的 pop；即使缩容后很快又扩容，前面这些 pop 可以支付搬移成本。但它的时间常数较大，因为缩容后表几乎又满了，后续 push 很快可能触发扩容。
+
+3. 若 pop 后元素个数少于 `N/4` 就缩为 `N/2`，也可以做到 `O(1)` 摊还时间，并且是三种给定方案里通常最好的折中。缩容后装载率约为 `1/2`，距离下一次扩容或缩容都有线性数量的普通操作，因此不会抖动。
+
+4. 可以用不同参数得到更好的空间常数。例如：当元素个数少于 `N/3` 时，把数组缩为 `2N/3`。缩容后装载率约为 `1/2`，距离下一次扩容或缩容至少有 `Θ(N)` 次操作，因此仍为常数摊还时间；同时容量始终约不超过元素数的 3 倍，比 `N/4 -> N/2` 方案的最坏空间因子 4 更好。
+
+### 6.18
+
+开放寻址哈希表需要三种槽状态：
+
+```text
+EMPTY      从未使用
+OCCUPIED   当前保存一个 key
+OBSOLETE   曾经保存过 key，但已删除，可被重用
+```
+
+搜索：
+
+```text
+search(H, key):
+    for i = 0 to m - 1:
+        j = h(key, i)
+        if H[j] is EMPTY:
+            return NOT_FOUND
+        if H[j] is OCCUPIED and H[j].key == key:
+            return j
+        // OBSOLETE 或其他 key 都继续探查
+    return NOT_FOUND
+```
+
+插入：
+
+```text
+insert(H, key):
+    firstObsolete = NIL
+
+    for i = 0 to m - 1:
+        j = h(key, i)
+
+        if H[j] is OCCUPIED and H[j].key == key:
+            return ALREADY_PRESENT
+
+        if H[j] is OBSOLETE and firstObsolete == NIL:
+            firstObsolete = j
+
+        if H[j] is EMPTY:
+            if firstObsolete != NIL:
+                H[firstObsolete] = key
+                return firstObsolete
+            else:
+                H[j] = key
+                return j
+
+    if firstObsolete != NIL:
+        H[firstObsolete] = key
+        return firstObsolete
+
+    return TABLE_FULL
+```
+
+删除：
+
+```text
+delete(H, key):
+    pos = search(H, key)
+    if pos == NOT_FOUND:
+        return NOT_FOUND
+    H[pos] = OBSOLETE
+    return DELETED
+```
+
+终止条件的区别是：搜索和删除遇到 `EMPTY` 可立即失败，因为探查链到这里就断了；遇到 `OBSOLETE` 不能停。插入遇到 `OBSOLETE` 可以记住该位置，但若不允许重复 key，仍应继续探查，直到找到相同 key、遇到 `EMPTY`，或完成 `m` 次探查。
+
+### 6.19
+
+设闭地址法的表槽数为 `n_C`，闭地址法负载因子为：
+
+```text
+alpha_C = n / n_C
+```
+
+其中 `n` 是 key 的个数。
+
+1. 若 key 占 1 word，链表结点占 2 words，则闭地址法总空间为：
+
+```text
+S_C = n_C + 2n = n_C(1 + 2 alpha_C)
+```
+
+开放寻址表中每个槽占 1 word。若开放寻址使用同样空间，则：
+
+```text
+n_O = S_C
+alpha_O = n / n_O = alpha_C / (1 + 2 alpha_C)
+```
+
+| `alpha_C` | closed addressing space | corresponding `alpha_O` |
+|---:|---:|---:|
+| 0.25 | `1.5 n_C` | `1/6 ≈ 0.167` |
+| 0.50 | `2 n_C` | `1/4 = 0.25` |
+| 1.00 | `3 n_C` | `1/3 ≈ 0.333` |
+| 2.00 | `5 n_C` | `2/5 = 0.4` |
+
+2. 若 key 占 4 words，链表结点占 5 words，则闭地址法总空间为：
+
+```text
+S_C = n_C + 5n = n_C(1 + 5 alpha_C)
+```
+
+开放寻址中每个槽要容纳一个 key，占 4 words，因此：
+
+```text
+4 n_O = S_C
+alpha_O = n / n_O = 4 alpha_C / (1 + 5 alpha_C)
+```
+
+| `alpha_C` | closed addressing space | corresponding `alpha_O` |
+|---:|---:|---:|
+| 0.25 | `2.25 n_C` | `4/9 ≈ 0.444` |
+| 0.50 | `3.5 n_C` | `4/7 ≈ 0.571` |
+| 1.00 | `6 n_C` | `2/3 ≈ 0.667` |
+| 2.00 | `11 n_C` | `8/11 ≈ 0.727` |
 
 ## 09-GTraverse
 
