@@ -1,27 +1,27 @@
-# Advanced Algorithms After-Class Exercise Solutions
+# Advanced Algorithms Homework Solutions
 
-本文件根据四个 PPT 末页的 `Home Assignment` 题号整理：
+只保留题号、小问编号、核心公式和最简逻辑。
 
-- `06-HeapSort.ppt`: 4.37, 4.38, 4.39, 4.44
-- `07-Selection.ppt`: 5.2, 5.4, 5.6, 5.8, 5.12, 5.13, 5.14, 5.17
-- `08-HashTable.ppt`: 6.1, 6.2, 6.18, 6.19
-- `09-GTraverse.ppt`: 7.12, 7.14, 7.15, 7.16
-
-## 06-HeapSort
+## 作业 06: HeapSort
 
 ### 4.37
 
-题意：用普通 Heapsort（不是 Accelerated Heapsort）把一个严格递减数组排成递增序，分析建堆阶段的比较次数。
+**a.** 10 个元素时，建堆阶段比较 `9` 次。
 
-1. 若有 10 个元素，建堆阶段做 `9` 次关键字比较。
-2. 若有 `n` 个元素，建堆阶段做 `n - 1` 次关键字比较。
-3. 递减数组已经满足最大堆性质。`constructHeap` 对每个内部结点调用 `fixHeap` 时都会立刻停止：有两个孩子的结点只需比较两个孩子并再与根比较一次，只有一个孩子的结点只需一次比较。所有内部结点合计正好是 `n - 1` 次，因此这是建堆阶段的最好情况。
+**b.** `n` 个元素时，建堆阶段比较 `n - 1` 次。
+
+**c.** 递减数组已经满足最大堆性质，是建堆阶段最好情况。  
+每条父子关系最多被确认一次，所以总比较次数为 `n - 1`。
 
 ### 4.38
 
-1. 递归版 Heapsort 的额外栈空间为 `Θ(log n)`，因为 `fixHeap` 最深沿堆高递归，而堆高为 `⌊lg n⌋`。
+**a.** 递归版 Heapsort 的额外栈空间为：
 
-2. `fixHeap` 的迭代版：
+```text
+Theta(log n)
+```
+
+**b.** `fixHeap` 迭代版：
 
 ```text
 fixHeap(E, K, vacant, heapSize):
@@ -29,17 +29,14 @@ fixHeap(E, K, vacant, heapSize):
         larger = 2 * vacant
         if larger < heapSize and E[larger].key < E[larger + 1].key:
             larger = larger + 1
-
         if K.key >= E[larger].key:
             break
-
         E[vacant] = E[larger]
         vacant = larger
-
     E[vacant] = K
 ```
 
-3. `fixHeapFast` 的迭代版可把递归调用改成更新 `vacant` 和当前子堆高度 `h` 的循环：
+**c.** `fixHeapFast` 迭代版：
 
 ```text
 fixHeapFast(E, K, vacant, h):
@@ -56,10 +53,12 @@ fixHeapFast(E, K, vacant, h):
         vacant = vacStop
         h = hStop
 
-    process the remaining heap of height 0 or 1 directly
+    handle the remaining heap of height 0 or 1 directly
 ```
 
-4. `constructHeap` 的迭代版：
+高度为 `0` 时直接放入 `K`；高度为 `1` 时只需和较大的孩子比较一次。
+
+**d.** `constructHeap` 迭代版：
 
 ```text
 constructHeap(E, n):
@@ -68,518 +67,395 @@ constructHeap(E, n):
         fixHeap(E, K, root, n)
 ```
 
-若使用 `fixHeapFast`，循环结构相同，只需给每个 `root` 传入以该结点为根的子堆高度。
+**e.** 最坏比较次数仍为：
 
-5. 迭代版 `constructHeap` 的最坏情况仍为 `Θ(n)` 次比较。因为每个结点最多下沉其子树高度，所有结点高度之和不超过 `n - 1`，而每层最多常数次比较。
+```text
+Theta(n)
+```
+
+理由：所有结点高度之和不超过 `n - 1`。
 
 ### 4.39
 
-记 `h(v)` 为结点 `v` 的高度。所有结点高度之和可写成：
+设 `h(v)` 为结点 `v` 的高度：
 
 ```text
-sum_v h(v) = sum_{k >= 1} #{高度至少为 k 的结点}
+sum_v h(v)
+= sum_{k >= 1} #{height(v) >= k}
+<= sum_{k >= 1} floor(n / 2^k)
+<= n - 1
 ```
 
-在一个含 `n` 个结点的二叉堆中，高度至少为 `k` 的结点数至多为 `⌊n / 2^k⌋`，因为每这样的结点下面至少对应一个相隔 `k` 层的后代区域。因此：
+所以建堆最坏比较次数至多为：
 
 ```text
-sum_v h(v) <= sum_{k >= 1} floor(n / 2^k) <= n - 1
+2(n - 1) = Theta(n)
 ```
-
-所以建堆阶段的最坏比较次数至多为所有结点高度之和的两倍，即不超过 `2n - 2`，从而为 `Θ(n)`。
 
 ### 4.44
 
 证明：
 
 ```text
-ceil(lg(floor(h / 2) + 1)) + 1 = ceil(lg(h + 1)),  h >= 1
+ceil(lg(floor(h/2) + 1)) + 1 = ceil(lg(h + 1))
 ```
 
-分奇偶讨论。
-
-若 `h = 2m + 1`，则：
+**情况 1：** `h = 2m + 1`
 
 ```text
-floor(h / 2) + 1 = m + 1
-h + 1 = 2m + 2 = 2(m + 1)
+floor(h/2) + 1 = m + 1
+h + 1 = 2(m + 1)
+```
+
+所以等式成立。
+
+**情况 2：** `h = 2m`，令 `x = m + 1`。  
+若 `r = ceil(lg x)`，则：
+
+```text
+2^{r-1} < x <= 2^r
+2^r < 2x - 1 < 2^{r+1}
 ```
 
 所以：
 
 ```text
-ceil(lg(m + 1)) + 1 = ceil(lg(2(m + 1))) = ceil(lg(h + 1))
+ceil(lg(2x - 1)) = r + 1
 ```
 
-若 `h = 2m`，令 `x = m + 1`。左边为 `ceil(lg x) + 1`，右边为 `ceil(lg(2x - 1))`。设 `r = ceil(lg x)`，则 `2^{r-1} < x <= 2^r`。因为 `x` 为整数，`2x - 1 > 2^r` 且 `2x - 1 < 2^{r+1}`，所以 `ceil(lg(2x - 1)) = r + 1`。等式成立。
+等式成立。
 
-## 07-Selection
+## 作业 07: Selection
 
 ### 5.2
 
-1. 对比较排序，敌手策略可以维护“仍与所有回答一致的排列集合”。每次算法比较两个元素时，敌手选择能保留更多可能排列的回答。一次比较最多把候选排列数减半，因此若要唯一确定排序结果，必须有：
+**a.** 比较排序有 `n!` 个可能结果：
 
 ```text
 2^t >= n!
-t >= ceil(lg(n!))
+t >= ceil(lg(n!)) = Omega(n lg n)
 ```
 
-这与基于决策树的排序下界一致，即 `Ω(n lg n)`。
-
-2. 对合并两个各含 `n/2` 个元素的有序序列，可能输出只对应于两列元素的交错方式，共有：
+**b.** 合并两个各含 `n/2` 个元素的有序序列，交错方式为：
 
 ```text
 C(n, n/2)
 ```
 
-种。用同样的“保留更多交错方式”的敌手策略，可得比较次数下界：
+所以下界为：
 
 ```text
-ceil(lg C(n, n/2)) = n - Θ(lg n)
+ceil(lg C(n, n/2)) = n - Theta(lg n)
 ```
-
-这个下界比合并问题常见的 `n - 1` 最坏情况比较下界略弱，但同样说明线性级别的比较不可避免。
 
 ### 5.4
 
-1. `heapFindMax` 把原始元素放在 `E[n]` 到 `E[2n - 1]`，再自底向上把每对孩子的较大者复制到父结点。每个内部结点保存其子树中的最大值，因此最后 `E[1]` 是全局最大值。
+**a.** `heapFindMax` 自底向上比较，每个内部结点保存子树最大值，所以 `E[1]` 是最大值。
 
-2. 想知道哪些元素输给了最大值，只需从保存最大值的叶结点沿父指针一路走到根。路径上每一层的兄弟结点就是在锦标赛中直接输给最大值的元素。
+**b.** 输给最大值的元素，都在最大值叶结点到根路径的兄弟结点中。
 
-3. 找第二大元素：
+**c.** 第二大只需在这些“输给最大值”的元素里找最大：
 
 ```text
-secondLargestAfterHeapFindMax(E, n):
-    maxKey = E[1]
-    i = 1
-    second = -infinity
-
-    while i < n:
-        left = 2 * i
-        right = 2 * i + 1
-
-        if E[left].key == maxKey:
-            second = max(second, E[right])
-            i = left
-        else:
-            second = max(second, E[left])
-            i = right
-
-    return second
+follow max path from root to leaf
+compare all sibling losers
+return the largest loser
 ```
-
-这里假设关键字互异；若允许重复，应额外保存元素身份而不只比较关键字。
 
 ### 5.6
 
-1. 最坏情况比较次数为：
+**a.** 最坏比较次数：
 
 ```text
 1 + 2(n - 2) = 2n - 3
 ```
 
-例如 `n = 6` 时输入 `1, 2, 3, 4, 5, 6`。初始化后，每个新元素都先大于 `second`，又大于 `max`，所以每轮做两次比较。
+最坏例子：`1, 2, 3, 4, 5, 6`。
 
-2. 平均比较次数：
-
-第 `i` 个元素（`i >= 3`）总要先与 `second` 比较一次；只有当它是当前前 `i` 个元素中的最大或第二大时，才会再与 `max` 比较一次。该概率为 `2 / i`。因此期望比较次数为：
+**b.** 平均比较次数：
 
 ```text
-1 + sum_{i=3}^{n} (1 + 2/i)
-= n - 1 + 2(H_n - 3/2)
+1 + sum_{i=3}^{n}(1 + 2/i)
 = n + 2H_n - 4
 ```
 
-其中 `H_n` 是第 `n` 个调和数。
-
 ### 5.8
 
-1. Quickselect 形式的 `findKth`：
+**a.** Quickselect：
 
 ```text
 findKth(E, k):
-    choose a pivot p
-    partition E into L = {x < p}, G = {x > p}
-
-    if |L| + 1 == k:
-        return p
-    else if k <= |L|:
-        return findKth(L, k)
-    else:
-        return findKth(G, k - |L| - 1)
+    choose pivot p
+    partition into L = {x < p}, G = {x > p}
+    if |L| + 1 == k: return p
+    if k <= |L|: return findKth(L, k)
+    return findKth(G, k - |L| - 1)
 ```
 
-2. 找中位数时，若每次 pivot 都是当前子数组的最小或最大元素，则递归规模每次只减少 1：
+**b.** 最坏情况每次 pivot 都最偏：
 
 ```text
-T(n) = T(n - 1) + Θ(n) = Θ(n^2)
+T(n) = T(n - 1) + Theta(n) = Theta(n^2)
 ```
 
-3. 若 pivot 在 `n` 个位置中等概率出现，找第 `k` 小元素的平均时间满足：
+**c.** 平均递推：
 
 ```text
 T(n, k) = n - 1
-          + (1/n) * sum_{j < k} T(n - j, k - j)
-          + (1/n) * sum_{j > k} T(j - 1, k)
+        + (1/n) * sum_{j < k} T(n - j, k - j)
+        + (1/n) * sum_{j > k} T(j - 1, k)
 ```
 
-其中 `j` 是 pivot 的秩。
+**d.** 平均运行时间：
 
-4. 平均运行时间为 `Θ(n)`。直观上，每轮分区花线性时间，而随机 pivot 使期望递归子问题规模按常数比例下降；标准归纳可证明 `T(n) <= cn`。
+```text
+Theta(n)
+```
 
 ### 5.12
 
-若 `n` 为偶数，且把中位数定义为第 `n/2` 小元素，则中位数以下有 `n/2 - 1` 个元素，中位数以上有 `n/2` 个元素。
-
-在敌手下界证明中，仍至少需要 `n - 1` 次关键比较来证明除中位数外的每个元素在中位数哪一侧。同时，敌手可以强迫至少：
+偶数 `n`，中位数定义为第 `n/2` 小：
 
 ```text
-n/2 - 1
+critical comparisons >= n - 1
+uncritical comparisons >= n/2 - 1
+lower bound = 3n/2 - 2
 ```
-
-次非关键比较。因此偶数情形的下界为：
-
-```text
-(n - 1) + (n/2 - 1) = 3n/2 - 2
-```
-
-即：任何基于比较的算法在最坏情况下至少要做 `3n/2 - 2` 次比较。
 
 ### 5.13
 
-1. Insertion Sort：比较通常非常不均衡。敌手可让每个新元素都插到当前有序前缀最前端，迫使每轮扫描整个前缀，达到 `Θ(n^2)` 最坏情况。
-2. Quicksort：若 pivot 选择不受保护，敌手可让每次划分都极不平衡，使递归规模变成 `n - 1`，达到 `Θ(n^2)`。随机化 pivot 可以避免固定输入上的这种敌手。
-3. Mergesort：合并时的比较通常较接近“双方都有信息量”。敌手可以让两个子序列交替胜出，使每次合并用满线性比较次数，但整体仍为 `Θ(n lg n)`。
-4. Heapsort：`fixHeap` 中敌手可让待下沉元素一路沉到叶子，使每次删除最大值花 `Θ(lg n)`，总计 `Θ(n lg n)`。
-5. Accelerated Heapsort：它减少了普通 `fixHeap` 中逐层反复比较待插入元素的开销。敌手仍可造成接近每层一次的主路径比较和 `Θ(lg lg n)` 的修正开销；课件中的最坏情况为 `n lg n + Θ(n lg lg n)`。
+**a. Insertion Sort：** 敌手让每个新元素插到最前，最坏 `Theta(n^2)`。
+
+**b. Quicksort：** 敌手让 pivot 每次极不平衡，最坏 `Theta(n^2)`。
+
+**c. Mergesort：** 敌手让两边交替胜出，每层线性，总计 `Theta(n lg n)`。
+
+**d. Heapsort：** 敌手让元素一路下沉，总计 `Theta(n lg n)`。
+
+**e. Accelerated Heapsort：** 最坏为：
+
+```text
+n lg n + Theta(n lg lg n)
+```
 
 ### 5.14
 
-用 6 次比较找 5 个元素的中位数。设元素为 `a, b, c, d, e`。
+5 个数 6 次比较找中位数：
 
-1. 比较 `a, b`，重命名使 `a <= b`。
-2. 比较 `c, d`，重命名使 `c <= d`。
-3. 比较 `a, c`。若 `c < a`，交换两组标签，使仍有 `a <= c`。此时 `a` 不可能是中位数，可丢弃。
-4. 比较 `b, d`。
-5. 若 `b <= d`，则 `d` 不可能是中位数，剩下只需求 `b, c, e` 的中位数。
-6. 若 `d < b`，则 `b` 不可能是中位数，剩下只需求 `c, d, e` 的中位数。
+```text
+1. compare a,b; make a <= b
+2. compare c,d; make c <= d
+3. compare a,c; make a <= c, discard a
+4. compare b,d; discard the larger one
+5. find median of the remaining 3 elements using 2 comparisons
+```
 
-三元素中位数可在 2 次比较内得到。因此总比较次数最多为 `4 + 2 = 6`。
+总计：
+
+```text
+4 + 2 = 6
+```
 
 ### 5.17
 
-设数组 `E[0..n]` 是 unimodal：先严格递增到 `M`，再严格递减。
+**a.** `n = 2` 时，两个比较必要且充分。
 
-1. 当 `n = 2` 时有三个元素 `E[0], E[1], E[2]`。比较 `E[0]` 与 `E[1]`、`E[1]` 与 `E[2]` 两次即可确定 `M`。一次比较不够，因为一次比较后至少还有两个峰值位置仍可能成立。
-
-2. 一个二分式算法：
+**b.** 算法：
 
 ```text
-findPeak(E, lo, hi):
-    while lo < hi:
-        mid = floor((lo + hi) / 2)
-        if E[mid] < E[mid + 1]:
-            lo = mid + 1
-        else:
-            hi = mid
-    return lo
+while lo < hi:
+    mid = floor((lo + hi) / 2)
+    if E[mid] < E[mid + 1]:
+        lo = mid + 1
+    else:
+        hi = mid
+return lo
 ```
 
-3. 每次比较都把候选峰值区间缩小到至多一半，因此最坏比较次数为：
+**c.** 最坏比较次数：
 
 ```text
 ceil(lg(n + 1))
 ```
 
-这是 `o(n)`。
+**d.** 若 `n = F_k`，可用 Fibonacci search，比较次数为 `k - 1`。
 
-4. 若 `n = F_k`，可使用 Fibonacci search。维护一个已知包含 `M` 的区间，其长度按 Fibonacci 数记为 `F_m`。在区间内选择两个 Fibonacci 比例的探测点，比较它们；若左探测点较小，峰值在右侧，否则在左侧。下一轮保留一个旧探测点，只新增一个探测点，于是参数从 `m` 降到 `m - 1`。从 `F_k` 开始，经过 `k - 1` 次比较即可把区间缩到一个位置。
+**e.** 敌手下界可迫使至少：
 
-5. 敌手下界思路：维护一个仍可能包含峰值的活动区间。对算法提出的任意比较，敌手选择能保留更多峰值候选位置的回答，并保持区间两端仍可被构造成单峰数组。每次比较最多使活动区间按常数因子缩小，并且还必须额外确定峰值相对两侧的上升/下降边界信息。由此可强迫至少 `lg n + 2` 次比较（`n >= 4`），说明该问题比普通有序数组搜索略难。
+```text
+lg n + 2
+```
 
-## 08-HashTable
+## 作业 08: HashTable
 
 ### 6.1
 
-若扩容时把数组大小乘以 4，而不是乘以 2，则扩容次数更少，拷贝元素的总次数常数因子更低。
-
-设最终插入 `n` 个元素，扩容因子为 `g`。扩容时被搬移的数组容量为：
+扩容因子从 2 改成 4：
 
 ```text
-1 + g + g^2 + ... < g n / (g - 1)
+factor 2: total moving < 2n
+factor 4: total moving < 4n/3
 ```
 
-因此乘以 2 时，总搬移量小于 `2n`；乘以 4 时，总搬移量小于 `4n/3`。两者摊还插入时间都仍为 `Θ(1)`，但乘以 4 的时间常数更小。
+结论：
 
-空间代价相反。乘以 2 时，刚扩容后装载率约为 `1/2`，最多约一半空间空闲；乘以 4 时，刚扩容后装载率约为 `1/4`，最多约四分之三空间空闲。因此乘以 4 用更多内存换更少扩容和更低拷贝常数。
+- 时间：乘以 4 搬移次数更少，摊还插入仍为 `Theta(1)`。
+- 空间：乘以 4 刚扩容后装载率约 `1/4`，比乘以 2 更浪费空间。
 
 ### 6.2
 
-记当前数组容量为 `N`，扩容策略仍为“满时扩为 `2N`”，一次搬移 `n` 个栈元素的代价为 `tn`。
+**a.** pop 后 `< N/2` 缩到 `N/2`：可能反复扩缩，不能保证常数摊还。
 
-1. 若 pop 后元素个数少于 `N/2` 就缩为 `N/2`，不能保证常数摊还时间。容量为 `N`、元素数接近 `N/2` 时，少量 pop 会触发缩容，随后少量 push 又会触发扩容；可以构造反复缩容/扩容的序列，使少数操作承担 `Θ(N)` 搬移代价。
+**b.** pop 后 `< N/4` 缩到 `N/4`：可常数摊还，但缩完接近满。
 
-2. 若 pop 后元素个数少于 `N/4` 就缩为 `N/4`，可以做到 `O(1)` 摊还时间。一次从容量 `N` 缩到 `N/4` 之前，必须已经发生了线性数量的 pop；即使缩容后很快又扩容，前面这些 pop 可以支付搬移成本。但它的时间常数较大，因为缩容后表几乎又满了，后续 push 很快可能触发扩容。
+**c.** pop 后 `< N/4` 缩到 `N/2`：较好，缩完装载率约 `1/2`，两边都有缓冲。
 
-3. 若 pop 后元素个数少于 `N/4` 就缩为 `N/2`，也可以做到 `O(1)` 摊还时间，并且是三种给定方案里通常最好的折中。缩容后装载率约为 `1/2`，距离下一次扩容或缩容都有线性数量的普通操作，因此不会抖动。
-
-4. 可以用不同参数得到更好的空间常数。例如：当元素个数少于 `N/3` 时，把数组缩为 `2N/3`。缩容后装载率约为 `1/2`，距离下一次扩容或缩容至少有 `Θ(N)` 次操作，因此仍为常数摊还时间；同时容量始终约不超过元素数的 3 倍，比 `N/4 -> N/2` 方案的最坏空间因子 4 更好。
+**d.** 可改为 `< N/3` 时缩到 `2N/3`，仍有线性缓冲，空间常数更好。
 
 ### 6.18
 
-开放寻址哈希表需要三种槽状态：
+开放寻址三种状态：
 
 ```text
-EMPTY      从未使用
-OCCUPIED   当前保存一个 key
-OBSOLETE   曾经保存过 key，但已删除，可被重用
+EMPTY      never used
+OCCUPIED   currently stores key
+OBSOLETE   deleted tombstone
 ```
 
 搜索：
 
 ```text
-search(H, key):
-    for i = 0 to m - 1:
-        j = h(key, i)
-        if H[j] is EMPTY:
-            return NOT_FOUND
-        if H[j] is OCCUPIED and H[j].key == key:
-            return j
-        // OBSOLETE 或其他 key 都继续探查
-    return NOT_FOUND
+search: stop at EMPTY; skip OBSOLETE
 ```
 
 插入：
 
 ```text
-insert(H, key):
-    firstObsolete = NIL
-
-    for i = 0 to m - 1:
-        j = h(key, i)
-
-        if H[j] is OCCUPIED and H[j].key == key:
-            return ALREADY_PRESENT
-
-        if H[j] is OBSOLETE and firstObsolete == NIL:
-            firstObsolete = j
-
-        if H[j] is EMPTY:
-            if firstObsolete != NIL:
-                H[firstObsolete] = key
-                return firstObsolete
-            else:
-                H[j] = key
-                return j
-
-    if firstObsolete != NIL:
-        H[firstObsolete] = key
-        return firstObsolete
-
-    return TABLE_FULL
+insert: remember first OBSOLETE; keep probing to avoid duplicate;
+        insert into first OBSOLETE or first EMPTY
 ```
 
 删除：
 
 ```text
-delete(H, key):
-    pos = search(H, key)
-    if pos == NOT_FOUND:
-        return NOT_FOUND
-    H[pos] = OBSOLETE
-    return DELETED
+delete: mark found slot as OBSOLETE
 ```
-
-终止条件的区别是：搜索和删除遇到 `EMPTY` 可立即失败，因为探查链到这里就断了；遇到 `OBSOLETE` 不能停。插入遇到 `OBSOLETE` 可以记住该位置，但若不允许重复 key，仍应继续探查，直到找到相同 key、遇到 `EMPTY`，或完成 `m` 次探查。
 
 ### 6.19
 
-设闭地址法的表槽数为 `n_C`，闭地址法负载因子为：
+设：
 
 ```text
 alpha_C = n / n_C
 ```
 
-其中 `n` 是 key 的个数。
-
-1. 若 key 占 1 word，链表结点占 2 words，则闭地址法总空间为：
+**a. key = 1 word, node = 2 words**
 
 ```text
-S_C = n_C + 2n = n_C(1 + 2 alpha_C)
+S_C = n_C + 2n = n_C(1 + 2alpha_C)
+alpha_O = alpha_C / (1 + 2alpha_C)
 ```
 
-开放寻址表中每个槽占 1 word。若开放寻址使用同样空间，则：
+**b. key = 4 words, node = 5 words**
 
 ```text
-n_O = S_C
-alpha_O = n / n_O = alpha_C / (1 + 2 alpha_C)
+S_C = n_C + 5n = n_C(1 + 5alpha_C)
+alpha_O = 4alpha_C / (1 + 5alpha_C)
 ```
 
-| `alpha_C` | closed addressing space | corresponding `alpha_O` |
+表：
+
+| `alpha_C` | part a | part b |
 |---:|---:|---:|
-| 0.25 | `1.5 n_C` | `1/6 ≈ 0.167` |
-| 0.50 | `2 n_C` | `1/4 = 0.25` |
-| 1.00 | `3 n_C` | `1/3 ≈ 0.333` |
-| 2.00 | `5 n_C` | `2/5 = 0.4` |
+| 0.25 | 0.167 | 0.444 |
+| 0.50 | 0.250 | 0.571 |
+| 1.00 | 0.333 | 0.667 |
+| 2.00 | 0.400 | 0.727 |
 
-2. 若 key 占 4 words，链表结点占 5 words，则闭地址法总空间为：
-
-```text
-S_C = n_C + 5n = n_C(1 + 5 alpha_C)
-```
-
-开放寻址中每个槽要容纳一个 key，占 4 words，因此：
-
-```text
-4 n_O = S_C
-alpha_O = n / n_O = 4 alpha_C / (1 + 5 alpha_C)
-```
-
-| `alpha_C` | closed addressing space | corresponding `alpha_O` |
-|---:|---:|---:|
-| 0.25 | `2.25 n_C` | `4/9 ≈ 0.444` |
-| 0.50 | `3.5 n_C` | `4/7 ≈ 0.571` |
-| 1.00 | `6 n_C` | `2/3 ≈ 0.667` |
-| 2.00 | `11 n_C` | `8/11 ≈ 0.727` |
-
-## 09-GTraverse
+## 作业 09: GTraverse
 
 ### 7.12
 
-图 7.30 的有向边按图读为：
+图 7.30 的边：
 
 ```text
 A->B, H->A, B->H, B->D, D->F, F->D, D->G, G->F,
 E->D, H->E, E->C, C->I, I->J, J->C, J->K, K->I
 ```
 
-分类中，`tree` 为树边，`back` 为回边，`descendant` 为指向后代但非树边的边，`cross` 为交叉边。
-
-1. 顶点数组按字母序，邻接表按字母序：
+分类规则：
 
 ```text
-A->B tree
-H->A back
-B->H tree
-B->D tree
-D->F tree
-F->D back
-D->G tree
-G->F cross
-E->D cross
-H->E tree
-E->C tree
-C->I tree
-I->J tree
-J->C back
-J->K tree
-K->I back
+tree       first discovers a white vertex
+back       points to a gray ancestor
+descendant points to a descendant but is not tree edge
+cross      all other finished-branch edges
 ```
 
-2. 顶点数组按逆字母序，邻接表按字母序：
+**a. 顶点字母序，邻接表字母序**
 
 ```text
-A->B tree
-H->A tree
-B->H back
-B->D tree
-D->F tree
-F->D back
-D->G tree
-G->F cross
-E->D cross
-H->E tree
-E->C cross
-C->I back
-I->J tree
-J->C tree
-J->K back
-K->I tree
+tree: A->B, B->D, D->F, D->G, B->H, H->E, E->C, C->I, I->J, J->K
+back: H->A, F->D, J->C, K->I
+cross: G->F, E->D
 ```
 
-3. 顶点数组按字母序，邻接表按逆字母序：
+**b. 顶点逆字母序，邻接表字母序**
 
 ```text
-A->B tree
-H->A back
-B->H tree
-B->D descendant
-D->F descendant
-F->D back
-D->G tree
-G->F tree
-E->D tree
-H->E tree
-E->C tree
-C->I tree
-I->J tree
-J->C back
-J->K tree
-K->I back
+tree: K->I, I->J, J->C, H->A, A->B, B->D, D->F, D->G, H->E
+back: B->H, F->D, C->I, J->K
+cross: G->F, E->D, E->C
 ```
 
-4. 顶点数组按逆字母序，邻接表按逆字母序：
+**c. 顶点字母序，邻接表逆字母序**
 
 ```text
-A->B tree
-H->A tree
-B->H back
-B->D cross
-D->F descendant
-F->D back
-D->G tree
-G->F tree
-E->D tree
-H->E tree
-E->C cross
-C->I back
-I->J tree
-J->C tree
-J->K back
-K->I tree
+tree: A->B, B->H, H->E, E->D, D->G, G->F, E->C, C->I, I->J, J->K
+back: H->A, F->D, J->C, K->I
+descendant: B->D, D->F
+```
+
+**d. 顶点逆字母序，邻接表逆字母序**
+
+```text
+tree: K->I, I->J, J->C, H->E, E->D, D->G, G->F, H->A, A->B
+back: J->K, C->I, F->D, B->H
+descendant: D->F
+cross: E->C, B->D
 ```
 
 ### 7.14
 
-设有根为 `r` 的同一棵有向树，且 `v` 与 `w` 互不为祖先/后代。因为树中从根到任一顶点的路径唯一，所以根到 `v` 的路径和根到 `w` 的路径有一个最长公共前缀。令这个公共前缀的最后一个顶点为 `c`。
-
-则 `c` 同时是 `v` 和 `w` 的祖先；从 `c` 到 `v`、从 `c` 到 `w` 的两条树路径在离开 `c` 后走向不同孩子，因此没有公共边。这个 `c` 就是 `v` 与 `w` 的 least common ancestor。
+根到 `v`、根到 `w` 的路径唯一。  
+两条路径的最长公共前缀最后一个顶点就是 `LCA c`。  
+从 `c` 到 `v` 和从 `c` 到 `w` 离开 `c` 后走不同孩子，所以无公共边。
 
 ### 7.15
 
-证明 Theorem 7.1 的第 3 项：若 `active(w) ⊆ active(v)`，则 `w` 是 `v` 的后代；若为真子集，则是 proper descendant。
+若 `active(w) subset active(v)`：
 
-反证。若 `w` 不是 `v` 的后代，则只有两种可能：
+- 若 `v` 是 `w` 后代，则应有 `active(v) subset active(w)`，矛盾。
+- 若二者无祖先关系，则活动区间应不相交，矛盾。
 
-1. `v` 是 `w` 的真后代。此时由 DFS 活动区间的嵌套性质，`active(v) ⊂ active(w)`，与 `active(w) ⊆ active(v)` 矛盾。
-2. `v` 和 `w` 没有祖先/后代关系。此时二者活动区间应当互不相交，也与 `active(w) ⊆ active(v)` 矛盾。
-
-因此 `w` 必为 `v` 的后代。若 `active(w) ⊂ active(v)`，则 `w != v`，所以 `w` 是 `v` 的真后代。
+所以 `w` 是 `v` 的后代；若是真子集，则是真后代。
 
 ### 7.16
 
-在 DFS skeleton 中，只要发现一条通向白色顶点的边，就把它加入输出列表；这条边正是 DFS tree edge。
-
 ```text
 dfsSweep(G):
-    mark every vertex white
-    treeEdges = empty list
-
-    for each vertex v in G:
+    mark all vertices white
+    for each vertex v:
         if v is white:
-            dfs(G, v, treeEdges)
+            dfs(v)
 
-    return treeEdges
-
-dfs(G, v, treeEdges):
+dfs(v):
     mark v gray
-
-    for each edge v->w in adjacency list of v:
+    for each edge v->w:
         if w is white:
-            append v->w to treeEdges
-            dfs(G, w, treeEdges)
-
+            output v->w
+            dfs(w)
     mark v black
 ```
 
-若图不连通，`dfsSweep` 会产生一片 DFS forest；每个新根没有入树边。
+若图不连通，输出的是 DFS forest。
