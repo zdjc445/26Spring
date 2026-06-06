@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>操作系统 MOOC 刷题</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: #0f0f23;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+.container {
+    max-width: 800px;
+    width: 100%;
+    padding: 24px 20px;
+}
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+header h1 {
+    font-size: 24px;
+    color: #00e676;
+    margin-bottom: 4px;
+}
+header .sub {
+    font-size: 13px;
+    color: #888;
+}
+
+/* Stats bar */
+.stats-bar {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.stat {
+    background: #1a1a3e;
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-align: center;
+    min-width: 80px;
+}
+.stat .num {
+    font-size: 28px;
+    font-weight: 700;
+    color: #00e676;
+}
+.stat .label { font-size: 12px; color: #888; margin-top: 2px; }
+
+/* Part filter */
+.part-filter {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    justify-content: center;
+}
+.part-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all .2s;
+}
+.part-btn:hover { border-color: #00e676; color: #fff; }
+.part-btn.active { background: #00e676; color: #000; border-color: #00e676; font-weight: 600; }
+
+/* Quiz card */
+.quiz-card {
+    background: #1a1a3e;
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    border: 1px solid #2a2a5e;
+}
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.question-tag {
+    font-size: 12px;
+    background: #2a2a5e;
+    padding: 4px 10px;
+    border-radius: 12px;
+    color: #aaa;
+}
+.question-num {
+    font-size: 13px;
+    color: #00e676;
+    font-weight: 600;
+}
+.question-text {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+/* Options */
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+    padding: 13px 16px;
+    border-radius: 10px;
+    border: 1.5px solid #2a2a5e;
+    background: #13132e;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    user-select: none;
+}
+.option:hover { border-color: #00e676; background: #1a1a3e; }
+.option .letter {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #2a2a5e;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px; flex-shrink: 0;
+    color: #aaa;
+}
+.option.correct { border-color: #00e676; background: #0a2a0a; }
+.option.correct .letter { background: #00e676; color: #000; }
+.option.wrong { border-color: #ff5252; background: #2a0a0a; }
+.option.wrong .letter { background: #ff5252; color: #fff; }
+.option.disabled { pointer-events: none; opacity: 0.85; }
+
+/* Explanation */
+.explanation {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 10px;
+    background: #0a1a0a;
+    border: 1px solid #1a3a1a;
+    display: none;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+.explanation.show { display: block; }
+.explanation .verdict {
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 15px;
+}
+.explanation .verdict.yes { color: #00e676; }
+.explanation .verdict.no { color: #ff5252; }
+
+/* Navigation */
+.nav-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+.nav-btn {
+    padding: 10px 24px;
+    border-radius: 25px;
+    border: 1px solid #333;
+    background: #1a1a3e;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all .2s;
+}
+.nav-btn:hover { background: #2a2a5e; border-color: #00e676; }
+.nav-btn.primary { background: #00e676; color: #000; border-color: #00e676; font-weight: 600; }
+.nav-btn.primary:hover { background: #00c853; }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* Progress */
+.progress-wrap {
+    margin: 16px 0 8px;
+    background: #1a1a3e;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00e676, #00c853);
+    border-radius: 10px;
+    transition: width .3s;
+}
+
+/* Question grid */
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 5px;
+    margin-bottom: 16px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 4px;
+}
+.q-dot {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    background: #1a1a3e;
+    border: 1px solid #2a2a5e;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #aaa;
+    transition: all .15s;
+    min-width: 28px;
+}
+.q-dot:hover { border-color: #00e676; }
+.q-dot.correct-dot { background: #0a3a0a; border-color: #00e676; }
+.q-dot.wrong-dot { background: #3a0a0a; border-color: #ff5252; }
+.q-dot.current { border-color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.4); }
+
+/* Reset button */
+.reset-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #ff5252;
+    background: transparent;
+    color: #ff5252;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all .2s;
+    margin-left: auto;
+}
+.reset-btn:hover { background: #2a0a0a; }
+
+@media (max-width: 600px) {
+    .question-grid { grid-template-columns: repeat(10, 1fr); gap: 3px; }
+    .q-dot { font-size: 9px; min-width: 22px; border-radius: 4px; }
+    .quiz-card { padding: 20px 16px; }
+    .question-text { font-size: 15px; }
+    .option { font-size: 14px; padding: 11px 14px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📚 操作系统 MOOC 刷题</h1>
+        <div class="sub">选择题分类汇编 · 共 <span id="totalCount">100</span> 题</div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat"><div class="num" id="statDone">0</div><div class="label">已做</div></div>
+        <div class="stat"><div class="num" id="statCorrect">0</div><div class="label">正确 ✅</div></div>
+        <div class="stat"><div class="num" id="statWrong">0</div><div class="label">错误 ❌</div></div>
+        <div class="stat"><div class="num" id="statRate">-</div><div class="label">正确率</div></div>
+    </div>
+
+    <div class="part-filter" id="partFilter"></div>
+
+    <div class="question-grid" id="questionGrid"></div>
+
+    <div class="quiz-card" id="quizCard">
+        <div class="question-header">
+            <span class="question-tag" id="partTag"></span>
+            <span class="question-num" id="qNum"></span>
+        </div>
+        <div class="question-text" id="qText"></div>
+        <div class="options" id="options"></div>
+        <div class="explanation" id="explanation"></div>
+    </div>
+
+    <div class="nav-row">
+        <button class="nav-btn" id="btnPrev">◀ 上一题</button>
+        <button class="nav-btn primary" id="btnNext">下一题 ▶</button>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    "id": 0,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 1,
+    "text": "操作系统是对______进行管理的软件。",
+    "options": [
+      "软件",
+      "硬件",
+      "计算机资源",
+      "应用程序"
+    ],
+    "answer": "C",
+    "explanation": "操作系统作为系统软件的核心，其主要功能就是对计算机系统的所有软硬件资源进行统一管理和调度。"
+  },
+  {
+    "id": 1,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 2,
+    "text": "配置了操作系统的机器是一台比原来的物理机器功能更强的计算机，这样的计算机只是一台逻辑上的计算机，称为_______计算机。",
+    "options": [
+      "共享",
+      "真实",
+      "虚拟",
+      "并行"
+    ],
+    "answer": "C",
+    "explanation": "操作系统通过抽象和管理硬件资源，为用户提供一个更易用、功能更强的逻辑环境，即虚拟计算机。"
+  },
+  {
+    "id": 2,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 3,
+    "text": "_____不是一个操作系统环境。",
+    "options": [
+      "Solaris",
+      "Windows CE",
+      "Celeron",
+      "Linux"
+    ],
+    "answer": "C",
+    "explanation": "Solaris、Windows CE和Linux都是操作系统，而Celeron是Intel公司生产的处理器品牌，属于硬件。"
+  },
+  {
+    "id": 3,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 4,
+    "text": "____该操作系统的系统响应时间的重要性超过协同资源的利用率，它被广泛地应用于卫星控制、导弹发射、工业控制、飞机订票业务灯领域。",
+    "options": [
+      "批处理操作系统",
+      "分时操作系统",
+      "实时操作系统",
+      "多用户操作系统"
+    ],
+    "answer": "C",
+    "explanation": "实时操作系统以其严格的响应时间要求和高可靠性，被广泛应用于需要即时响应和控制的领域。"
+  },
+  {
+    "id": 4,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 5,
+    "text": "允许在一台主机上同时连接多个终端，各个用户可以通过各自的终端交互使用计算机，这样的操作系统是______。",
+    "options": [
+      "网络操作系统",
+      "分时操作系统",
+      "批处理操作系统",
+      "分布式操作系统"
+    ],
+    "answer": "B",
+    "explanation": "分时操作系统通过时间片轮转等机制，允许多个用户同时以交互方式使用同一台计算机。"
+  },
+  {
+    "id": 5,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 6,
+    "text": "如果分时系统的时间片一定，那么_____，则响应时间越长。",
+    "options": [
+      "内存越少",
+      "内存越多",
+      "用户数越多",
+      "用户数越少"
+    ],
+    "answer": "C",
+    "explanation": "在时间片一定的情况下，用户数越多，每个用户获得CPU的时间间隔就越长，导致响应时间增加。"
+  },
+  {
+    "id": 6,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 7,
+    "text": "系统调用是______。",
+    "options": [
+      "高级语言中的库程序",
+      "操作系统中的一条命令",
+      "操作系统向用户程序提供的接口",
+      "用户编写的一个子程序"
+    ],
+    "answer": "C",
+    "explanation": "系统调用是操作系统提供给应用程序的编程接口，允许应用程序请求操作系统服务，如文件操作、进程管理等。"
+  },
+  {
+    "id": 7,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 8,
+    "text": "实时操作系统必须在____内处理来自外部的事件。",
+    "options": [
+      "周转时间",
+      "规定时间",
+      "响应时间",
+      "调度时间"
+    ],
+    "answer": "B",
+    "explanation": "实时系统的主要特点是其对时间的高度敏感性，必须在严格规定的时间内完成任务。"
+  },
+  {
+    "id": 8,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 9,
+    "text": "实时系统_________。",
+    "options": [
+      "是依赖人为干预的监督和控制系统",
+      "实质上是批处理系统和分时系统的结合",
+      "必须既要及时响应、快速处理，又要有高可靠性和安全性",
+      "强调系统资源的利用率"
+    ],
+    "answer": "C",
+    "explanation": "实时系统对时间性、可靠性和安全性有极高的要求，以确保在限定时间内对外部事件做出正确响应。"
+  },
+  {
+    "id": 9,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 10,
+    "text": "用户程序的输入和输出操作实际上由______完成。",
+    "options": [
+      "操作系统",
+      "程序设计语言",
+      "编译系统",
+      "标准库程序"
+    ],
+    "answer": "A",
+    "explanation": "输入输出操作涉及硬件资源，因此必须通过操作系统提供的服务（系统调用）来完成，用户程序不能直接访问硬件。"
+  },
+  {
+    "id": 10,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 11,
+    "text": "在操作系统中，并发性是指________。",
+    "options": [
+      "若干个时间在不同时刻发生",
+      "若干个事件在同一时间间隔内发生",
+      "若干个事件在同一时刻发生",
+      "若干个时间在不同的时间间隔内发生"
+    ],
+    "answer": "B",
+    "explanation": "并发是指多个事件在同一时间段内宏观上同时发生，但在微观上是交替进行的。"
+  },
+  {
+    "id": 11,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 12,
+    "text": "若把操作系统看成计算机系统资源的管理者，下面的_____不属于操作系统所管理的资源。",
+    "options": [
+      "主存",
+      "CPU",
+      "中断",
+      "程序"
+    ],
+    "answer": "D",
+    "explanation": "操作系统管理硬件资源（如主存、CPU）和软件资源（如文件、设备），中断是一种机制，程序本身是需要被管理的资源，但选项D中“程序”表述不够具体，通常指程序执行实体（进程）。若指程序代码，则不是被操作系统直接作为\"资源\"管理的。"
+  },
+  {
+    "id": 12,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 13,
+    "text": "多道程序设计是指______。",
+    "options": [
+      "在一台处理机上并发运行多个程序",
+      "在一台处理机上同一时刻运行多个程序",
+      "在分布系统中同一时刻运行多个程序",
+      "在实时系统中并发运行多个程序"
+    ],
+    "answer": "A",
+    "explanation": "多道程序设计是在单处理器上通过并发执行的方式，宏观上同时运行多个程序。"
+  },
+  {
+    "id": 13,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 14,
+    "text": "提高处理器资源利用率的关键技术是_____。",
+    "options": [
+      "虚拟技术",
+      "交换技术",
+      "多道程序设计技术",
+      "SPOOLing技术"
+    ],
+    "answer": "C",
+    "explanation": "多道程序设计通过让多个程序共享CPU时间，提高了CPU的利用率。"
+  },
+  {
+    "id": 14,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 15,
+    "text": "操作系统中采用多道程序设计提高CPU和外部设备的_____。",
+    "options": [
+      "兼容性",
+      "利用率",
+      "可靠性",
+      "稳定性"
+    ],
+    "answer": "B",
+    "explanation": "多道程序设计使得CPU在等待I/O操作完成时可以执行其他程序，从而提高了CPU和外部设备的利用率。"
+  },
+  {
+    "id": 15,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 16,
+    "text": "引入多道程序设计技术的前提条件之一是系统具有______。",
+    "options": [
+      "分时功能",
+      "中断功能",
+      "多个CPU",
+      "多个终端"
+    ],
+    "answer": "B",
+    "explanation": "中断功能是实现多道程序设计的基础，它允许CPU在执行一个程序时，能够响应I/O等事件，并切换到其他程序执行。"
+  },
+  {
+    "id": 16,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 17,
+    "text": "当计算机提供了管态和目态时，_____必须在管态下执行。",
+    "options": [
+      "输入/输出指令",
+      "算术运算指令",
+      "从内存取数的指令",
+      "把运算结果送入内存的指令"
+    ],
+    "answer": "A",
+    "explanation": "输入/输出指令直接操作硬件设备，为了保护系统安全，它们被设计为特权指令，只能在管态（核心态）下执行。"
+  },
+  {
+    "id": 17,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 18,
+    "text": "当CPU执行操作系统代码时，称处理机处于______。",
+    "options": [
+      "目态",
+      "管态",
+      "自由态",
+      "就绪态"
+    ],
+    "answer": "B",
+    "explanation": "管态（或核心态）是操作系统执行特权指令、管理系统资源的状态。"
+  },
+  {
+    "id": 18,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 19,
+    "text": "特权指令是指_____。",
+    "options": [
+      "其执行可能有损系统的安全性",
+      "控制指令",
+      "机器指令",
+      "系统管理员可用的指令"
+    ],
+    "answer": "A",
+    "explanation": "特权指令是那些可能对系统安全或稳定性产生影响的指令，例如直接访问硬件、修改系统配置等，只能在管态下执行。"
+  },
+  {
+    "id": 19,
+    "part": 1,
+    "partName": "第一部分",
+    "num": 20,
+    "text": "计算机系统中判断是否有中断事件发生应该在_____。",
+    "options": [
+      "由用户态转入核心态时",
+      "执行P操作后",
+      "进程切换时",
+      "执行完一条指令后"
+    ],
+    "answer": "D",
+    "explanation": "CPU在执行完每条指令后，都会检查是否有中断请求，如果有则响应中断。"
+  },
+  {
+    "id": 20,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 1,
+    "text": "____优先权是在创建进程时确定的，确定之后在整个进程运行期间不再改变。",
+    "options": [
+      "静态",
+      "动态",
+      "先来先服务",
+      "短作业"
+    ],
+    "answer": "A",
+    "explanation": "静态优先权在进程创建时确定，并在整个生命周期中保持不变。"
+  },
+  {
+    "id": 21,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 2,
+    "text": "下列进程状态变化中，______变化是不可能发生的。",
+    "options": [
+      "运行—>等待",
+      "等待—>运行",
+      "运行—>就绪",
+      "等待—>就绪"
+    ],
+    "answer": "B",
+    "explanation": "进程从等待状态不能直接转换为运行状态，必须先进入就绪状态，等待调度器分配CPU。"
+  },
+  {
+    "id": 22,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 3,
+    "text": "当_____时，进程从运行状态变为就绪状态。",
+    "options": [
+      "时间片到",
+      "等待某一事件",
+      "进程被调度程序选中",
+      "等待的事件发生"
+    ],
+    "answer": "A",
+    "explanation": "在分时系统中，当一个进程的时间片用完而未完成任务时，它会被剥夺CPU，从运行状态转换为就绪状态。"
+  },
+  {
+    "id": 23,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 4,
+    "text": "进程管理中，当_____，进程从阻塞态变成就绪态。",
+    "options": [
+      "进程被进程调度程序选中",
+      "时间片用完",
+      "等待的事件发生",
+      "等待一个事件"
+    ],
+    "answer": "C",
+    "explanation": "当进程等待的事件发生时，它就可以从阻塞态（等待态）解除阻塞，进入就绪态。"
+  },
+  {
+    "id": 24,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 5,
+    "text": "下面对进程的描述中，错误的是____。",
+    "options": [
+      "进程是动态的概念",
+      "进程是有生命周期的",
+      "进程是指令的集合",
+      "进程执行需要处理机"
+    ],
+    "answer": "C",
+    "explanation": "进程是程序的执行过程，而程序才是指令的集合。进程是动态的、有生命周期的实体，并且需要处理机来执行。"
+  },
+  {
+    "id": 25,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 6,
+    "text": "下面所述步骤中，_____不是创建进程所必需的。",
+    "options": [
+      "将进程控制块链入就绪队列",
+      "为进程分配内存",
+      "由调度程序为进程分配CPU",
+      "建立一个进程控制块"
+    ],
+    "answer": "C",
+    "explanation": "分配CPU是调度程序的职责，在进程创建完成后，才由调度程序决定何时为其分配CPU。其他选项都是进程创建的必要步骤。"
+  },
+  {
+    "id": 26,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 7,
+    "text": "多道程序环境下，操作系统分配资源以____为基本单位。",
+    "options": [
+      "进程",
+      "线程",
+      "指令",
+      "程序"
+    ],
+    "answer": "A",
+    "explanation": "在传统的操作系统中，进程是资源分配和调度的基本单位。"
+  },
+  {
+    "id": 27,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 8,
+    "text": "下述哪一个选项体现了原语的主要特点_______。",
+    "options": [
+      "不可分割性",
+      "共享性",
+      "并发性",
+      "异步性"
+    ],
+    "answer": "A",
+    "explanation": "原语是不可中断的操作序列，其执行是原子性的，即不可分割。"
+  },
+  {
+    "id": 28,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 9,
+    "text": "关于内核级线程，以下描述不正确的是_______。",
+    "options": [
+      "控制权从一个线程传送到另一个线程时不需要用户态-内核态-用户态的模式切换",
+      "内核可以将处理器调度直接分配给某个内核级线程",
+      "建立和维护线程的数据结构及保存每个线程的入口",
+      "可以将一个进程的多个线程分派到多个处理器，能够发挥多处理器并行工作的优势"
+    ],
+    "answer": "A",
+    "explanation": "内核级线程的调度和管理由操作系统内核完成，因此线程间的切换通常涉及用户态到内核态的模式切换。用户级线程的切换才不需要模式切换。"
+  },
+  {
+    "id": 29,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 10,
+    "text": "一个进程被唤醒意味着____。",
+    "options": [
+      "进程变为就绪状态",
+      "它的优先权变为最大",
+      "其PCB移至等待队列队首",
+      "该进程重新占有了CPU"
+    ],
+    "answer": "A",
+    "explanation": "进程被唤醒后，表示它已经满足了运行条件，可以进入就绪队列，等待调度。"
+  },
+  {
+    "id": 30,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 11,
+    "text": "在引入线程的操作系统中，资源分配的基本单位是____。",
+    "options": [
+      "程序",
+      "作业",
+      "进程",
+      "线程"
+    ],
+    "answer": "C",
+    "explanation": "即使引入了线程，进程仍然是资源分配的基本单位，而线程是独立调度的基本单位。"
+  },
+  {
+    "id": 31,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 12,
+    "text": "在下述关于父进程和子进程的叙述中，正确的是_____。",
+    "options": [
+      "父进程和子进程可以并发执行",
+      "撤销子进程时，应该同时撤销父进程",
+      "父进程创建了子进程，因此父进程执行完了，子进程才能运行",
+      "撤销父进程时，应该同时撤销子进程"
+    ],
+    "answer": "A",
+    "explanation": "父进程和子进程都是独立的执行实体，可以并发执行。撤销父进程时，通常会同时撤销其所有子进程（级联终止），但反之不成立。"
+  },
+  {
+    "id": 32,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 13,
+    "text": "对进程的管理和控制使用_______。",
+    "options": [
+      "信号量",
+      "信箱通信",
+      "指令",
+      "原语"
+    ],
+    "answer": "D",
+    "explanation": "操作系统通过原语来实现对进程的管理和控制，例如创建、撤销、阻塞、唤醒等操作。"
+  },
+  {
+    "id": 33,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 14,
+    "text": "所谓“可重入”程序是指______。",
+    "options": [
+      "能够被多个进程共享的程序",
+      "无限循环程序",
+      "不能够被多个程序同时调用的程序",
+      "在执行过程中其代码自身会发生变化的程序"
+    ],
+    "answer": "A",
+    "explanation": "可重入程序是指在任何时刻都能够被多个进程同时调用和执行，而不会因并发执行而产生错误，通常要求代码是纯代码（不可修改）。"
+  },
+  {
+    "id": 34,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 15,
+    "text": "原语是______。",
+    "options": [
+      "不可中断的指令序列",
+      "运行在用户态下的过程",
+      "操作系统的内核",
+      "可中断的指令序列"
+    ],
+    "answer": "A",
+    "explanation": "原语是操作系统内核中提供的一种特殊的指令序列，其执行是原子性的，在执行过程中不允许被中断。"
+  },
+  {
+    "id": 35,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 16,
+    "text": "在进程调度算法中，对短进程不利的是_____。",
+    "options": [
+      "高响应比优先算法",
+      "短进程优先调度算法",
+      "先来先服务算法",
+      "多级反馈队列调度算法"
+    ],
+    "answer": "C",
+    "explanation": "先来先服务（FCFS）算法对短进程不利，因为长进程可能先到达并占据CPU很长时间，导致短进程长时间等待。"
+  },
+  {
+    "id": 36,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 17,
+    "text": "一个可共享的程序在执行过程中是不能被修改的，这样的程序代码应该是­_____。",
+    "options": [
+      "可重入代码",
+      "封闭的代码",
+      "可再现代码",
+      "可执行代码"
+    ],
+    "answer": "A",
+    "explanation": "可重入代码通常是纯代码，即在执行过程中不会修改自身，因此可以被多个进程共享而不会出现问题。"
+  },
+  {
+    "id": 37,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 18,
+    "text": "在进程管理中，当_____时，进程状态从运行态转换到就绪态。",
+    "options": [
+      "等待某一事件发生",
+      "时间片用完",
+      "进程被调度程序选中",
+      "等待的事件发生"
+    ],
+    "answer": "B",
+    "explanation": "当进程的时间片用完，CPU调度器会剥夺其CPU，将其置为就绪状态。"
+  },
+  {
+    "id": 38,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 19,
+    "text": "Solaris的多线程的实现方式为______。",
+    "options": [
+      "纯用户级多线程",
+      "纯内核级线程",
+      "混合式",
+      "单线程结构进程"
+    ],
+    "answer": "C",
+    "explanation": "Solaris操作系统采用了混合式多线程模型，结合了用户级线程和内核级线程的优点。"
+  },
+  {
+    "id": 39,
+    "part": 2,
+    "partName": "第二部分",
+    "num": 20,
+    "text": "在UNIX系统中运行以下程序，最多可再产生出______进程? main( ){ fork( ); /*←pc(程序计数器)，进程A fork( ); fork( ); }",
+    "options": [
+      "9",
+      "7",
+      "5",
+      "3"
+    ],
+    "answer": "B",
+    "explanation": "每次fork()调用都会使当前进程复制出一个子进程。\n初始1个进程（A）。\n第一次fork()：A产生B。此时有A, B共2个进程。\n第二次fork()：A产生C，B产生D。此时有A, B, C, D共4个进程。\n第三次fork()：A产生E，B产生F，C产生G，D产生H。此时有A, B, C, D, E, F, G, H共8个进程。\n题目问“最多可**再**产生出”多少个进程，即除了初始进程A之外，一共产生了 $2^3 - 1 = 7$ 个子进程。"
+  },
+  {
+    "id": 40,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 1,
+    "text": "静态重定位的时机是____。",
+    "options": [
+      "程序编译时",
+      "程序链接时",
+      "程序运行时",
+      "程序装入时"
+    ],
+    "answer": "D",
+    "explanation": "静态重定位在程序装入内存时进行，一旦装入，程序的物理地址就固定不变。"
+  },
+  {
+    "id": 41,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 2,
+    "text": "能够装入内存任何位置的代码程序必须是____。",
+    "options": [
+      "可静态链接的",
+      "可动态链接的",
+      "可定位的",
+      "可重入的"
+    ],
+    "answer": "C",
+    "explanation": "可定位（relocatable）程序是指其地址可以在装入内存时进行调整，从而可以在内存中的任何位置加载和执行。"
+  },
+  {
+    "id": 42,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 3,
+    "text": "在可变式分区管理中，采用内存移动技术的目的是_____。",
+    "options": [
+      "便于地址转换",
+      "合并空闲区",
+      "合并分配区",
+      "增加主存容量"
+    ],
+    "answer": "B",
+    "explanation": "内存移动（或紧凑）技术用于将分散的空闲区合并成一个大的连续空闲区，以减少外部碎片，提高内存利用率。"
+  },
+  {
+    "id": 43,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 4,
+    "text": "在存储管理中，采用覆盖与交换技术的目的是____。",
+    "options": [
+      "物理上扩充主存容量",
+      "代码在主存中共享",
+      "提高CPU效率",
+      "减少程序占用的主存空间"
+    ],
+    "answer": "A",
+    "explanation": "覆盖和交换技术都是为了在物理内存容量不足时，通过将程序的不同部分或不同程序的全部内容在内存和辅存之间来回移动，从而使得逻辑上更大的程序能够运行，达到“物理上扩充主存容量”的效果。"
+  },
+  {
+    "id": 44,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 5,
+    "text": "在分区存储管理中，下面的____最有可能使得高地址空间变成为大的空闲区。",
+    "options": [
+      "首次适应法",
+      "最坏适应法",
+      "循环首次适应法",
+      "最佳适应法"
+    ],
+    "answer": "B",
+    "explanation": "最坏适应法（Worst Fit）总是选择最大的空闲分区进行分配，这样剩下的空闲区仍然是相对较大的，而较小的空闲区会不断分散在高地址或低地址，但从整体策略来看，它倾向于保留大的空闲区。"
+  },
+  {
+    "id": 45,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 6,
+    "text": "以下哪种_____存储管理能提供虚存。",
+    "options": [
+      "覆盖",
+      "分区方式",
+      "可重定位分区管理",
+      "页式"
+    ],
+    "answer": "D",
+    "explanation": "虚拟存储器最主要和常见的实现方式是页式存储管理，它通过将程序的逻辑地址空间划分为页，并映射到物理内存中的块，实现了虚拟地址空间大于物理地址空间的功能。"
+  },
+  {
+    "id": 46,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 7,
+    "text": "在分页式虚存中，分页由_____实现。",
+    "options": [
+      "编译器",
+      "系统调用",
+      "操作系统",
+      "程序员"
+    ],
+    "answer": "C",
+    "explanation": "分页的实现是操作系统负责的底层机制，用户（程序员）通常无需直接参与。"
+  },
+  {
+    "id": 47,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 8,
+    "text": "在虚拟页式存储管理方案中，下面_____完成将页面调入内存的工作。",
+    "options": [
+      "缺页中断处理",
+      "紧缩技术利用",
+      "工作集模型应用",
+      "页面淘汰过程"
+    ],
+    "answer": "A",
+    "explanation": "当访问的页面不在内存时，会发生缺页中断，由操作系统中的缺页中断处理程序负责将所需的页面从辅存调入内存。"
+  },
+  {
+    "id": 48,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 9,
+    "text": "采用_____不会产生内部碎片。",
+    "options": [
+      "段页式",
+      "分段式存储管理",
+      "固定分区式存储管理",
+      "分页式存储管理"
+    ],
+    "answer": "B",
+    "explanation": "分段式存储管理中，段的大小是可变的，根据程序的逻辑结构确定，因此不会产生内部碎片。固定分区和页式存储管理都可能产生内部碎片。"
+  },
+  {
+    "id": 49,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 10,
+    "text": "采用________存储管理不会产生外部碎片。",
+    "options": [
+      "可变分区",
+      "分页式",
+      "分段式",
+      "虚拟分段式"
+    ],
+    "answer": "B",
+    "explanation": "分页式存储管理将物理内存划分为固定大小的页框，程序的页面可以离散地装入这些页框，不会产生外部碎片，但会产生内部碎片。"
+  },
+  {
+    "id": 50,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 11,
+    "text": "一台机器有48位虚地址和32位物理地址，若页长为8KB，如果设计一个反置页表，则有______个页表项。",
+    "options": [
+      "2^19",
+      "2^35",
+      "2^16",
+      "2^32"
+    ],
+    "answer": "C",
+    "explanation": "物理地址空间大小：$2^{32}$ 字节。\n页长：$8 \\text{KB} = 2^3 \\times 2^{10} \\text{B} = 2^{13}$ 字节。\n反置页表中的页表项数量等于物理内存中的页框数量。\n页框数量 = 物理地址空间大小 / 页长 = $2^{32} / 2^{13} = 2^{19}$。\n因此，反置页表有 $2^{19}$ 个页表项。"
+  },
+  {
+    "id": 51,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 12,
+    "text": "作业在执行中发生了缺页中断，经操作系统处理后，应该让其执行_____指令。",
+    "options": [
+      "被中断的前一条",
+      "被中断的后一条",
+      "启动时的第一条",
+      "被中断的"
+    ],
+    "answer": "D",
+    "explanation": "缺页中断是由于程序访问的页面不在内存中引起的，处理完缺页中断（将页面调入内存）后，程序应该从引起中断的**同一条**指令处重新开始执行。"
+  },
+  {
+    "id": 52,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 13,
+    "text": "在请求分页存储管理中，当访问的页面不在内存时，便产生缺页中断，缺页中断是属于____。",
+    "options": [
+      "访管中断",
+      "程序中断",
+      "外中断",
+      "I/O中断"
+    ],
+    "answer": "B",
+    "explanation": "缺页中断是由程序执行过程中内部事件（访问非法地址或不在内存的页面）引起的，属于程序中断的一种。"
+  },
+  {
+    "id": 53,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 14,
+    "text": "通常所说的\"存储保护\"的基本含义是____。",
+    "options": [
+      "防止程序被人偷看",
+      "防止程序间相互越界访问",
+      "防止程序在内存丢失",
+      "防止存储器硬件受损"
+    ],
+    "answer": "B",
+    "explanation": "存储保护是为了确保各个进程在内存中有独立的地址空间，防止一个进程非法访问或修改其他进程的内存区域。"
+  },
+  {
+    "id": 54,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 15,
+    "text": "LRU置换算法所基于的思想是____。",
+    "options": [
+      "在最近的过去用得少的在最近的将来也用得少",
+      "在最近的过去很久未使用的在最近的将来也不会使用",
+      "在最近的过去用得多的在最近的将来也用得多",
+      "在最近的过去很久未使用的在最近的将来会使用"
+    ],
+    "answer": "A",
+    "explanation": "LRU（最近最少使用）算法的核心思想是，如果一个页面在最近一段时间内很少被使用，那么它在未来也很可能不会被使用，因此应该被置换出去。"
+  },
+  {
+    "id": 55,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 16,
+    "text": "在下面关于虚拟存储器的叙述中，正确的是____。",
+    "options": [
+      "要求程序运行前不必全部装入内存且在运行过程中不必一直驻留在内存",
+      "要求程序运行前不必全部装入内存但是在运行过程中必须一直驻留在内存",
+      "要求程序运行前必须全部装入内存且在运行过程中一直驻留在内存",
+      "要求程序运行前必须全部装入内存但在运行过程中不必一直驻留在内存"
+    ],
+    "answer": "A",
+    "explanation": "虚拟存储器的核心特征是按需调入，即程序不必全部装入内存即可运行，并且在运行过程中，不活跃的部分可以被置换到辅存。"
+  },
+  {
+    "id": 56,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 17,
+    "text": "虚存的可行性基础是____。",
+    "options": [
+      "程序执行的并发性",
+      "程序执行的离散性",
+      "程序执行的顺序性",
+      "程序执行的局部性"
+    ],
+    "answer": "D",
+    "explanation": "虚拟存储器之所以可行，主要依赖于程序执行的局部性原理，即在一段时间内，程序只访问其地址空间的一小部分。"
+  },
+  {
+    "id": 57,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 18,
+    "text": "把逻辑地址转变为内存的物理地址的过程称作____。",
+    "options": [
+      "连接",
+      "重定位或地址映射",
+      "运行",
+      "编译"
+    ],
+    "answer": "B",
+    "explanation": "地址映射是内存管理单元（MMU）根据页表或段表将程序生成的逻辑地址转换为物理内存地址的过程，也称为重定位。"
+  },
+  {
+    "id": 58,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 19,
+    "text": "假定某页式管理系统中，主存128KB，分成32块，块号为0，1，2，3，...，31；某作业有5块，其页号为0，1，2，3，4，被分别装入主存的3，8，4，6，9块中。有一逻辑地址为[3，70]。试求出相应的物理地址_______（其中方括号中的第一个元素为页号，第二个元素为页内地址，按十进制计算）。",
+    "options": [
+      "24576",
+      "14646",
+      "34576",
+      "24646"
+    ],
+    "answer": "D",
+    "explanation": "1.  **计算块大小（页大小）：**\n    主存总容量 = 128 KB\n    主存块数 = 32 块\n    每块大小 = 128 KB / 32 = 4 KB。\n    页内地址 70，表示在页内的偏移量。\n2.  **查找页表：**\n    逻辑地址的页号为 3。\n    根据题目，页号 3 对应的物理块号是 6。\n3.  **计算物理地址：**\n    物理地址 = 物理块号 × 每块大小 + 页内地址\n    物理地址 = 6 × 4 KB + 70 B\n    物理地址 = 24 KB + 70 B\n    换算成字节：24 KB = 24 * 1024 B = 24576 B\n    物理地址 = 24576 B + 70 B = 24646 B。"
+  },
+  {
+    "id": 59,
+    "part": 3,
+    "partName": "第三部分",
+    "num": 20,
+    "text": "页面替换算法_____有可能会产生Belady异常现象。",
+    "options": [
+      "OPT",
+      "LRU",
+      "FIFO",
+      "Clock"
+    ],
+    "answer": "C",
+    "explanation": "Belady异常是指在某些页面替换算法中，当分配的物理页框数增加时，缺页次数反而增加的现象。FIFO（先进先出）算法是唯一可能产生Belady异常的常用算法。"
+  },
+  {
+    "id": 60,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 1,
+    "text": "按____分类可将设备分为块设备和字符设备。",
+    "options": [
+      "从属关系",
+      "操作特性",
+      "信息交换单位",
+      "共享属性"
+    ],
+    "answer": "C",
+    "explanation": "块设备以固定大小的数据块进行存取（如磁盘），字符设备以单个字符为单位进行存取（如键盘、打印机），这是根据信息交换单位来划分的。"
+  },
+  {
+    "id": 61,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 2,
+    "text": "CPU输出数据的速度远远高于打印机的打印速度，为了解决这一矛盾，可采用____。",
+    "options": [
+      "虚存技术",
+      "并行技术",
+      "缓冲技术",
+      "覆盖技术"
+    ],
+    "answer": "C",
+    "explanation": "缓冲技术通过在高速设备和低速设备之间设置缓冲区，可以平衡它们之间的速度差异，提高I/O效率。"
+  },
+  {
+    "id": 62,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 3,
+    "text": "通过硬件和软件的功能扩充，把原来独占的设备改造成能为若干用户共享的设备，这种设备称为____。",
+    "options": [
+      "存储设备",
+      "虚拟设备",
+      "系统设备",
+      "用户设备"
+    ],
+    "answer": "B",
+    "explanation": "虚拟设备（如SPOOLing技术）通过软件模拟，将独占性设备（如打印机）虚拟为可共享的设备，提高其利用率。"
+  },
+  {
+    "id": 63,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 4,
+    "text": "通道又称I/O处理机，它用于实现____之间的信息传输。",
+    "options": [
+      "CPU与外设",
+      "内存与外设",
+      "CPU与外存",
+      "内存与外存"
+    ],
+    "answer": "B",
+    "explanation": "通道是一种专门的I/O处理器，负责主存与I/O设备之间的数据传输，从而解放CPU。"
+  },
+  {
+    "id": 64,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 5,
+    "text": "为了使多个进程能有效地同时处理输入和输出，最好使用____结构的缓冲技术。",
+    "options": [
+      "双缓冲",
+      "单缓冲",
+      "循环缓冲",
+      "缓冲池"
+    ],
+    "answer": "D",
+    "explanation": "缓冲池是由多个缓冲区组成的共享区域，可以更灵活、高效地支持多个进程的并发I/O操作。"
+  },
+  {
+    "id": 65,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 6,
+    "text": "如果I/O设备与存储设备进行数据交换不经过CPU来完成，这种数据交换方式是____。",
+    "options": [
+      "DMA方式",
+      "中断方式",
+      "无条件存取方式",
+      "程序轮询"
+    ],
+    "answer": "A",
+    "explanation": "DMA（直接内存访问）方式允许I/O设备直接与内存进行数据交换，而不需要CPU的干预，大大提高了数据传输效率。"
+  },
+  {
+    "id": 66,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 7,
+    "text": "在中断处理中，输入/输出中断可能是指____：①设备出错，②数据传输结束。",
+    "options": [
+      "都不是",
+      "②",
+      "①",
+      "①和②"
+    ],
+    "answer": "D",
+    "explanation": "I/O中断通常用于通知CPU设备完成数据传输或设备发生错误。"
+  },
+  {
+    "id": 67,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 8,
+    "text": "在采用SPOOLing技术的系统中，用户的打印结果首先被送到____。",
+    "options": [
+      "磁盘固定区域",
+      "终端",
+      "打印机",
+      "内存固定区域"
+    ],
+    "answer": "A",
+    "explanation": "SPOOLing技术将用户的I/O请求（如打印）先缓冲到磁盘的特定区域，待设备空闲时再进行处理。"
+  },
+  {
+    "id": 68,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 9,
+    "text": "大多数低速设备都属于____设备。",
+    "options": [
+      "独享",
+      "虚拟",
+      "SPOOLing",
+      "共享"
+    ],
+    "answer": "D",
+    "explanation": "许多低速设备，如打印机，通常是共享设备，通过SPOOLing等技术实现多用户共享。但“独享”是相对的，更准确的说，低速设备很多时候会被通过虚拟化或缓冲机制进行共享。这里更侧重于，它们通常是需要被共享的。"
+  },
+  {
+    "id": 69,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 10,
+    "text": "____是直接存取的存储设备。",
+    "options": [
+      "磁盘",
+      "键盘显示终端",
+      "磁带",
+      "打印机"
+    ],
+    "answer": "A",
+    "explanation": "磁盘是一种直接存取设备，可以随机访问其上的任何数据块。磁带是顺序存取设备。"
+  },
+  {
+    "id": 70,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 11,
+    "text": "操作系统中的SPOOLing技术，实质是指____转化为共享设备的技术。",
+    "options": [
+      "独占设备",
+      "脱机设备",
+      "块设备",
+      "虚拟设备"
+    ],
+    "answer": "A",
+    "explanation": "SPOOLing通过模拟并发，将物理上的独占设备（如打印机）虚拟成多个用户可以同时“使用”的共享设备。"
+  },
+  {
+    "id": 71,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 12,
+    "text": "在操作系统中，____指的是一种硬件机制。",
+    "options": [
+      "通道技术",
+      "内存覆盖技术",
+      "缓冲池",
+      "SPOOLing技术"
+    ],
+    "answer": "A",
+    "explanation": "通道（Channel）是计算机体系结构中的一个硬件组成部分，用于实现I/O操作与CPU的并行。其他选项都是软件或软件与硬件结合的技术。"
+  },
+  {
+    "id": 72,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 13,
+    "text": "在操作系统中，用户程序申请使用I/O设备时，通常采用____。",
+    "options": [
+      "独占设备名",
+      "逻辑设备名",
+      "虚拟设备名",
+      "物理设备名"
+    ],
+    "answer": "B",
+    "explanation": "操作系统提供设备独立性，用户程序通过逻辑设备名来请求I/O操作，操作系统负责将逻辑设备名映射到实际的物理设备。"
+  },
+  {
+    "id": 73,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 14,
+    "text": "采用假脱机技术，将磁盘的一部分作为公共缓冲区以代替打印机，用户对打印机的操作实际上是对磁盘的存储操作，用以代替打印机的部分是____。",
+    "options": [
+      "共享设备",
+      "虚拟设备",
+      "独占设备",
+      "一般物理设备"
+    ],
+    "answer": "B",
+    "explanation": "假脱机（SPOOLing）技术通过在磁盘上模拟打印机，使得多个用户可以同时向“打印机”输出，这个被模拟的打印机就是虚拟设备。"
+  },
+  {
+    "id": 74,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 15,
+    "text": "___算法是设备分配常用的一种算法。",
+    "options": [
+      "最佳适应",
+      "短作业优先",
+      "首次适应",
+      "先来先服务"
+    ],
+    "answer": "D",
+    "explanation": "先来先服务（FCFS）是一种简单且常用的设备分配算法，特别是对于那些按顺序请求的设备。"
+  },
+  {
+    "id": 75,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 16,
+    "text": "将系统中的每一台设备按某种原则进行统一的编号，这些编号作为区分硬件和识别设备的代号，该编号称为设备的____。",
+    "options": [
+      "相对号",
+      "绝对号",
+      "类型号",
+      "符号名"
+    ],
+    "answer": "B",
+    "explanation": "绝对号是设备在系统中的唯一标识符，通常是硬件相关的物理地址或编号。"
+  },
+  {
+    "id": 76,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 17,
+    "text": "通道程序是____。",
+    "options": [
+      "可以由高级语言编写",
+      "由一系列通道指令组成",
+      "由一系列机器指令组成",
+      "就是通道控制器"
+    ],
+    "answer": "B",
+    "explanation": "通道程序是由一系列通道指令（而非CPU的机器指令）组成的，用于控制通道进行数据传输。"
+  },
+  {
+    "id": 77,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 18,
+    "text": "I/O软件的分层结构中，______负责将把用户提交的逻辑I/O请求转化为物理I/O操作的启动和执行。",
+    "options": [
+      "用户空间的I/O软件",
+      "独立于设备的I/O软件",
+      "设备驱动程序",
+      "I/O中断处理程序"
+    ],
+    "answer": "C",
+    "explanation": "设备驱动程序是I/O软件层次中的最底层，直接与硬件设备进行交互，负责设备的具体操作和控制。"
+  },
+  {
+    "id": 78,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 19,
+    "text": "使用SPOOLing系统的目的是为了提高______的使用效率。",
+    "options": [
+      "I/O设备",
+      "内存",
+      "CPU",
+      "操作系统"
+    ],
+    "answer": "A",
+    "explanation": "SPOOLing主要通过缓和CPU与慢速I/O设备之间的速度矛盾，提高慢速I/O设备的利用率。"
+  },
+  {
+    "id": 79,
+    "part": 4,
+    "partName": "第四部分",
+    "num": 20,
+    "text": "下列算法中，用于磁盘移臂调度的是_____。",
+    "options": [
+      "优先级高者优先算法",
+      "LRU算法",
+      "时间片轮转法",
+      "最短寻找时间优先算法"
+    ],
+    "answer": "D",
+    "explanation": "最短寻找时间优先（SSTF）算法是磁盘移臂调度的一种常见算法，旨在最小化磁头移动的总距离。"
+  },
+  {
+    "id": 80,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 1,
+    "text": "Unix系统中，文件的索引结构存放在_________中。",
+    "options": [
+      "目录项",
+      "超级块",
+      "inode节点",
+      "空闲块"
+    ],
+    "answer": "C",
+    "explanation": "在Unix文件系统中，i-node（索引节点）存储了文件的所有元数据信息，包括文件的数据块地址。"
+  },
+  {
+    "id": 81,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 2,
+    "text": "操作系统中对文件进行管理的部分叫做____。",
+    "options": [
+      "数据存储系统",
+      "数据库系统",
+      "文件系统",
+      "检索系统"
+    ],
+    "answer": "C",
+    "explanation": "文件系统是操作系统中负责管理文件的部分，它提供文件的存储、组织、访问和保护等功能。"
+  },
+  {
+    "id": 82,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 3,
+    "text": "为了解决不同用户文件的“命名冲突”问题，通常在文件系统中采用____。",
+    "options": [
+      "多级目录",
+      "索引",
+      "路径",
+      "约定的方法"
+    ],
+    "answer": "A",
+    "explanation": "多级目录结构允许不同用户或不同目录下的文件使用相同的名称，通过不同的路径来区分。"
+  },
+  {
+    "id": 83,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 4,
+    "text": "无结构文件的含义是________。",
+    "options": [
+      "索引文件",
+      "索引顺序文件",
+      "变长记录的文件",
+      "流式文件"
+    ],
+    "answer": "D",
+    "explanation": "无结构文件通常指的是流式文件，它被看作是一个简单的字节流，没有内部的记录结构。"
+  },
+  {
+    "id": 84,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 5,
+    "text": "下列文件中不属于物理文件的是_______。",
+    "options": [
+      "链接文件",
+      "索引文件",
+      "连续文件",
+      "记录式文件"
+    ],
+    "answer": "D",
+    "explanation": "记录式文件描述的是文件的逻辑结构，即文件由一系列逻辑记录组成。链接文件、索引文件、连续文件则描述的是文件的物理存储方式。"
+  },
+  {
+    "id": 85,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 6,
+    "text": "文件系统的主要目的是____。",
+    "options": [
+      "实现虚拟存储",
+      "提高外存的读写速度",
+      "用于存储系统文件",
+      "实现对文件的按名存取"
+    ],
+    "answer": "D",
+    "explanation": "文件系统最核心的功能是提供“按名存取”的能力，即用户可以通过文件名方便地访问文件，而无需关心其物理存储位置。"
+  },
+  {
+    "id": 86,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 7,
+    "text": "下列文件中属于逻辑结构的文件是____文件。",
+    "options": [
+      "库文件",
+      "系统文件",
+      "连续文件",
+      "流式文件"
+    ],
+    "answer": "D",
+    "explanation": "流式文件和记录式文件是文件的两种逻辑结构。库文件和系统文件是按用途分类的文件。连续文件是物理结构。"
+  },
+  {
+    "id": 87,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 8,
+    "text": "文件系统采用多级目录结构后，对于不同用户的文件，其文件名____。",
+    "options": [
+      "可以相同也可以不同",
+      "受系统约束",
+      "应该相同",
+      "应该不同"
+    ],
+    "answer": "A",
+    "explanation": "多级目录结构允许在不同目录下存在同名文件，只要它们的完整路径名不同即可。"
+  },
+  {
+    "id": 88,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 9,
+    "text": "文件目录的主要作用是________。",
+    "options": [
+      "提高速度",
+      "按名存取",
+      "节省空间",
+      "提高外存利用率"
+    ],
+    "answer": "B",
+    "explanation": "文件目录的主要功能是提供文件的“按名存取”能力，它存储了文件名与文件物理位置之间的映射关系。"
+  },
+  {
+    "id": 89,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 10,
+    "text": "在文件系统中，文件的不同物理结构有不同的优缺点。在下列文件的物理结构中，______具有直接读写文件任意一个记录的能力，又提高了文件存储空间的利用率。",
+    "options": [
+      "链接结构",
+      "索引结构",
+      "Hash结构",
+      "顺序结构"
+    ],
+    "answer": "B",
+    "explanation": "索引结构通过索引表记录文件块的物理地址，可以实现对文件任意记录的直接访问（随机存取），并且可以分散存储，提高空间利用率。"
+  },
+  {
+    "id": 90,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 11,
+    "text": "文件系统用____组织文件。",
+    "options": [
+      "路径",
+      "堆栈",
+      "目录",
+      "指针"
+    ],
+    "answer": "C",
+    "explanation": "文件系统主要通过目录来组织文件，目录中包含文件名和指向文件物理位置的信息。"
+  },
+  {
+    "id": 91,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 12,
+    "text": "文件路径名是指____。",
+    "options": [
+      "一系列的目录文件名和该文件的文件名",
+      "目录文件名和文件名的集合",
+      "从根目录到文件所经历的路径中的各符号名的集合",
+      "文件名和文件扩展名"
+    ],
+    "answer": "C",
+    "explanation": "文件路径名是从根目录（或当前目录）开始，到目标文件为止，所有目录名和文件名组成的字符串。"
+  },
+  {
+    "id": 92,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 13,
+    "text": "一个文件的相对路径名是从____开始，逐步沿着各级子目录追溯，最后到指定文件的整个通路上所有子目录名组成的一个字符串。",
+    "options": [
+      "当前目录",
+      "根目录",
+      "二级目录",
+      "多级目录"
+    ],
+    "answer": "A",
+    "explanation": "相对路径名是相对于当前工作目录的路径，而绝对路径名是从根目录开始的。"
+  },
+  {
+    "id": 93,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 14,
+    "text": "对一个文件的访问，常由____共同限制。",
+    "options": [
+      "用户访问权限和文件属性",
+      "优先级和文件属性",
+      "用户访问权限和用户优先级",
+      "文件属性的口令"
+    ],
+    "answer": "A",
+    "explanation": "文件的访问控制通常由两方面决定：一是用户自身的访问权限（读、写、执行等），二是文件本身的属性（如所有者、组、权限位等）。"
+  },
+  {
+    "id": 94,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 15,
+    "text": "存放在磁盘上的文件____。",
+    "options": [
+      "只能随机访问",
+      "不能随机访问",
+      "既可随机访问，又可顺序访问",
+      "只能顺序访问"
+    ],
+    "answer": "C",
+    "explanation": "磁盘是一种直接存取设备，因此其上的文件既可以进行随机访问（通过计算块地址直接读取），也可以进行顺序访问（从头到尾依次读取）。"
+  },
+  {
+    "id": 95,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 16,
+    "text": "在文件系统中，位示图可用于____。",
+    "options": [
+      "实现文件的保护和保密",
+      "文件目录的查找",
+      "磁盘空间的管理",
+      "内存空间的共享"
+    ],
+    "answer": "C",
+    "explanation": "位示图（位向量）是一种常用的磁盘空闲空间管理方法，每个位代表一个磁盘块，用于指示该块是否空闲。"
+  },
+  {
+    "id": 96,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 17,
+    "text": "常用的文件存取方法有两种：顺序存取和____存取。",
+    "options": [
+      "流式",
+      "随机",
+      "串联",
+      "顺序"
+    ],
+    "answer": "B",
+    "explanation": "文件的存取方法主要分为顺序存取（从头开始依次读取）和随机存取（直接访问文件中的任意位置）。"
+  },
+  {
+    "id": 97,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 18,
+    "text": "Unix系统中，通过_____实现文件系统的按名存取功能。",
+    "options": [
+      "inode节点",
+      "目录项",
+      "超级块",
+      "空闲块"
+    ],
+    "answer": "B",
+    "explanation": "目录项中存储了文件名和对应的inode号，通过inode号才能找到文件的实际内容，所以目录项是实现按名存取的第一步。"
+  },
+  {
+    "id": 98,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 19,
+    "text": "Unix文件系统中，打开文件的系统调用open输入参数包含______。",
+    "options": [
+      "文件名",
+      "inode号",
+      "文件描述符",
+      "inode"
+    ],
+    "answer": "A",
+    "explanation": "`open`系统调用通常接受文件的路径名（文件名）作为参数，用于指定要打开的文件。"
+  },
+  {
+    "id": 99,
+    "part": 5,
+    "partName": "第五部分",
+    "num": 20,
+    "text": "Unix文件系统中，打开文件的系统调用open返回值是________。",
+    "options": [
+      "文件描述符（字）",
+      "inode",
+      "文件名",
+      "inode号"
+    ],
+    "answer": "A",
+    "explanation": "`open`系统调用成功后，会返回一个非负整数，即文件描述符，它是用户程序后续操作该文件的句柄。"
+  }
+];
+const PART_NAMES = ["Part 1", "第一部分", "第二部分", "第三部分", "第四部分", "第五部分"];
+
+document.getElementById('totalCount').textContent = QUESTIONS.length;
+
+let state = {
+    currentIndex: 0,
+    answers: {},
+    filterPart: -1,
+    wrongList: [],  // ids of questions answered wrong
+};
+
+const saved = localStorage.getItem('os-quiz-state-v2');
+if (saved) {
+    try {
+        const parsed = JSON.parse(saved);
+        state.answers = parsed.answers || {};
+        state.currentIndex = parsed.currentIndex || 0;
+        state.filterPart = parsed.filterPart ?? -1;
+        state.wrongList = parsed.wrongList || [];
+    } catch(e) {}
+}
+
+function getFiltered() {
+    if (state.filterPart < 0) return QUESTIONS;
+    return QUESTIONS.filter(q => q.part === state.filterPart);
+}
+
+function save() {
+    localStorage.setItem('os-quiz-state-v2', JSON.stringify({
+        answers: state.answers,
+        currentIndex: state.currentIndex,
+        filterPart: state.filterPart,
+        wrongList: state.wrongList,
+    }));
+}
+
+function getStats() {
+    const filtered = getFiltered();
+    let done = 0, correct = 0, wrong = 0;
+    filtered.forEach(q => {
+        if (state.answers[q.id] !== undefined) {
+            done++;
+            if (state.answers[q.id] === q.answer) correct++;
+            else wrong++;
+        }
+    });
+    return { done, correct, wrong, total: filtered.length };
+}
+
+function updateStats() {
+    const s = getStats();
+    document.getElementById('statDone').textContent = s.done;
+    document.getElementById('statCorrect').textContent = s.correct;
+    document.getElementById('statWrong').textContent = s.wrong;
+    document.getElementById('statRate').textContent = s.done > 0 ? Math.round(s.correct / s.done * 100) + '%' : '-';
+    document.getElementById('progressFill').style.width = (s.total > 0 ? s.done / s.total * 100 : 0) + '%';
+}
+
+function updateGrid() {
+    const grid = document.getElementById('questionGrid');
+    const filtered = getFiltered();
+    grid.innerHTML = filtered.map((q, i) => {
+        let cls = '';
+        if (i === state.currentIndex) cls += ' current';
+        if (state.answers[q.id] !== undefined) {
+            cls += state.answers[q.id] === q.answer ? ' correct-dot' : ' wrong-dot';
+        }
+        return `<div class="q-dot${cls}" onclick="goTo(${i})" title="${q.partName} #${q.num}">${q.id+1}</div>`;
+    }).join('');
+}
+
+function goTo(index) {
+    const filtered = getFiltered();
+    if (index < 0 || index >= filtered.length) return;
+    state.currentIndex = index;
+    renderQuestion();
+    updateGrid();
+    save();
+}
+
+function renderQuestion() {
+    const filtered = getFiltered();
+    if (filtered.length === 0) {
+        document.getElementById('qText').textContent = '该分类下没有题目';
+        document.getElementById('options').innerHTML = '';
+        document.getElementById('explanation').className = 'explanation';
+        document.getElementById('btnPrev').disabled = true;
+        document.getElementById('btnNext').disabled = true;
+        return;
+    }
+    if (state.currentIndex >= filtered.length) state.currentIndex = 0;
+    if (state.currentIndex < 0) state.currentIndex = 0;
+
+    const q = filtered[state.currentIndex];
+    document.getElementById('partTag').textContent = q.partName;
+    document.getElementById('qNum').textContent = `#${q.id + 1} / ${filtered.length} 题`;
+    document.getElementById('qText').textContent = q.text;
+
+    const letters = ['A', 'B', 'C', 'D'];
+    const userAns = state.answers[q.id];
+    const answered = userAns !== undefined;
+
+    document.getElementById('options').innerHTML = q.options.map((opt, i) => {
+        let cls = '';
+        if (answered) {
+            if (letters[i] === q.answer) cls = ' correct';
+            else if (letters[i] === userAns) cls = ' wrong';
+            cls += ' disabled';
+        }
+        return `<div class="option${cls}" onclick="selectAnswer(${q.id}, '${letters[i]}')">
+            <div class="letter">${letters[i]}</div>
+            <span>${opt}</span>
+        </div>`;
+    }).join('');
+
+    const expDiv = document.getElementById('explanation');
+    if (answered) {
+        const isCorrect = userAns === q.answer;
+        expDiv.innerHTML = `
+            <div class="verdict ${isCorrect ? 'yes' : 'no'}">${isCorrect ? '✅ 正确！' : '❌ 错误，正确答案是 ' + q.answer}</div>
+            <div>${q.explanation}</div>
+        `;
+        expDiv.className = 'explanation show';
+    } else {
+        expDiv.className = 'explanation';
+    }
+
+    document.getElementById('btnPrev').disabled = state.currentIndex === 0;
+    document.getElementById('btnNext').disabled = state.currentIndex >= filtered.length - 1;
+
+    updateStats();
+    updateGrid();
+    // Scroll to current question in grid
+    const grid = document.getElementById('questionGrid');
+    const dots = grid.children;
+    if (dots[state.currentIndex]) {
+        dots[state.currentIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+function selectAnswer(qid, letter) {
+    if (state.answers[qid] !== undefined) return;
+    const q = QUESTIONS[qid];
+    state.answers[qid] = letter;
+    if (letter !== q.answer) {
+        if (!state.wrongList.includes(qid)) state.wrongList.push(qid);
+    } else {
+        state.wrongList = state.wrongList.filter(id => id !== qid);
+    }
+    renderQuestion();
+    save();
+}
+
+function renderPartFilter() {
+    const container = document.getElementById('partFilter');
+    container.innerHTML = `<button class="part-btn${state.filterPart < 0 ? ' active' : ''}" onclick="setFilter(-1)">全部</button>` +
+        PART_NAMES.map((name, i) =>
+            `<button class="part-btn${state.filterPart === i ? ' active' : ''}" onclick="setFilter(${i})">${name}</button>`
+        ).join('');
+}
+
+function setFilter(partIdx) {
+    state.filterPart = partIdx;
+    state.currentIndex = 0;
+    renderPartFilter();
+    renderQuestion();
+    save();
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+    const filtered = getFiltered();
+    if (filtered.length === 0) return;
+    const q = filtered[state.currentIndex];
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (state.currentIndex > 0) goTo(state.currentIndex - 1);
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (state.currentIndex < filtered.length - 1) goTo(state.currentIndex + 1);
+    }
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        if (state.currentIndex < filtered.length - 1) goTo(state.currentIndex + 1);
+    }
+    if (!state.answers[q.id]) {
+        const key = e.key.toUpperCase();
+        if (['A', 'B', 'C', 'D'].includes(key)) selectAnswer(q.id, key);
+        if (['1', '2', '3', '4'].includes(key)) {
+            selectAnswer(q.id, ['A', 'B', 'C', 'D'][parseInt(key) - 1]);
+        }
+    }
+});
+
+document.getElementById('btnPrev').addEventListener('click', () => goTo(state.currentIndex - 1));
+document.getElementById('btnNext').addEventListener('click', () => goTo(state.currentIndex + 1));
+
+// Init
+renderPartFilter();
+renderQuestion();
+</script>
+</body>
+</html>
