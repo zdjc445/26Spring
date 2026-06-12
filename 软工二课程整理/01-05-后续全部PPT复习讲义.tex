@@ -1,0 +1,3232 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setcounter{secnumdepth}{0}
+\renewcommand{\arraystretch}{1.25}
+\emergencystretch=4em
+\sloppy
+\title{01-05 后续全部 PPT 复习讲义}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+
+\begin{quote}
+范围：\texttt{01-01} 到 \texttt{04-02}，以及 \texttt{设计模式}、\texttt{代码设计}、\texttt{软件构造}。  
+用法：先背“概念与原则”，再练“场景题模板”。考试题通常不会只考名词解释，而是要求把原则落到需求、架构、接口、详细设计、代码质量和测试上。
+\end{quote}
+
+\bigskip\hrule\bigskip
+
+\subsection{目录}
+
+\begin{enumerate}
+\item 软件工程基础与项目管理
+\item 需求工程
+\item 软件体系结构与人机交互
+\item 详细设计、模块化与信息隐藏
+\item 设计模式
+\item 代码设计与软件构造
+\item 综合题答题模板
+\end{enumerate}
+
+\bigskip\hrule\bigskip
+
+\section{1. 软件工程基础与项目管理}
+
+\subsection{1.1 软件是什么}
+
+软件不是单纯的程序。课程中的核心表达是：
+
+\textbf{软件 = 程序 + 数据 + 文档 + 知识}
+
+IEEE 610.12-1990 对软件的定义强调三类内容：
+
+\begin{itemize}
+\item 程序
+\item 规程或过程
+\item 相关文档与数据
+\end{itemize}
+
+答题时要写出“软件不只等于代码”。代码只是可执行部分，文档、数据、过程和领域知识共同决定软件能否被理解、运行、维护和演化。
+
+\subsection{1.2 软件的典型特征}
+
+常见概括：
+
+\begin{itemize}
+\item 无形：软件没有物理形态，进度和质量不易直接观察。
+\item 复杂：状态、分支、交互和依赖数量高。
+\item 可复制：复制成本低，但开发和维护成本高。
+\item 易修改：修改入口多，但影响传播复杂。
+\item 退化：软件不会物理磨损，但会因环境变化、需求变化和补丁叠加而退化。
+\item 依赖：依赖硬件、操作系统、网络、数据库、第三方库和组织流程。
+\item 智力密集：核心产出来自设计、抽象、分析和协作。
+\end{itemize}
+
+考试答“软件危机”时，要把这些特征与项目失败联系起来：规模变大后，靠个人经验写代码无法稳定控制质量、进度、成本和维护。
+
+\subsection{1.3 软件工程的定义}
+
+IEEE 定义的关键词：
+
+\begin{itemize}
+\item 系统化
+\item 规范化
+\item 可度量
+\item 开发、运行和维护
+\end{itemize}
+
+可写为：
+
+\begin{quote}
+软件工程是把系统化、规范化、可度量的方法应用于软件的开发、运行和维护，并研究这些方法的学科。
+\end{quote}
+
+软件工程解决的不是“怎么写出一段代码”，而是“如何在多人协作、长期演化、质量受控的条件下交付软件系统”。
+
+\subsection{1.4 软件危机与 Ariane 5 案例}
+
+软件危机的标志性节点是 1968 年 NATO 软件工程会议。
+
+常见问题：
+
+\begin{itemize}
+\item 项目延期
+\item 成本超支
+\item 软件质量低
+\item 难以维护
+\item 文档缺失
+\item 需求不断变化
+\item 开发过程不可控
+\end{itemize}
+
+Ariane 5 案例的答题重点：
+
+\begin{itemize}
+\item 代码本身来自已有系统，不等于在新环境中正确。
+\item 隐含的数值范围假设没有被充分记录和验证。
+\item 复用没有配套完成需求、环境、接口和异常条件验证。
+\item 失败属于需求假设、集成验证、配置和变更管理问题，不只是编码问题。
+\end{itemize}
+
+\subsection{1.5 SWEBOK 知识域}
+
+传统知识域覆盖需求、设计、构造、测试、维护、配置管理、工程管理、过程、模型方法、质量、职业实践、经济学、计算基础、数学基础、工程基础等。
+
+SWEBOK V4 增强关注：
+
+\begin{itemize}
+\item 软件体系结构
+\item 软件工程运维
+\item 软件安全
+\item AI for SE：用 AI 辅助软件工程
+\item SE for AI：用软件工程方法建设 AI 系统
+\end{itemize}
+
+答题时可以用一句话收束：
+
+\begin{quote}
+AI 增强了需求整理、设计草图、代码生成和审查效率，但工程纪律仍由需求验证、接口约束、测试、配置管理和人工评审保证。
+\end{quote}
+
+\bigskip\hrule\bigskip
+
+\subsection{1.6 项目与项目管理}
+
+PMBOK 中项目的核心特征：
+
+\begin{itemize}
+\item 临时性：有明确开始和结束。
+\item 独特性：交付独特产品、服务或成果。
+\end{itemize}
+
+软件项目管理要控制三个基本约束：
+
+\begin{itemize}
+\item 范围
+\item 时间
+\item 成本
+\end{itemize}
+
+三者共同影响质量。范围扩大、时间压缩或成本不足，都会传导到质量风险。
+
+\subsection{1.7 项目管理五大过程组}
+
+按课程表达：
+
+\begin{enumerate}
+\item 项目启动
+\item 项目计划
+\item 项目执行
+\item 跟踪与控制
+\item 项目收尾
+\end{enumerate}
+
+常见管理活动：
+
+\begin{itemize}
+\item 项目计划
+\item 团队管理
+\item 成本管理
+\item 软件质量保证
+\item 度量
+\item 过程管理
+\item 进度管理
+\item 风险管理
+\item 配置管理
+\end{itemize}
+
+\subsection{1.8 风险管理}
+
+风险管理循环：
+
+\begin{enumerate}
+\item 风险识别
+\item 风险分析
+\item 优先级排序
+\item 风险应对
+\item 风险监控
+\end{enumerate}
+
+常见风险类型：
+
+\begin{itemize}
+\item 技术风险：新框架、新平台、性能瓶颈、兼容性问题。
+\item 人员风险：关键成员离开、经验不足、沟通失败。
+\item 需求风险：需求不清、范围膨胀、利益相关者冲突。
+\item 进度风险：估算失真、依赖延期、任务拆分不合理。
+\item 外部风险：政策、供应商、硬件、网络、第三方接口变化。
+\end{itemize}
+
+答题模板：
+
+\begin{quote}
+先列风险，再写影响，再写应对措施。  
+例如：第三方支付接口变更属于外部和技术风险，会影响充值功能上线；应对措施是提前建立接口契约、Mock 服务、回归测试和变更通知机制。
+\end{quote}
+
+\subsection{1.9 软件质量保证 SQA}
+
+SQA 关注“过程和产品是否满足质量要求”。
+
+常见活动：
+
+\begin{itemize}
+\item 代码审查
+\item 静态分析
+\item 测试
+\item 过程审计
+\item 质量度量
+\item 阶段评审
+\end{itemize}
+
+里程碑质量活动：
+
+\begin{itemize}
+\item 需求阶段：需求评审、需求度量。
+\item 体系结构阶段：架构评审、集成测试策略。
+\item 详细设计阶段：设计评审、设计度量、集成测试准备。
+\item 构造阶段：代码审查、代码度量、单元测试。
+\item 测试阶段：缺陷度量、覆盖率分析、回归测试。
+\end{itemize}
+
+\subsection{1.10 软件配置管理 SCM}
+
+SCM 的目标：
+
+\begin{itemize}
+\item 识别配置项
+\item 控制变更
+\item 记录和报告配置状态
+\item 审计配置
+\item 保证产品与规格一致
+\end{itemize}
+
+核心术语：
+
+\begin{itemize}
+\item 配置项 CI：纳入配置管理的项目制品，如需求文档、设计文档、源代码、测试脚本、部署脚本、数据库脚本。
+\item 基线 Baseline：经过正式评审和批准的规格或产品，后续变更必须走正式变更控制。
+\end{itemize}
+
+SCM 常见活动：
+
+\begin{enumerate}
+\item 配置项识别
+\item 版本管理
+\item 变更控制
+\item 配置审计
+\item 状态报告
+\item 发布管理
+\end{enumerate}
+
+\subsection{1.11 变更控制流程}
+
+标准作答流程：
+
+\begin{enumerate}
+\item 提交变更请求 CR。
+\item 进行影响分析：影响需求、设计、代码、测试、进度、成本和风险。
+\item 进行风险评估。
+\item CCB 审查并批准或拒绝。
+\item 制定回滚计划。
+\item 执行变更。
+\item 更新基线。
+\item 上线验证。
+\item 更新状态报告。
+\end{enumerate}
+
+Knight Capital 案例的答题重点：
+
+\begin{itemize}
+\item 部署遗漏一台服务器。
+\item 新旧代码路径并存导致异常交易。
+\item 这是发布管理、配置管理和上线验证失败。
+\item 技术错误背后是过程控制缺失。
+\end{itemize}
+
+\bigskip\hrule\bigskip
+
+\section{2. 需求工程}
+
+\subsection{2.1 需求工程的含义}
+
+需求工程覆盖所有围绕需求展开的活动。
+
+核心活动：
+
+\begin{itemize}
+\item 需求获取
+\item 需求分析
+\item 需求规格说明
+\item 需求验证
+\item 需求管理
+\end{itemize}
+
+需求工程不是简单“问用户要功能”。它需要理解问题域、利益相关者、业务流程、约束条件、数据规则和外部系统。
+
+\subsection{2.2 问题域}
+
+问题域包含：
+
+\begin{itemize}
+\item 业务目标
+\item 业务流程
+\item 领域术语
+\item 组织规则
+\item 相关人员
+\item 现有系统
+\item 数据对象
+\item 外部约束
+\end{itemize}
+
+需求工程的关键是先理解问题域，再定义系统边界和解决方案。
+
+\subsection{2.3 需求层次}
+
+\subsubsection{业务需求}
+
+回答“为什么建设系统”。
+
+关注：
+
+\begin{itemize}
+\item 战略目标
+\item 业务价值
+\item 愿景
+\item 范围
+\end{itemize}
+
+示例：
+
+\begin{quote}
+建设校园卡自助系统，提高充值、挂失、查询等业务的自助化比例，降低人工窗口压力。
+\end{quote}
+
+\subsubsection{用户需求}
+
+回答“用户想用系统完成什么任务”。
+
+特点：
+
+\begin{itemize}
+\item 面向用户任务
+\item 语言不够精确
+\item 常混合功能、界面和约束
+\end{itemize}
+
+示例：
+
+\begin{quote}
+学生希望在网页或移动端自助完成校园卡充值，并查看充值记录。
+\end{quote}
+
+\subsubsection{系统级需求}
+
+回答“系统必须提供什么能力和约束”。
+
+特点：
+
+\begin{itemize}
+\item 精确
+\item 可验证
+\item 可追踪
+\item 面向系统交互和响应
+\end{itemize}
+
+示例：
+
+\begin{quote}
+系统接收充值请求后，应校验校园卡状态和支付结果；支付成功后创建充值记录并更新账户余额。
+\end{quote}
+
+\subsection{2.4 需求类型}
+
+\subsubsection{功能需求}
+
+说明系统做什么。
+
+示例：
+
+\begin{itemize}
+\item 用户登录。
+\item 查询校园卡余额。
+\item 提交充值订单。
+\item 查询充值记录。
+\item 挂失校园卡。
+\end{itemize}
+
+\subsubsection{非功能需求}
+
+说明系统达到什么质量或约束。
+
+常见维度：
+
+\begin{itemize}
+\item 性能
+\item 安全
+\item 可用性
+\item 可靠性
+\item 可维护性
+\item 可移植性
+\item 易用性
+\end{itemize}
+
+性能维度：
+
+\begin{itemize}
+\item 速度
+\item 容量
+\item 吞吐量
+\item 负载
+\item 时效性或实时性
+\end{itemize}
+
+\subsubsection{外部接口需求}
+
+说明系统与外部系统、硬件、用户界面之间的交互约束。
+
+示例：
+
+\begin{itemize}
+\item 与支付平台通过 HTTPS 通信。
+\item 与校园卡中心系统同步余额。
+\item 前端通过 REST API 调用后端服务。
+\end{itemize}
+
+\subsubsection{约束}
+
+说明系统建设必须遵守的限制。
+
+示例：
+
+\begin{itemize}
+\item 使用学校统一身份认证。
+\item 数据库存储在校内数据中心。
+\item 后端采用 Java Spring Boot。
+\end{itemize}
+
+\subsubsection{数据需求}
+
+说明系统需要管理的数据对象、数据字段、完整性规则和保留策略。
+
+示例：
+
+\begin{itemize}
+\item 充值记录包含记录编号、校园卡号、金额、支付渠道、支付状态、创建时间。
+\item 充值金额必须大于 0。
+\end{itemize}
+
+\subsection{2.5 AI 辅助需求获取}
+
+AI 适合：
+
+\begin{itemize}
+\item 从访谈记录中提取功能点。
+\item 整理用户故事。
+\item 生成需求文档初稿。
+\item 把自然语言改写成结构化条目。
+\item 检查编号、格式和冲突线索。
+\end{itemize}
+
+AI 的薄弱点：
+
+\begin{itemize}
+\item 容易遗漏隐含业务规则。
+\item 容易忽略系统边界。
+\item 容易生成不符合真实组织流程的功能。
+\item 对领域例外、权限规则、历史系统接口理解不足。
+\end{itemize}
+
+推荐流程：
+
+\begin{enumerate}
+\item Prompt：给出背景、角色、范围、输出格式。
+\item Generate：生成需求条目或模型草图。
+\item Review：人工核对业务规则、边界、异常和术语。
+\item Refine：补充约束、优先级、验收标准和追踪关系。
+\end{enumerate}
+
+\bigskip\hrule\bigskip
+
+\subsection{2.6 用例建模}
+
+用例描述系统与外部对象之间的一组交互行为。它从用户目标出发，描述系统如何向参与者提供有价值的服务。
+
+Cockburn 的区分：
+
+\begin{itemize}
+\item 用例：包含一个用户目标下的所有场景。
+\item 场景：用例中的一条具体路径。
+\end{itemize}
+
+\subsubsection{基本元素}
+
+\begin{itemize}
+\item 参与者 Actor：系统外部与系统交互的角色。
+\item 用例 Use Case：系统提供的服务。
+\item 系统边界：区分系统内部和外部。
+\item 关系：关联、包含、扩展、泛化。
+\end{itemize}
+
+参与者可以是人、外部系统、硬件设备或定时器。参与者位于系统边界外，用例位于系统边界内。
+
+\subsubsection{include 与 extend}
+
+include：
+
+\begin{itemize}
+\item 基本用例每次执行时都要执行被包含用例。
+\item 方向：基本用例指向被包含用例。
+\item 用于抽取多个用例共享的公共行为。
+\end{itemize}
+
+extend：
+
+\begin{itemize}
+\item 扩展用例在特定条件下插入基本用例。
+\item 方向：扩展用例指向基本用例。
+\item 用于异常、可选、附加行为。
+\end{itemize}
+
+示例：
+
+\begin{itemize}
+\item “充值” include “身份验证”：每次充值都要验证用户身份。
+\item “充值失败处理” extend “充值”：只有支付失败或写入余额失败时触发。
+\end{itemize}
+
+\subsubsection{用例粒度}
+
+合格用例通常满足：
+
+\begin{itemize}
+\item 对应一个业务事件。
+\item 由参与者发起。
+\item 在连续时间内完成。
+\item 对参与者有业务价值。
+\end{itemize}
+
+常见错误：
+
+\begin{itemize}
+\item 把增删改查拆成太细的技术操作。
+\item 把同一业务目标拆散。
+\item 把登录、数据校验、数据库连接当作独立业务用例。
+\item 在用例图里写实现细节。
+\end{itemize}
+
+\subsubsection{Cockburn 层次}
+
+\begin{itemize}
+\item 概要层：范围太大，适合说明系统目标。
+\item 用户目标层：最适合作为主用例。
+\item 子功能层：粒度较小，常用于 include 或内部步骤。
+\end{itemize}
+
+\subsection{2.7 用例描述模板}
+
+十项模板：
+
+\begin{enumerate}
+\item 用例编号
+\item 用例名称
+\item 参与者
+\item 触发条件
+\item 前置条件
+\item 后置条件
+\item 基本流程
+\item 扩展流程
+\item 特殊需求
+\item 备注
+\end{enumerate}
+
+前置条件是用例开始前已经成立的系统状态，不是“用户输入账号密码”这类步骤。
+
+示例：充值用例简表
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.28\textwidth}|>{\raggedright\arraybackslash}p{0.62\textwidth}|}
+\hline
+\textbf{项目} & \textbf{内容} \\
+\hline
+\endfirsthead
+\hline
+\textbf{项目} & \textbf{内容} \\
+\hline
+\endhead
+用例编号 & UC-Recharge \\
+\hline
+用例名称 & 校园卡充值 \\
+\hline
+参与者 & 持卡人 \\
+\hline
+触发条件 & 持卡人选择充值功能 \\
+\hline
+前置条件 & 持卡人已通过身份认证，校园卡状态正常 \\
+\hline
+后置条件 & 充值成功时账户余额增加，并生成充值记录 \\
+\hline
+基本流程 & 选择充值金额；系统创建充值订单；调用支付接口；支付成功后更新余额；显示结果 \\
+\hline
+扩展流程 & 支付失败时记录失败原因并提示用户；校园卡状态异常时拒绝充值 \\
+\hline
+特殊需求 & 充值结果写入和记录生成保持一致 \\
+\hline
+\end{longtable}
+
+\subsection{2.8 用户故事与 BDD}
+
+用户故事常用格式：
+
+\begin{quote}
+作为 \texttt{<角色>}，我想要 \texttt{<能力>}，以便 \texttt{<业务价值>}。
+\end{quote}
+
+示例：
+
+\begin{quote}
+作为持卡人，我想要在线充值校园卡，以便在食堂和门禁场景继续使用校园卡。
+\end{quote}
+
+BDD 使用 Given-When-Then：
+
+\small
+\begin{verbatim}
+Given 持卡人已登录且校园卡状态正常
+When 持卡人提交 100 元充值并完成支付
+Then 系统增加校园卡余额并生成一条成功充值记录
+\end{verbatim}
+\normalsize
+
+ATDD 强调先定义验收测试，再驱动设计和实现。
+
+\bigskip\hrule\bigskip
+
+\subsection{2.9 需求分析模型}
+
+常用模型：
+
+\begin{itemize}
+\item 用例图
+\item 概念类图
+\item 顺序图
+\item 状态图
+\item ER 图
+\item OCL 约束
+\end{itemize}
+
+面向对象需求分析输出：
+
+\begin{itemize}
+\item 用例图和用例描述
+\item 概念类图或领域模型
+\item 顺序图
+\item 状态图
+\item OCL 约束
+\end{itemize}
+
+\subsection{2.10 概念类图}
+
+概念类图描述问题域中的概念及其关系，属于分析模型。
+
+它与设计类图的区别：
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+\hline
+\textbf{项目} & \textbf{概念类图} & \textbf{设计类图} \\
+\hline
+\endfirsthead
+\hline
+\textbf{项目} & \textbf{概念类图} & \textbf{设计类图} \\
+\hline
+\endhead
+阶段 & 需求分析 & 详细设计 \\
+\hline
+关注 & 领域概念 & 软件类、接口、方法 \\
+\hline
+内容 & 类名、属性、关联、多重性 & 属性、方法、可见性、接口、继承、依赖 \\
+\hline
+来源 & 用例、业务文本、领域知识 & 架构、设计原则、实现技术 \\
+\hline
+\end{longtable}
+
+\subsubsection{从文本提取概念类}
+
+步骤：
+
+\begin{enumerate}
+\item 收集用例描述、访谈记录和业务规则。
+\item 标记名词和名词短语。
+\item 合并同义词。
+\item 删除纯属性、实现概念、外部系统、重复词和临时消息。
+\item 与业务人员确认剩余概念。
+\item 为概念添加属性、关联和多重性。
+\end{enumerate}
+
+判断一个词能否成为概念类：
+
+\begin{itemize}
+\item 系统需要长期记录它。
+\item 它拥有多个属性。
+\item 它参与业务规则。
+\item 它与其他概念存在稳定关系。
+\end{itemize}
+
+示例：
+
+\begin{itemize}
+\item “充值记录”是概念类，因为系统要保存记录编号、金额、支付状态、时间等属性。
+\item “金额”通常是属性，不是概念类。
+\item “支付平台”是外部系统，在系统边界外。
+\end{itemize}
+
+\subsubsection{关联与多重性}
+
+动词短语常提示关联：
+
+\begin{itemize}
+\item 用户拥有校园卡。
+\item 校园卡产生充值记录。
+\item 充值记录对应支付订单。
+\end{itemize}
+
+数量词提示多重性：
+
+\begin{itemize}
+\item 一个用户可以拥有多张校园卡。
+\item 一张校园卡可以有多条充值记录。
+\item 一条充值记录对应一个支付订单。
+\end{itemize}
+
+\subsection{2.11 顺序图}
+
+顺序图描述对象之间按时间顺序发生的消息交互。
+
+画法要点：
+
+\begin{itemize}
+\item 先选一个用例。
+\item 从基本流程开始。
+\item 每个交互步骤对应消息。
+\item 使用 \texttt{alt} 表示分支，使用 \texttt{opt} 表示可选步骤。
+\item 消息顺序必须与业务流程一致。
+\end{itemize}
+
+充值用例的典型对象：
+
+\begin{itemize}
+\item 持卡人
+\item 充值界面
+\item 充值控制器
+\item 充值服务
+\item 校园卡仓储
+\item 充值记录仓储
+\item 支付网关
+\end{itemize}
+
+典型流程：
+
+\begin{enumerate}
+\item 持卡人提交充值请求。
+\item 控制器调用充值服务。
+\item 服务查询校园卡状态。
+\item 服务创建充值记录或充值订单。
+\item 服务调用支付网关确认支付结果。
+\item 服务更新余额。
+\item 服务保存充值记录。
+\item 控制器返回充值结果。
+\end{enumerate}
+
+\subsection{2.12 状态图}
+
+状态图描述一个对象在生命周期内的状态变化。
+
+适合建模：
+
+\begin{itemize}
+\item 订单
+\item 校园卡
+\item 支付记录
+\item 设备
+\item 会话
+\end{itemize}
+
+充值记录状态示例：
+
+\begin{itemize}
+\item Created
+\item Paying
+\item Success
+\item Failed
+\item Cancelled
+\end{itemize}
+
+状态图可以直接指导测试：
+
+\begin{itemize}
+\item 每条合法迁移对应一个测试。
+\item 每条非法迁移对应一个异常测试。
+\end{itemize}
+
+\subsection{2.13 OCL}
+
+OCL 是附着在 UML 模型上的声明式约束语言。
+
+特点：
+
+\begin{itemize}
+\item 无副作用。
+\item 说明不变式、前置条件和后置条件。
+\item 可表达集合约束。
+\end{itemize}
+
+常见元素：
+
+\begin{itemize}
+\item \texttt{inv}：不变式。
+\item \texttt{pre}：前置条件。
+\item \texttt{post}：后置条件。
+\item \texttt{@pre}：操作执行前的值。
+\item \texttt{forAll}、\texttt{exists}、\texttt{select}、\texttt{collect}：集合操作。
+\end{itemize}
+
+示例：
+
+\small
+\begin{verbatim}
+context Recharge
+inv PositiveAmount:
+  self.amount > 0
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+context CampusCard::recharge(amount)
+pre ValidAmount:
+  amount > 0
+post BalanceIncreased:
+  self.balance = self.balance@pre + amount
+\end{verbatim}
+\normalsize
+
+\bigskip\hrule\bigskip
+
+\subsection{2.14 SRS 与需求验证}
+
+SRS 是系统级需求规格说明，从产品和系统视角列出需求。
+
+用例文档和 SRS 的区别：
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+\hline
+\textbf{项目} & \textbf{用例文档} & \textbf{SRS} \\
+\hline
+\endfirsthead
+\hline
+\textbf{项目} & \textbf{用例文档} & \textbf{SRS} \\
+\hline
+\endhead
+视角 & 用户交互 & 系统能力 \\
+\hline
+组织方式 & 按用户目标 & 按功能、接口、数据、质量属性 \\
+\hline
+重点 & 场景和流程 & 可验证、可追踪的需求条目 \\
+\hline
+\end{longtable}
+
+SRS 条目要使用刺激-响应结构：
+
+\begin{quote}
+当 \texttt{<刺激>} 发生时，系统应 \texttt{<响应>}。
+\end{quote}
+
+示例：
+
+\begin{quote}
+当持卡人完成支付且支付平台返回成功结果时，系统应更新校园卡余额并生成成功充值记录。
+\end{quote}
+
+\subsection{2.15 好需求的标准}
+
+常见标准：
+
+\begin{itemize}
+\item 正确性
+\item 完整性
+\item 一致性
+\item 可读性
+\item 可修改性
+\item 可验证性
+\item 可追踪性
+\end{itemize}
+
+验证方法：
+
+\begin{itemize}
+\item 同行评审
+\item 原型验证
+\item 仿真
+\item 测试用例推导
+\item 追踪矩阵检查
+\end{itemize}
+
+\subsection{2.16 需求追踪}
+
+前向追踪：
+
+\begin{quote}
+需求 → 设计 → 代码 → 测试
+\end{quote}
+
+后向追踪：
+
+\begin{quote}
+代码或设计 → 需求来源
+\end{quote}
+
+追踪矩阵常见列：
+
+\begin{itemize}
+\item 需求编号
+\item 需求来源
+\item 设计模块
+\item 代码模块
+\item 测试用例
+\item 状态
+\end{itemize}
+
+需求属性：
+
+\begin{itemize}
+\item 编号
+\item 描述
+\item 理由
+\item 来源
+\item 优先级
+\item 稳定性
+\item 状态
+\item 负责人
+\item 版本
+\item 变更历史
+\end{itemize}
+
+\subsection{2.17 歧义与冲突}
+
+歧义类型：
+
+\begin{itemize}
+\item 词法歧义：同一词有多种含义。
+\item 句法歧义：句子结构导致多种解释。
+\item 语用歧义：上下文或业务背景不足导致理解不一致。
+\end{itemize}
+
+冲突类型：
+
+\begin{itemize}
+\item 直接矛盾：两个需求对同一条件给出相反响应。
+\item 资源冲突：时间、预算、算力、设备或人员无法同时满足。
+\item 优先级冲突：不同利益相关者对需求重要性排序不同。
+\end{itemize}
+
+处理流程：
+
+\begin{enumerate}
+\item 标记冲突需求编号。
+\item 说明冲突类型。
+\item 找到对应利益相关者。
+\item 召开评审。
+\item 记录决策和理由。
+\item 更新 SRS、追踪矩阵和变更历史。
+\end{enumerate}
+
+\subsection{2.18 Spec 驱动开发}
+
+SDD 链路：
+
+\begin{quote}
+Spec → Design → Tasks → Code
+\end{quote}
+
+好的 Spec 包含：
+
+\begin{itemize}
+\item 问题背景
+\item 用户故事
+\item 功能范围
+\item 验收标准
+\item 非功能约束
+\item 不在范围内的内容
+\item 待确认问题
+\end{itemize}
+
+在 AI 协作中，Spec 是人与 AI 之间的工程协议。Spec 越清晰，AI 输出越容易被审查、测试和接入项目。
+
+\bigskip\hrule\bigskip
+
+\section{3. 软件体系结构与人机交互}
+
+\subsection{3.1 设计的任务}
+
+设计回答“如何实现需求”。
+
+与需求和编程的区别：
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+\hline
+\textbf{阶段} & \textbf{回答问题} & \textbf{关注模型} \\
+\hline
+\endfirsthead
+\hline
+\textbf{阶段} & \textbf{回答问题} & \textbf{关注模型} \\
+\hline
+\endhead
+需求 & 做什么 & 用例图、概念类图 \\
+\hline
+设计 & 如何组织解决方案 & 包图、组件图、接口、协作 \\
+\hline
+编程 & 如何用代码实现 & 类、方法、语句、数据结构 \\
+\hline
+\end{longtable}
+
+设计管理复杂度的基本手段：
+
+\begin{itemize}
+\item 关注点分离
+\item 分解
+\item 抽象
+\item 模块化
+\item 信息隐藏
+\end{itemize}
+
+\subsection{3.2 设计层次}
+
+\subsubsection{高层设计：体系结构设计}
+
+关注整个系统结构：
+
+\begin{itemize}
+\item 子系统
+\item 分层
+\item 组件
+\item 部署节点
+\item 连接方式
+\item 技术栈约束
+\end{itemize}
+
+常用图：
+
+\begin{itemize}
+\item 组件图
+\item 部署图
+\item 高层包图
+\end{itemize}
+
+\subsubsection{中层设计}
+
+关注包、模块、类之间如何协作。
+
+常用图：
+
+\begin{itemize}
+\item 包图
+\item 交互图
+\item 设计类图
+\end{itemize}
+
+\subsubsection{低层设计}
+
+关注单个类、方法、数据结构和算法。
+
+内容：
+
+\begin{itemize}
+\item 属性
+\item 方法
+\item 参数
+\item 返回值
+\item 控制结构
+\item 异常处理
+\end{itemize}
+
+\subsection{3.3 体系结构的组成}
+
+体系结构由三类内容构成：
+
+\begin{itemize}
+\item 部件或组件
+\item 连接件
+\item 配置
+\end{itemize}
+
+解释：
+
+\begin{itemize}
+\item 组件承担计算、存储或业务职责。
+\item 连接件定义组件交互方式，如方法调用、REST API、消息队列、数据库连接。
+\item 配置说明组件和连接件如何组合成整体系统。
+\end{itemize}
+
+体系结构决策一旦落地，修改成本高。错误的层次、错误的依赖方向和错误的部署结构会形成长期技术债。
+
+\subsection{3.4 4+1 视图}
+
+4+1 视图用于从多个角度描述体系结构：
+
+\begin{itemize}
+\item 逻辑视图：类、包、领域对象、业务职责。
+\item 开发视图：代码模块、工程结构、组件划分。
+\item 进程视图：运行时进程、线程、并发、通信。
+\item 物理视图：服务器、客户端、数据库、网络部署。
+\item 场景视图：用关键用例串联并验证前四个视图。
+\end{itemize}
+
+答题时常用写法：
+
+\begin{quote}
+使用场景视图验证架构是否支持核心用例；使用逻辑视图说明业务分层；使用开发视图说明代码组织；使用进程视图说明运行时并发和通信；使用物理视图说明客户端、服务器和数据库部署。
+\end{quote}
+
+\subsection{3.5 体系结构风格}
+
+体系结构风格定义：
+
+\begin{itemize}
+\item 组件词汇表
+\item 连接件类型
+\item 拓扑约束
+\end{itemize}
+
+\subsubsection{分层风格}
+
+典型三层：
+
+\begin{itemize}
+\item 表示层
+\item 业务逻辑层
+\item 数据访问层
+\end{itemize}
+
+优点：
+
+\begin{itemize}
+\item 职责清晰。
+\item 上层不用关心下层实现细节。
+\item 便于替换界面、业务逻辑或数据存储。
+\item 便于测试和维护。
+\end{itemize}
+
+缺点：
+
+\begin{itemize}
+\item 层间调用带来额外开销。
+\item 简单功能也要穿过多层。
+\item 层次划分错误会导致绕层访问和依赖混乱。
+\end{itemize}
+
+\subsubsection{MVC}
+
+MVC 分离：
+
+\begin{itemize}
+\item Model：数据和业务状态。
+\item View：界面显示。
+\item Controller：接收输入并协调模型和视图。
+\end{itemize}
+
+Web 项目中常见对应关系：
+
+\begin{itemize}
+\item Controller：处理 HTTP 请求。
+\item Service：执行业务逻辑。
+\item Repository 或 DAO：访问数据。
+\item Entity 或 PO：持久化对象。
+\item DTO 或 VO：接口传输对象或界面展示对象。
+\end{itemize}
+
+\subsection{3.6 体系结构设计过程}
+
+课程中的过程可概括为：
+
+\begin{enumerate}
+\item 分析需求。
+\item 选择体系结构风格。
+\item 设计逻辑结构。
+\item 设计接口。
+\item 设计物理部署。
+\item 验证体系结构。
+\item 评审并迭代。
+\end{enumerate}
+
+答题时不要只画图，要说明为什么选择这个结构。
+
+示例：
+
+\begin{quote}
+企业信息系统强调可维护性、安全性和分工协作，适合采用分层架构。表示层处理用户交互，业务逻辑层封装业务规则，数据访问层封装持久化细节。上层依赖接口而非实现，以降低层间耦合。
+\end{quote}
+
+\subsection{3.7 接口与依赖倒置}
+
+分层系统中要避免上层直接依赖下层实现类。
+
+推荐结构：
+
+\begin{itemize}
+\item \texttt{service} 包声明业务接口。
+\item \texttt{service.impl} 包提供业务实现。
+\item \texttt{repository} 包声明数据访问接口。
+\item \texttt{repository.impl} 包提供数据访问实现。
+\item Controller 依赖 Service 接口。
+\item Service 实现依赖 Repository 接口。
+\end{itemize}
+
+依赖倒置原则：
+
+\begin{itemize}
+\item 高层模块不依赖低层模块，二者都依赖抽象。
+\item 抽象不依赖细节，细节依赖抽象。
+\end{itemize}
+
+考试代码题重点：
+
+\begin{itemize}
+\item 写出接口所在包名。
+\item Controller 中通过构造器注入 Service。
+\item ServiceImpl 中通过构造器注入 Repository。
+\item Controller 不直接访问 Repository。
+\end{itemize}
+
+\subsection{3.8 体系结构验证}
+
+验证关注：
+
+\begin{itemize}
+\item 核心用例是否能穿过架构完成。
+\item 层间依赖方向是否正确。
+\item 接口是否稳定。
+\item 质量属性是否得到支撑。
+\item 部署结构是否满足性能、安全和可靠性要求。
+\item 是否存在架构坏味道。
+\end{itemize}
+
+常见架构坏味道：
+
+\begin{itemize}
+\item 上层绕过业务层直接访问数据库。
+\item 所有业务逻辑堆在 Controller。
+\item Service 只有转发，没有业务职责。
+\item Repository 混入业务规则。
+\item 包之间循环依赖。
+\item 共享全局状态过多。
+\end{itemize}
+
+\bigskip\hrule\bigskip
+
+\subsection{3.9 人机交互设计}
+
+人机交互关注用户、任务、界面和系统反馈之间的关系。
+
+可用性属性：
+
+\begin{itemize}
+\item 易学性
+\item 效率
+\item 易记性
+\item 错误率与恢复能力
+\item 满意度
+\end{itemize}
+
+易学性和效率存在取舍。新手需要清晰入口和提示，熟练用户需要快捷键、批量操作和命令式能力。
+
+\subsection{3.10 人的认知特点}
+
+设计原则：
+
+\begin{itemize}
+\item 识别优于回忆。
+\item 图形信息在很多场景下比纯文本更易识别。
+\item GUI 通过菜单、按钮和图标降低记忆负担。
+\item CLI 对专家高效，但学习成本高。
+\end{itemize}
+
+\subsection{3.11 Fitts 定律}
+
+Fitts 定律说明：
+
+\begin{itemize}
+\item 目标越近，操作越快。
+\item 目标越大，操作越快。
+\item 屏幕边缘和角落更容易命中。
+\end{itemize}
+
+设计推论：
+
+\begin{itemize}
+\item 高频按钮要放在易触达位置。
+\item 危险按钮与常用按钮要保持距离。
+\item 小图标按钮需要足够点击区域。
+\end{itemize}
+
+\subsection{3.12 用户类型}
+
+\begin{itemize}
+\item 新手：需要清晰导航、提示和容错。
+\item 中级用户：需要稳定流程和效率提升。
+\item 专家：需要快捷键、批处理和可配置操作。
+\end{itemize}
+
+好的界面同时服务不同熟练度用户：入口清楚，操作路径短，反馈及时，并提供快捷方式。
+
+\subsection{3.13 直接操纵}
+
+直接操纵的特点：
+
+\begin{itemize}
+\item 对象可见。
+\item 操作可逆。
+\item 反馈即时。
+\item 用户有控制感。
+\end{itemize}
+
+优势：
+
+\begin{itemize}
+\item 学习时间短。
+\item 错误易发现。
+\item 用户满意度高。
+\end{itemize}
+
+需要处理的问题：
+
+\begin{itemize}
+\item 界面隐喻要符合用户心智模型。
+\item 操作对象和系统状态要清晰。
+\item 复杂系统需要良好导航结构。
+\end{itemize}
+
+\subsection{3.14 导航与反馈}
+
+导航设计：
+
+\begin{itemize}
+\item 全局结构：用户知道自己在哪里、能去哪。
+\item 局部结构：当前任务内的步骤清楚。
+\item 按任务模型组织，而不是按技术模块组织。
+\end{itemize}
+
+反馈时间：
+
+\begin{itemize}
+\item 键盘、鼠标、光标反馈要非常快。
+\item 简单频繁任务在约 1 秒内给出响应。
+\item 更长操作要显示进度、状态或队列。
+\end{itemize}
+
+\subsection{3.15 黄金规则与 Nielsen 启发式}
+
+三条黄金规则：
+
+\begin{itemize}
+\item 用户控制。
+\item 减少记忆负担。
+\item 保持一致。
+\end{itemize}
+
+Nielsen 十项启发式：
+
+\begin{enumerate}
+\item 系统状态可见。
+\item 系统与现实世界匹配。
+\item 用户控制和自由。
+\item 一致性和标准。
+\item 错误预防。
+\item 识别优于回忆。
+\item 灵活性和效率。
+\item 美学和极简设计。
+\item 帮助用户识别、诊断和恢复错误。
+\item 帮助和文档。
+\end{enumerate}
+
+\subsection{3.16 HCI 设计过程与评估}
+
+常用过程：
+
+\begin{enumerate}
+\item 理解用户和任务。
+\item 建立界面概念模型。
+\item 绘制线框图。
+\item 制作低保真原型。
+\item 用户测试。
+\item 制作高保真原型。
+\item 可用性评估。
+\item 实现并迭代。
+\end{enumerate}
+
+评估方法：
+
+\begin{itemize}
+\item 启发式评估
+\item 用户测试
+\item Think-aloud
+\item A/B 测试
+\item 眼动分析
+\end{itemize}
+
+AI 交互设计补充：
+
+\begin{itemize}
+\item 显示 AI 的计划和依据。
+\item 允许用户确认、撤销和覆盖。
+\item 保留审计日志。
+\item 在失败时给出可恢复路径。
+\item 通过逐步授权建立信任。
+\end{itemize}
+
+\bigskip\hrule\bigskip
+
+\section{4. 详细设计、模块化与信息隐藏}
+
+\subsection{4.1 详细设计的范围}
+
+详细设计包含：
+
+\begin{itemize}
+\item 中层设计：过程、调用关系、类协作。
+\item 低层设计：数据结构、算法、类型、语句和控制结构。
+\end{itemize}
+
+输入：
+
+\begin{itemize}
+\item 用例
+\item 概念模型
+\item 顺序图
+\item 状态图
+\item 非功能需求
+\item 体系结构模块规格
+\item 导入和导出接口
+\item 组件接口
+\end{itemize}
+
+输出：
+
+\begin{itemize}
+\item 静态结构：类、接口、关系。
+\item 动态行为：对象协作和消息。
+\item 状态行为：对象生命周期。
+\item 实现注解：约束、异常、事务。
+\item 设计理由：关键选择的依据。
+\end{itemize}
+
+\subsection{4.2 责任与协作}
+
+面向对象详细设计的核心是：
+
+\begin{itemize}
+\item 责任
+\item 协作
+\end{itemize}
+
+责任：
+
+\begin{itemize}
+\item 操作责任：对象要执行的任务。
+\item 数据责任：对象要维护的信息。
+\end{itemize}
+
+协作：
+
+\begin{itemize}
+\item 对象之间通过消息调用完成更大的任务。
+\item 一个对象不直接承担全部工作，而是把子任务委托给合适对象。
+\end{itemize}
+
+委托的意义：
+
+\begin{itemize}
+\item 降低耦合。
+\item 分离关注点。
+\item 让职责落在拥有信息的对象上。
+\end{itemize}
+
+\subsection{4.3 详细设计过程}
+
+可按以下顺序答题：
+
+\begin{enumerate}
+\item 根据用例和系统事件识别控制入口。
+\item 根据概念类图分配数据责任。
+\item 根据顺序图分配操作责任。
+\item 明确类、接口、属性、方法和关系。
+\item 用 GRASP 原则检查职责分配。
+\item 用模块化、信息隐藏和设计模式改进结构。
+\item 设计单元测试和集成测试。
+\end{enumerate}
+
+\subsection{4.4 GRASP 原则}
+
+\subsubsection{Low Coupling 低耦合}
+
+类之间依赖越少，修改传播越小。
+
+做法：
+
+\begin{itemize}
+\item 依赖接口。
+\item 避免全局变量。
+\item 避免对象链式访问。
+\item 避免跨层调用。
+\end{itemize}
+
+\subsubsection{High Cohesion 高内聚}
+
+一个类的职责要集中，成员之间围绕同一目标。
+
+坏例子：
+
+\begin{itemize}
+\item 一个 \texttt{Manager} 同时处理用户、订单、支付、日志、报表。
+\end{itemize}
+
+好例子：
+
+\begin{itemize}
+\item \texttt{RechargeService} 处理充值业务。
+\item \texttt{PaymentGateway} 处理支付平台交互。
+\item \texttt{RechargeRecordRepository} 处理充值记录持久化。
+\end{itemize}
+
+\subsubsection{Information Expert 信息专家}
+
+把责任分配给拥有完成该责任所需信息的类。
+
+示例：
+
+\begin{itemize}
+\item 判断校园卡余额是否足够消费，责任应放在 \texttt{CampusCard} 或管理校园卡余额的服务中，而不是界面对象中。
+\end{itemize}
+
+\subsubsection{Creator 创建者}
+
+B 创建 A 的条件：
+
+\begin{itemize}
+\item B 聚合或包含 A。
+\item B 记录 A。
+\item B 紧密使用 A。
+\item B 拥有初始化 A 的数据。
+\end{itemize}
+
+示例：
+
+\begin{itemize}
+\item \texttt{RechargeService} 拥有充值金额、校园卡、支付结果等信息，负责创建 \texttt{RechargeRecord}。
+\end{itemize}
+
+\subsubsection{Controller 控制器}
+
+控制器负责接收系统事件并协调业务对象。
+
+控制器不是所有业务逻辑的堆放点。Controller 接收请求并调用 Service；Service 承担业务流程；领域对象承担自身规则。
+
+\subsection{4.5 控制风格}
+
+\subsubsection{集中式控制}
+
+少数控制对象掌握大量逻辑。
+
+优点：
+
+\begin{itemize}
+\item 决策位置集中。
+\item 流程容易追踪。
+\end{itemize}
+
+缺点：
+
+\begin{itemize}
+\item 控制器臃肿。
+\item 其他对象退化为数据容器。
+\end{itemize}
+
+\subsubsection{委托式控制}
+
+控制器保留主流程，把子任务委托给专业对象。
+
+这是实际项目中较稳妥的风格。
+
+\subsubsection{分散式控制}
+
+控制逻辑分散在大量小对象中。
+
+问题：
+
+\begin{itemize}
+\item 控制流难追踪。
+\item 调试和维护成本高。
+\end{itemize}
+
+\subsection{4.6 Parnas 信息隐藏}
+
+Parnas 的核心思想：
+
+\begin{quote}
+模块隐藏一个重要的设计决策。
+\end{quote}
+
+模块不只是子程序。模块边界要围绕“未来容易变化的设计决策”设置。
+
+例子：
+
+\begin{itemize}
+\item 支付平台接口会变化，应隐藏在 \texttt{PaymentGateway} 接口背后。
+\item 数据库表结构会变化，应隐藏在 Repository 背后。
+\item 余额更新事务策略会变化，应隐藏在 Service 内部。
+\end{itemize}
+
+\subsection{4.7 模块化}
+
+模块是可以被独立设计、实现和测试的自包含单元。
+
+面向对象中的粒度：
+
+\begin{itemize}
+\item 方法
+\item 类
+\item 包
+\end{itemize}
+
+模块化目标：
+
+\begin{itemize}
+\item 降低耦合。
+\item 提高内聚。
+\item 隐藏变化。
+\item 支持独立测试。
+\item 支持并行开发。
+\end{itemize}
+
+\subsection{4.8 耦合}
+
+耦合表示模块之间依赖强度。耦合越低，修改传播越小。
+
+面向对象中两类主要耦合：
+
+\begin{itemize}
+\item 访问耦合
+\item 继承耦合
+\end{itemize}
+
+\subsubsection{访问耦合}
+
+从高到低：
+
+\begin{enumerate}
+\item 隐式访问耦合：全局变量、单例共享状态。
+\item 实现访问耦合：通过反射等方式访问内部实现。
+\item 成员变量访问耦合：直接访问 public 字段。
+\item 参数变量访问耦合：通过参数传递具体类型。
+\item 无访问耦合。
+\end{enumerate}
+
+高风险层级：
+
+\begin{itemize}
+\item 隐式访问耦合
+\item 实现访问耦合
+\item 成员变量访问耦合
+\end{itemize}
+
+可接受结构：
+
+\begin{itemize}
+\item 通过参数和接口协作。
+\item 不访问对方内部结构。
+\end{itemize}
+
+\subsubsection{Law of Demeter}
+
+“只和直接朋友交谈”。
+
+一个方法只调用：
+
+\begin{itemize}
+\item 自身对象的方法。
+\item 参数对象的方法。
+\item 本方法创建对象的方法。
+\item 本对象直接字段的方法。
+\end{itemize}
+
+避免：
+
+\small
+\begin{verbatim}
+order.getCustomer().getAddress().getCity()
+\end{verbatim}
+\normalsize
+
+改进方向：
+
+\small
+\begin{verbatim}
+order.getCustomerCity()
+\end{verbatim}
+\normalsize
+
+或把责任放到合适对象中。
+
+\subsection{4.9 接口隔离与面向接口编程}
+
+面向接口编程：
+
+\begin{itemize}
+\item 客户端依赖抽象接口。
+\item 实现类可以替换。
+\item 测试时可注入 Mock。
+\end{itemize}
+
+接口隔离原则：
+
+\begin{quote}
+客户端不应被迫依赖它不使用的方法。
+\end{quote}
+
+坏接口：
+
+\small
+\begin{verbatim}
+public interface CampusCardService {
+    void recharge();
+    void reportLost();
+    void generateFinanceReport();
+    void repairDevice();
+}
+\end{verbatim}
+\normalsize
+
+改进：
+
+\small
+\begin{verbatim}
+public interface RechargeService {
+    void recharge();
+}
+
+public interface LossReportService {
+    void reportLost();
+}
+\end{verbatim}
+\normalsize
+
+\subsection{4.10 继承耦合}
+
+继承是白盒复用，子类依赖父类内部设计。
+
+继承耦合类型从高到低：
+
+\begin{itemize}
+\item Modification：子类修改父类语义，风险最高。
+\item Refinement：子类细化父类行为。
+\item Extension：子类增加新能力。
+\item Nil：无继承耦合。
+\end{itemize}
+
+优先选择：
+
+\begin{itemize}
+\item 组合
+\item 委托
+\item 接口
+\end{itemize}
+
+\subsection{4.11 LSP}
+
+LSP 要求：
+
+\begin{quote}
+子类型对象替换父类型对象后，程序正确性保持不变。
+\end{quote}
+
+契约要求：
+
+\begin{itemize}
+\item 子类前置条件不能更强。
+\item 子类后置条件不能更弱。
+\item 子类必须维护父类不变式。
+\end{itemize}
+
+例子：
+
+\begin{itemize}
+\item 如果父类 \texttt{Account.withdraw(amount)} 允许在余额足够时取款，子类不能额外要求“amount 必须大于 100”。
+\end{itemize}
+
+\subsection{4.12 组合优于继承}
+
+组合通过对象协作复用行为。
+
+优点：
+
+\begin{itemize}
+\item 运行时可替换。
+\item 不暴露父类内部实现。
+\item 更易遵守 LSP。
+\item 更容易测试。
+\end{itemize}
+
+示例：
+
+\begin{itemize}
+\item \texttt{RechargeService} 组合 \texttt{PaymentGateway}，而不是继承某个支付实现类。
+\end{itemize}
+
+\subsection{4.13 封装}
+
+封装层次：
+
+\begin{itemize}
+\item A：封装数据类型或抽象数据类型。
+\item B：封装内部结构。
+\item C：封装其他对象引用。
+\item D：封装运行时类型信息。
+\item E：封装潜在变化。
+\end{itemize}
+
+Iterator 模式就是封装集合内部结构，让客户端不用知道底层是 \texttt{List}、\texttt{Set} 还是 \texttt{Map}。
+
+\subsection{4.14 设计原则 P1-P14}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+\hline
+\textbf{编号} & \textbf{原则} & \textbf{要点} \\
+\hline
+\endfirsthead
+\hline
+\textbf{编号} & \textbf{原则} & \textbf{要点} \\
+\hline
+\endhead
+P1 & 全局变量有害 & 全局状态导致隐式依赖 \\
+\hline
+P2 & 显式表达 & 依赖、状态、约束要清楚 \\
+\hline
+P3 & DRY & 不重复知识和逻辑 \\
+\hline
+P4 & 面向接口编程 & 依赖抽象而非实现 \\
+\hline
+P5 & Law of Demeter & 只和直接朋友交谈 \\
+\hline
+P6 & ISP & 接口保持小而专用 \\
+\hline
+P7 & LSP & 子类可替换父类 \\
+\hline
+P8 & 组合优于继承 & 降低白盒复用风险 \\
+\hline
+P9 & 封装变化 & 把变化点藏到稳定接口背后 \\
+\hline
+P10 & 最小权限 & 只暴露必要访问权限 \\
+\hline
+P11 & OCP & 对扩展开放，对修改关闭 \\
+\hline
+P12 & DIP & 高层和低层都依赖抽象 \\
+\hline
+P13 & SRP & 一个模块只有一个变化理由 \\
+\hline
+P14 & SOFA & 短、单一、少参数、抽象层一致 \\
+\hline
+\end{longtable}
+
+SOFA：
+
+\begin{itemize}
+\item Short
+\item One thing
+\item Few arguments
+\item Abstraction level consistency
+\end{itemize}
+
+\subsection{4.15 集成测试与 Mock}
+
+集成测试检查类之间的协作。
+
+输入：
+
+\begin{itemize}
+\item 对象组合
+\item 触发消息
+\end{itemize}
+
+输出：
+
+\begin{itemize}
+\item 返回值
+\item 最终对象状态
+\item 外部协作是否被调用
+\end{itemize}
+
+Mock 对象用于替代外部依赖：
+
+\begin{itemize}
+\item 数据库
+\item 支付平台
+\item 第三方 API
+\item 消息队列
+\end{itemize}
+
+充值服务测试示例：
+
+\begin{itemize}
+\item 注入 Mock \texttt{PaymentGateway} 返回支付成功。
+\item 注入 Mock \texttt{CampusCardRepository} 返回状态正常的校园卡。
+\item 调用 \texttt{recharge}。
+\item 断言余额更新、记录保存、返回结果正确。
+\end{itemize}
+
+\bigskip\hrule\bigskip
+
+\section{5. 设计模式}
+
+\subsection{5.1 设计模式的构成}
+
+一个设计模式通常包含：
+
+\begin{itemize}
+\item 名称
+\item 问题
+\item 解决方案
+\item 应用场景
+\item 注意事项
+\end{itemize}
+
+模式不是为了“套模板”，而是把稳定抽象和变化点分开。
+
+\subsection{5.2 Strategy 策略模式}
+
+定义：
+
+\begin{quote}
+定义一组算法，把每个算法封装起来，并让它们可以互换，使算法变化独立于使用算法的客户。
+\end{quote}
+
+结构：
+
+\begin{itemize}
+\item Context：持有 Strategy。
+\item Strategy：算法接口。
+\item ConcreteStrategy：具体算法。
+\end{itemize}
+
+适用场景：
+
+\begin{itemize}
+\item 同一业务存在多种算法。
+\item 需要运行时切换算法。
+\item 代码中存在大量按类型分支选择行为。
+\end{itemize}
+
+例子：充值手续费策略
+
+\small
+\begin{verbatim}
+public interface FeeStrategy {
+    BigDecimal calculateFee(BigDecimal amount);
+}
+
+public class BankCardFeeStrategy implements FeeStrategy {
+    public BigDecimal calculateFee(BigDecimal amount) {
+        return amount.multiply(new BigDecimal("0.005"));
+    }
+}
+
+public class AlipayFeeStrategy implements FeeStrategy {
+    public BigDecimal calculateFee(BigDecimal amount) {
+        return BigDecimal.ZERO;
+    }
+}
+\end{verbatim}
+\normalsize
+
+Context：
+
+\small
+\begin{verbatim}
+public class RechargeServiceImpl implements RechargeService {
+    private final FeeStrategy feeStrategy;
+
+    public RechargeServiceImpl(FeeStrategy feeStrategy) {
+        this.feeStrategy = feeStrategy;
+    }
+
+    public void recharge(BigDecimal amount) {
+        BigDecimal fee = feeStrategy.calculateFee(amount);
+        // 执行业务流程
+    }
+}
+\end{verbatim}
+\normalsize
+
+优点：
+
+\begin{itemize}
+\item 消除复杂条件分支。
+\item 新增算法时新增策略类。
+\item 符合 OCP。
+\end{itemize}
+
+代价：
+
+\begin{itemize}
+\item 类数量增加。
+\item 客户端需要选择策略。
+\item Strategy 与 Context 之间需要约定输入输出。
+\end{itemize}
+
+\subsection{5.3 Abstract Factory 抽象工厂}
+
+定义：
+
+\begin{quote}
+提供一个创建一组相关或相互依赖对象的接口，而不指定它们的具体类。
+\end{quote}
+
+结构：
+
+\begin{itemize}
+\item AbstractFactory
+\item ConcreteFactory
+\item AbstractProduct
+\item ConcreteProduct
+\item Client
+\end{itemize}
+
+适用场景：
+
+\begin{itemize}
+\item 系统需要创建一组相关产品。
+\item 产品族需要整体替换。
+\item 客户端不应依赖具体产品类。
+\end{itemize}
+
+例子：不同平台 UI 组件族
+
+\small
+\begin{verbatim}
+public interface UIFactory {
+    Button createButton();
+    Dialog createDialog();
+}
+
+public class WebUIFactory implements UIFactory {
+    public Button createButton() {
+        return new WebButton();
+    }
+
+    public Dialog createDialog() {
+        return new WebDialog();
+    }
+}
+\end{verbatim}
+\normalsize
+
+优点：
+
+\begin{itemize}
+\item 保证同一产品族一起使用。
+\item 客户端依赖抽象。
+\item 切换产品族集中在工厂。
+\end{itemize}
+
+缺点：
+
+\begin{itemize}
+\item 新增产品种类会修改工厂接口。
+\item 产品族稳定时效果最好。
+\end{itemize}
+
+\subsection{5.4 Factory Method 工厂方法}
+
+定义：
+
+\begin{quote}
+父类定义创建对象的接口，由子类决定实例化哪一个具体类。
+\end{quote}
+
+适用场景：
+
+\begin{itemize}
+\item 父类无法提前确定要创建的具体对象。
+\item 创建逻辑要延迟到子类。
+\end{itemize}
+
+与抽象工厂区别：
+
+\begin{itemize}
+\item 工厂方法关注创建一个产品。
+\item 抽象工厂关注创建一组相关产品。
+\end{itemize}
+
+\subsection{5.5 Singleton 单例}
+
+定义：
+
+\begin{quote}
+保证一个类只有一个实例，并提供全局访问点。
+\end{quote}
+
+使用时要谨慎：
+
+\begin{itemize}
+\item 单例容易形成全局状态。
+\item 会增加隐式耦合。
+\item 测试替换不方便。
+\end{itemize}
+
+适合：
+
+\begin{itemize}
+\item 无状态工具入口。
+\item 全局唯一资源管理器。
+\item 配置对象。
+\end{itemize}
+
+不适合：
+
+\begin{itemize}
+\item 承载业务状态。
+\item 替代依赖注入。
+\end{itemize}
+
+\subsection{5.6 Iterator 迭代器}
+
+定义：
+
+\begin{quote}
+在不暴露聚合对象内部表示的前提下，顺序访问其中元素。
+\end{quote}
+
+结构：
+
+\begin{itemize}
+\item Iterator
+\item ConcreteIterator
+\item Aggregate
+\item ConcreteAggregate
+\end{itemize}
+
+优点：
+
+\begin{itemize}
+\item 隐藏集合内部结构。
+\item 简化聚合对象接口。
+\item 支持多种遍历方式。
+\item 支持多个遍历同时进行。
+\end{itemize}
+
+例子：
+
+客户端使用迭代器遍历充值记录，不关心底层是数组、链表、数据库游标还是分页结果。
+
+\bigskip\hrule\bigskip
+
+\section{6. 代码设计与软件构造}
+
+\subsection{6.1 代码设计关注点}
+
+代码设计关注可读性、可维护性和可验证性。
+
+主要内容：
+
+\begin{itemize}
+\item 布局
+\item 命名
+\item 注释
+\item Javadoc
+\item 小任务拆分
+\item 复杂决策表达
+\item 数据使用
+\item 显式依赖
+\item 断言
+\end{itemize}
+
+\subsection{6.2 布局}
+
+原则：
+
+\begin{itemize}
+\item 缩进表达逻辑层级。
+\item 空行分隔不同语义块。
+\item 长表达式拆行。
+\item 相似语句对齐。
+\item 复杂控制结构保持清楚。
+\end{itemize}
+
+坏布局会让正确代码难以审查。
+
+\subsection{6.3 命名}
+
+命名要求：
+
+\begin{itemize}
+\item 表达含义。
+\item 与领域术语一致。
+\item 避免误导。
+\item 避免无意义缩写。
+\item 避免过长。
+\end{itemize}
+
+Java 约定：
+
+\begin{itemize}
+\item 包名：小写单词。
+\item 类名和接口名：PascalCase。
+\item 变量和方法：camelCase。
+\item 常量：大写字母加下划线。
+\end{itemize}
+
+语义规则：
+
+\begin{itemize}
+\item 类、属性、数据对象用名词。
+\item 接口可用名词或形容词。
+\item 方法用动词或动词加名词。
+\end{itemize}
+
+示例：
+
+\begin{itemize}
+\item \texttt{RechargeService}
+\item \texttt{CampusCardRepository}
+\item \texttt{findRechargeRecordsByCardNo}
+\item \texttt{MAX\_RECHARGE\_AMOUNT}
+\end{itemize}
+
+\subsection{6.4 注释与 Javadoc}
+
+Java 注释：
+
+\begin{itemize}
+\item \texttt{//}：单行注释。
+\item \texttt{/* */}：普通块注释。
+\item \texttt{/** */}：文档注释。
+\end{itemize}
+
+Javadoc 常用标签：
+
+\begin{itemize}
+\item \texttt{@author}
+\item \texttt{@version}
+\item \texttt{@see}
+\item \texttt{@since}
+\item \texttt{@deprecated}
+\item \texttt{@param}
+\item \texttt{@return}
+\item \texttt{@throws}
+\end{itemize}
+
+注释原则：
+
+\begin{itemize}
+\item 解释意图、约束和不直观决策。
+\item 不重复代码表面含义。
+\item 公共 API 要说明参数、返回值和异常。
+\end{itemize}
+
+\subsection{6.5 AI 代码生成 Prompt}
+
+四个元素：
+
+\begin{itemize}
+\item Context：上下文。
+\item Goal：目标。
+\item Format：输出格式。
+\item Steps：步骤。
+\end{itemize}
+
+示例：
+
+\small
+\begin{verbatim}
+Context:
+项目使用 Spring Boot，分层为 controller/service/repository。
+
+Goal:
+实现校园卡充值服务接口和实现类。
+
+Format:
+输出 Java 接口、实现类和单元测试。
+
+Steps:
+先定义 DTO，再定义 Service 接口，再写实现逻辑，最后写测试。
+\end{verbatim}
+\normalsize
+
+\subsection{6.6 软件构造}
+
+SWEBOK 中软件构造覆盖：
+
+\begin{itemize}
+\item 编码
+\item 验证
+\item 单元测试
+\item 集成测试
+\item 调试
+\end{itemize}
+
+构造不是“写代码”一个动作，而是把设计转化为可运行、可验证、可维护的软件制品。
+
+\subsection{6.7 构造技术}
+
+主要技术：
+
+\begin{itemize}
+\item 可理解的源代码
+\item 类、枚举、变量、常量
+\item 控制结构
+\item 错误处理
+\item 代码级安全
+\item 单元测试
+\item 集成测试
+\item 调试
+\end{itemize}
+
+\subsection{6.8 代码审查}
+
+课程给出的审查经验：
+
+\begin{itemize}
+\item 每次审查少于 200 到 400 行代码。
+\item 审查速度控制在每小时 300 到 500 行。
+\item 单次审查时间控制在 60 到 90 分钟。
+\item 开发者先对代码做注解。
+\item 使用检查表。
+\item 确认缺陷已修复。
+\item 保持积极的审查文化。
+\item 借助工具支持轻量化审查。
+\end{itemize}
+
+AI 辅助代码审查适合：
+
+\begin{itemize}
+\item 识别坏味道。
+\item 检查安全问题。
+\item 检查风格问题。
+\item 发现遗漏测试。
+\end{itemize}
+
+最终结论要由人结合需求、设计和上下文确认。
+
+\subsection{6.9 集成与构建}
+
+集成策略：
+
+\begin{itemize}
+\item 大爆炸集成：一次性集成所有模块。
+\item 增量集成：逐步集成并验证模块。
+\end{itemize}
+
+增量集成更利于定位问题和控制风险。
+
+构建：
+
+\begin{quote}
+将源代码、资源、配置和依赖转化为可执行或可部署制品。
+\end{quote}
+
+构建依赖配置管理：
+
+\begin{itemize}
+\item 版本一致。
+\item 依赖可追踪。
+\item 构建脚本受控。
+\item 发布制品可复现。
+\end{itemize}
+
+\subsection{6.10 构造管理}
+
+构造管理内容：
+
+\begin{itemize}
+\item 分配构造任务。
+\item 跟踪代码进度。
+\item 度量复杂度。
+\item 度量代码行数。
+\item 度量注释比例。
+\item 管理分支、合并和发布。
+\item 执行代码审查和测试门禁。
+\end{itemize}
+
+\subsection{6.11 坏味道与重构}
+
+重构定义：
+
+\begin{quote}
+在不改变软件外部行为的前提下，改善内部结构。
+\end{quote}
+
+常见坏味道：
+
+\begin{itemize}
+\item 重复代码。
+\item 长方法。
+\item 大类。
+\item 长参数列表。
+\item Magic Number 或 Magic String。
+\item 空 catch。
+\item 过多注释。
+\item 某个类过度访问其他类属性。
+\item Switch 或 if-else 按类型分发行为。
+\end{itemize}
+
+对应改进：
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+\hline
+\textbf{坏味道} & \textbf{问题} & \textbf{重构} \\
+\hline
+\endfirsthead
+\hline
+\textbf{坏味道} & \textbf{问题} & \textbf{重构} \\
+\hline
+\endhead
+重复代码 & 隐式耦合 & 提取方法或提取类 \\
+\hline
+长方法 & 难理解、难测试 & 提取方法 \\
+\hline
+大类 & 职责过多 & 提取类、按职责拆分 \\
+\hline
+长参数列表 & 调用复杂 & 引入参数对象 \\
+\hline
+Magic Number & 含义不清 & 提取常量 \\
+\hline
+空 catch & 吞掉错误 & 记录日志或抛出业务异常 \\
+\hline
+过多注释 & 结构表达力不足 & 改名、拆分、重组逻辑 \\
+\hline
+过度访问其他类属性 & 职责位置错误 & 移动方法或委托 \\
+\hline
+类型分支 & 违反 OCP & 策略模式或多态 \\
+\hline
+\end{longtable}
+
+\subsection{6.12 TDD}
+
+TDD 循环：
+
+\begin{enumerate}
+\item Red：先写失败测试。
+\item Green：写最少代码让测试通过。
+\item Refactor：在测试保护下重构。
+\end{enumerate}
+
+适合：
+
+\begin{itemize}
+\item 规则明确的业务逻辑。
+\item 算法。
+\item 服务层。
+\item 状态迁移。
+\end{itemize}
+
+\subsection{6.13 AI 编程原则}
+
+使用 AI 写代码时：
+
+\begin{itemize}
+\item 明确意图。
+\item 逐步细化。
+\item 保持对代码的理解。
+\item 先定义测试或验收标准。
+\item 经过验证后再提交。
+\end{itemize}
+
+不能把 AI 输出直接当作正确实现。需要用需求、设计、测试和代码审查约束它。
+
+\bigskip\hrule\bigskip
+
+\section{7. 综合题答题模板}
+
+\subsection{7.1 分层接口代码模板}
+
+题型：
+
+\begin{quote}
+给定某个情境，写出 Service 接口声明、Repository 方法声明、Controller 调用 Service 的代码片段，并体现依赖注入。
+\end{quote}
+
+作答要求：
+
+\begin{itemize}
+\item 写包名。
+\item 写接口。
+\item 写构造器注入。
+\item Controller 调用 Service。
+\item ServiceImpl 调用 Repository。
+\item Controller 不直接调用 Repository。
+\end{itemize}
+
+示例：校园卡充值
+
+\small
+\begin{verbatim}
+package edu.school.card.service;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public interface RechargeService {
+    RechargeResult recharge(RechargeCommand command);
+
+    List<RechargeRecordView> findRechargeRecords(String cardNo);
+}
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+package edu.school.card.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface CampusCardRepository {
+    Optional<CampusCard> findByCardNo(String cardNo);
+
+    void save(CampusCard campusCard);
+}
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+package edu.school.card.repository;
+
+import java.util.List;
+
+public interface RechargeRecordRepository {
+    void save(RechargeRecord rechargeRecord);
+
+    List<RechargeRecord> findByCardNo(String cardNo);
+}
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+package edu.school.card.controller;
+
+import edu.school.card.service.RechargeCommand;
+import edu.school.card.service.RechargeResult;
+import edu.school.card.service.RechargeService;
+import edu.school.card.service.RechargeRecordView;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/recharges")
+public class RechargeController {
+    private final RechargeService rechargeService;
+
+    public RechargeController(RechargeService rechargeService) {
+        this.rechargeService = rechargeService;
+    }
+
+    @PostMapping
+    public RechargeResult recharge(@RequestBody RechargeCommand command) {
+        return rechargeService.recharge(command);
+    }
+
+    @GetMapping("/cards/{cardNo}")
+    public List<RechargeRecordView> findRechargeRecords(
+            @PathVariable String cardNo) {
+        return rechargeService.findRechargeRecords(cardNo);
+    }
+}
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+package edu.school.card.service.impl;
+
+import edu.school.card.repository.CampusCardRepository;
+import edu.school.card.repository.RechargeRecordRepository;
+import edu.school.card.service.RechargeCommand;
+import edu.school.card.service.RechargeRecordView;
+import edu.school.card.service.RechargeResult;
+import edu.school.card.service.RechargeService;
+import java.util.List;
+
+public class RechargeServiceImpl implements RechargeService {
+    private final CampusCardRepository campusCardRepository;
+    private final RechargeRecordRepository rechargeRecordRepository;
+
+    public RechargeServiceImpl(
+            CampusCardRepository campusCardRepository,
+            RechargeRecordRepository rechargeRecordRepository) {
+        this.campusCardRepository = campusCardRepository;
+        this.rechargeRecordRepository = rechargeRecordRepository;
+    }
+
+    @Override
+    public RechargeResult recharge(RechargeCommand command) {
+        CampusCard card = campusCardRepository.findByCardNo(command.cardNo())
+                .orElseThrow(CardNotFoundException::new);
+        card.recharge(command.amount());
+        RechargeRecord record = RechargeRecord.success(
+                command.cardNo(),
+                command.amount());
+        campusCardRepository.save(card);
+        rechargeRecordRepository.save(record);
+        return RechargeResult.success(record.id());
+    }
+
+    @Override
+    public List<RechargeRecordView> findRechargeRecords(String cardNo) {
+        return rechargeRecordRepository.findByCardNo(cardNo).stream()
+                .map(RechargeRecordView::from)
+                .toList();
+    }
+}
+\end{verbatim}
+\normalsize
+
+答题说明：
+
+\begin{itemize}
+\item \texttt{controller} 是表示层入口。
+\item \texttt{service} 是表示层与逻辑层之间的接口。
+\item \texttt{repository} 是逻辑层与数据层之间的接口。
+\item 构造器注入体现依赖注入。
+\item 代码里出现的 DTO、Entity 和异常类可以只声明名称，重点是层间依赖方向。
+\end{itemize}
+
+\subsection{7.2 校园卡自助系统物理包图文字版}
+
+题型：
+
+\begin{quote}
+画出校园卡自助系统物理包图。分为客户端和服务器端，体现分层概念，包含所有模块。三包和展示层在客户端，逻辑层和数据层在服务器端，使用 HTTP 通信和 REST API。
+\end{quote}
+
+考试作图要素：
+
+\begin{itemize}
+\item 客户端节点。
+\item 服务器端节点。
+\item 客户端包含 HTML、CSS、JavaScript 三包。
+\item 展示层在客户端。
+\item 逻辑层和数据层在服务器端。
+\item 客户端与服务器通过 HTTP 通信。
+\item 通信接口是 REST API。
+\item 服务器端内部体现 Controller、Service、Repository、数据库。
+\end{itemize}
+
+文字图：
+
+\small
+\begin{verbatim}
+<<device>> Client
+  package html
+  package css
+  package javascript
+  package presentation
+    module LoginPage
+    module RechargePage
+    module RechargeRecordPage
+    module LossReportPage
+    module BalanceQueryPage
+    module ProfilePage
+
+  presentation --HTTP/REST API--> server.api
+
+<<server>> Server
+  package api
+    module AuthController
+    module RechargeController
+    module BalanceController
+    module LossReportController
+    module CardController
+
+  package service
+    interface AuthService
+    interface RechargeService
+    interface BalanceService
+    interface LossReportService
+    interface CardService
+
+  package service.impl
+    class AuthServiceImpl
+    class RechargeServiceImpl
+    class BalanceServiceImpl
+    class LossReportServiceImpl
+    class CardServiceImpl
+
+  package repository
+    interface UserRepository
+    interface CampusCardRepository
+    interface RechargeRecordRepository
+    interface LossReportRepository
+    interface TransactionRepository
+
+  package repository.impl
+    class UserRepositoryImpl
+    class CampusCardRepositoryImpl
+    class RechargeRecordRepositoryImpl
+    class LossReportRepositoryImpl
+    class TransactionRepositoryImpl
+
+  package domain
+    class User
+    class CampusCard
+    class RechargeRecord
+    class LossReport
+    class Transaction
+
+  package database
+    table user
+    table campus_card
+    table recharge_record
+    table loss_report
+    table transaction
+\end{verbatim}
+\normalsize
+
+依赖方向：
+
+\small
+\begin{verbatim}
+presentation -> api -> service -> repository -> database
+service.impl -> domain
+repository.impl -> domain
+\end{verbatim}
+\normalsize
+
+图上必须体现：
+
+\small
+\begin{verbatim}
+Client.presentation -- HTTP + REST API --> Server.api
+\end{verbatim}
+\normalsize
+
+\subsection{7.3 充值服务接口题模板}
+
+题型：
+
+\begin{quote}
+针对充值服务，包括充值、查询充值记录，写出展示层和逻辑层之间接口，以及逻辑层和数据层之间接口。注意写出接口所在包名。
+\end{quote}
+
+展示层和逻辑层之间接口：
+
+\small
+\begin{verbatim}
+package edu.school.card.service;
+
+import java.util.List;
+
+public interface RechargeService {
+    RechargeResult recharge(RechargeCommand command);
+
+    List<RechargeRecordView> findRechargeRecords(String cardNo);
+}
+\end{verbatim}
+\normalsize
+
+逻辑层和数据层之间接口：
+
+\small
+\begin{verbatim}
+package edu.school.card.repository;
+
+import java.util.Optional;
+
+public interface CampusCardRepository {
+    Optional<CampusCard> findByCardNo(String cardNo);
+
+    void save(CampusCard campusCard);
+}
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+package edu.school.card.repository;
+
+import java.util.List;
+
+public interface RechargeRecordRepository {
+    void save(RechargeRecord rechargeRecord);
+
+    List<RechargeRecord> findByCardNo(String cardNo);
+}
+\end{verbatim}
+\normalsize
+
+DTO 示例：
+
+\small
+\begin{verbatim}
+package edu.school.card.service;
+
+import java.math.BigDecimal;
+
+public record RechargeCommand(String cardNo, BigDecimal amount, String payChannel) {
+}
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+package edu.school.card.service;
+
+public record RechargeResult(String recordId, String status, String message) {
+}
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+package edu.school.card.service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+public record RechargeRecordView(
+        String recordId,
+        String cardNo,
+        BigDecimal amount,
+        String status,
+        LocalDateTime createdAt) {
+}
+\end{verbatim}
+\normalsize
+
+答题解释：
+
+\begin{itemize}
+\item \texttt{RechargeService} 是展示层调用逻辑层的接口。
+\item \texttt{CampusCardRepository} 和 \texttt{RechargeRecordRepository} 是逻辑层调用数据层的接口。
+\item \texttt{RechargeService} 不暴露数据库表结构。
+\item \texttt{Repository} 不处理充值业务规则，只负责数据读取和保存。
+\end{itemize}
+
+\subsection{7.4 需求题答题模板}
+
+\subsubsection{写业务需求}
+
+\small
+\begin{verbatim}
+BR-01 建设校园卡自助系统，提高校园卡充值、查询、挂失等业务的
+自助办理比例，减少人工窗口处理压力。
+\end{verbatim}
+\normalsize
+
+\subsubsection{写用户需求}
+
+\small
+\begin{verbatim}
+UR-01 作为持卡人，我想在线充值校园卡，以便在余额不足时继续使用校园卡。
+\end{verbatim}
+\normalsize
+
+\subsubsection{写系统级功能需求}
+
+\small
+\begin{verbatim}
+FR-01 当持卡人提交充值请求时，系统应校验持卡人身份、校园卡状态和充值金额。
+FR-02 当支付平台返回支付成功结果时，系统应更新校园卡余额并生成成功充值记录。
+FR-03 当持卡人查询充值记录时，系统应返回该校园卡的充值记录列表。
+\end{verbatim}
+\normalsize
+
+\subsubsection{写非功能需求}
+
+\small
+\begin{verbatim}
+NFR-01 系统应通过 HTTPS 提供充值接口。
+NFR-02 充值成功响应时间应不超过 3 秒，不包含第三方支付平台处理时间。
+NFR-03 系统应记录每次充值请求、支付结果和余额更新结果。
+\end{verbatim}
+\normalsize
+
+\subsection{7.5 概念类图题模板}
+
+校园卡系统概念类：
+
+\begin{itemize}
+\item User
+\item CampusCard
+\item RechargeRecord
+\item PaymentOrder
+\item LossReport
+\item Transaction
+\end{itemize}
+
+主要关系：
+
+\begin{itemize}
+\item 一个 \texttt{User} 拥有零张或多张 \texttt{CampusCard}。
+\item 一张 \texttt{CampusCard} 对应零条或多条 \texttt{RechargeRecord}。
+\item 一条 \texttt{RechargeRecord} 对应一个 \texttt{PaymentOrder}。
+\item 一张 \texttt{CampusCard} 对应零条或多条 \texttt{LossReport}。
+\item 一张 \texttt{CampusCard} 对应零条或多条 \texttt{Transaction}。
+\end{itemize}
+
+概念类示例：
+
+\small
+\begin{verbatim}
+User
+  userId
+  name
+  studentNo
+
+CampusCard
+  cardNo
+  balance
+  status
+
+RechargeRecord
+  recordId
+  amount
+  status
+  createdAt
+
+PaymentOrder
+  orderId
+  channel
+  status
+  paidAt
+\end{verbatim}
+\normalsize
+
+\subsection{7.6 顺序图题模板}
+
+充值基本流程：
+
+\small
+\begin{verbatim}
+Actor -> RechargePage: 输入金额并提交
+RechargePage -> RechargeController: POST /api/recharges
+RechargeController -> RechargeService: recharge(command)
+RechargeService -> CampusCardRepository: findByCardNo(cardNo)
+CampusCardRepository --> RechargeService: CampusCard
+RechargeService -> PaymentGateway: pay(order)
+PaymentGateway --> RechargeService: PaymentResult
+RechargeService -> CampusCard: recharge(amount)
+RechargeService -> CampusCardRepository: save(card)
+RechargeService -> RechargeRecordRepository: save(record)
+RechargeService --> RechargeController: RechargeResult
+RechargeController --> RechargePage: JSON result
+\end{verbatim}
+\normalsize
+
+异常分支：
+
+\begin{itemize}
+\item 校园卡不存在：抛出 \texttt{CardNotFoundException}。
+\item 校园卡已挂失：返回充值拒绝。
+\item 支付失败：保存失败记录并返回失败原因。
+\item 保存余额失败：执行事务回滚并记录错误。
+\end{itemize}
+
+\subsection{7.7 状态图题模板}
+
+校园卡状态：
+
+\small
+\begin{verbatim}
+Normal -> Lost: reportLost
+Lost -> Normal: cancelLossReport
+Normal -> Frozen: freeze
+Frozen -> Normal: unfreeze
+Normal -> Cancelled: cancel
+Lost -> Cancelled: cancel
+Frozen -> Cancelled: cancel
+\end{verbatim}
+\normalsize
+
+充值记录状态：
+
+\small
+\begin{verbatim}
+Created -> Paying: startPayment
+Paying -> Success: paymentSucceeded
+Paying -> Failed: paymentFailed
+Created -> Cancelled: cancel
+Failed -> Created: retry
+\end{verbatim}
+\normalsize
+
+测试点：
+
+\begin{itemize}
+\item 正常迁移要测。
+\item 非法迁移要测。
+\item 每个状态的允许操作要测。
+\end{itemize}
+
+\subsection{7.8 设计原则题模板}
+
+题目给出代码后，按以下结构答：
+
+\begin{enumerate}
+\item 指出问题。
+\item 对应原则。
+\item 说明风险。
+\item 给出改进。
+\end{enumerate}
+
+示例：
+
+\small
+\begin{verbatim}
+问题：Controller 直接访问 Repository，并在 Controller 中完成充值业务规则。
+原则：违反分层职责、低耦合和 SRP。
+风险：界面入口与数据库访问耦合，业务规则无法复用，单元测试困难。
+改进：Controller 只依赖 RechargeService；
+RechargeServiceImpl 注入 Repository 并封装充值流程。
+\end{verbatim}
+\normalsize
+
+\subsection{7.9 设计模式题模板}
+
+题目出现大量按类型选择算法：
+
+\small
+\begin{verbatim}
+if (payType.equals("BANK")) { ... }
+else if (payType.equals("ALIPAY")) { ... }
+else if (payType.equals("WECHAT")) { ... }
+\end{verbatim}
+\normalsize
+
+答：
+
+\begin{itemize}
+\item 使用 Strategy。
+\item 抽象 \texttt{PaymentStrategy}。
+\item 每种支付方式一个具体策略。
+\item \texttt{RechargeService} 依赖 \texttt{PaymentStrategy} 或策略工厂。
+\item 新增支付方式时新增策略类，减少修改原业务流程。
+\end{itemize}
+
+题目出现一组相关产品整体替换：
+
+\begin{itemize}
+\item 使用 Abstract Factory。
+\item 抽象产品和抽象工厂。
+\item 具体工厂创建同一产品族。
+\end{itemize}
+
+题目要求隐藏集合结构：
+
+\begin{itemize}
+\item 使用 Iterator。
+\item 客户端通过迭代器访问元素。
+\end{itemize}
+
+\subsection{7.10 代码质量题模板}
+
+答题结构：
+
+\small
+\begin{verbatim}
+问题：
+违反原则：
+影响：
+重构：
+测试：
+\end{verbatim}
+\normalsize
+
+示例：
+
+\small
+\begin{verbatim}
+问题：充值方法过长，同时处理参数校验、支付调用、余额更新、记录保存和异常处理。
+违反原则：SRP、SOFA。
+影响：代码难理解、难测试、修改支付逻辑会影响余额更新逻辑。
+重构：提取校验方法、支付网关、余额更新方法和记录保存方法；支付方式变化使用 Strategy。
+测试：为正常充值、支付失败、校园卡挂失、金额非法分别编写单元测试。
+\end{verbatim}
+\normalsize
+
+\subsection{7.11 HCI 题模板}
+
+题目要求评价界面：
+
+\small
+\begin{verbatim}
+问题：充值按钮太小且远离金额输入区域。
+原则：违反 Fitts 定律和效率原则。
+影响：用户完成高频充值操作的时间增加，误触风险上升。
+改进：增大按钮点击区域，把提交按钮放在金额输入区域附近，并对危险操作使用确认反馈。
+\end{verbatim}
+\normalsize
+
+题目要求设计反馈：
+
+\small
+\begin{verbatim}
+充值提交后，系统立即显示处理中状态；
+支付成功后显示余额变化和充值记录编号；
+支付失败时显示失败原因和重试入口；
+长时间等待时显示进度或可取消操作。
+\end{verbatim}
+\normalsize
+
+\subsection{7.12 配置管理题模板}
+
+题目出现上线后版本不一致、漏部署、旧代码被触发：
+
+\small
+\begin{verbatim}
+问题属于配置管理和发布管理失败。
+原因：配置项识别不完整，版本状态未核对，发布前未做配置审计和上线验证。
+改进：
+1. 将源码、脚本、配置、依赖和部署清单纳入配置项。
+2. 建立发布基线。
+3. 变更走 CR、影响分析、CCB 审批、执行、审计、状态报告。
+4. 发布前核对所有服务器版本。
+5. 发布后执行冒烟测试和回滚预案。
+\end{verbatim}
+\normalsize
+
+\bigskip\hrule\bigskip
+
+\section{8. 快速背诵清单}
+
+\subsection{软件工程}
+
+\begin{itemize}
+\item 软件 = 程序 + 数据 + 文档 + 知识。
+\item 软件工程 = 系统化、规范化、可度量的方法。
+\item 软件危机来自规模、复杂度、变化和协作失控。
+\item AI 加速工程活动，但不能替代验证、评审和配置管理。
+\end{itemize}
+
+\subsection{项目管理}
+
+\begin{itemize}
+\item 项目：临时性、独特性。
+\item 三约束：范围、时间、成本，影响质量。
+\item 五过程组：启动、计划、执行、跟踪控制、收尾。
+\item 风险管理：识别、分析、排序、应对、监控。
+\item SCM：配置项、基线、版本、变更、审计、状态报告、发布。
+\end{itemize}
+
+\subsection{需求工程}
+
+\begin{itemize}
+\item 活动：获取、分析、规格说明、验证、管理。
+\item 层次：业务需求、用户需求、系统级需求。
+\item 类型：功能、非功能、接口、约束、数据。
+\item 用例：用户目标、参与者、系统边界、include、extend。
+\item SRS：系统视角、刺激-响应、可验证、可追踪。
+\end{itemize}
+
+\subsection{体系结构}
+
+\begin{itemize}
+\item 架构 = 组件 + 连接件 + 配置。
+\item 4+1：逻辑、开发、进程、物理、场景。
+\item 分层：表示层、业务逻辑层、数据访问层。
+\item 依赖倒置：上层依赖接口，不依赖实现。
+\end{itemize}
+
+\subsection{HCI}
+
+\begin{itemize}
+\item 可用性：易学、效率、易记、错误恢复、满意度。
+\item Fitts：目标越近越大，操作越快。
+\item 识别优于回忆。
+\item 黄金规则：用户控制、减少记忆负担、一致性。
+\end{itemize}
+
+\subsection{详细设计}
+
+\begin{itemize}
+\item 核心：责任与协作。
+\item GRASP：低耦合、高内聚、信息专家、创建者、控制器。
+\item 信息隐藏：模块隐藏重要设计决策。
+\item SOFA：短、单一、少参数、抽象层一致。
+\end{itemize}
+
+\subsection{设计模式}
+
+\begin{itemize}
+\item Strategy：封装可互换算法。
+\item Abstract Factory：创建一组相关产品。
+\item Factory Method：子类决定创建哪个产品。
+\item Singleton：唯一实例和全局访问点。
+\item Iterator：隐藏集合内部结构并顺序访问元素。
+\end{itemize}
+
+\subsection{构造}
+
+\begin{itemize}
+\item 构造 = 编码 + 验证 + 单元测试 + 集成测试 + 调试。
+\item 代码审查要小批量、限时、用检查表。
+\item 重构不改变外部行为，只改善内部结构。
+\item TDD：Red、Green、Refactor。
+\end{itemize}
+
+
+\end{document}

@@ -1,0 +1,682 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setcounter{secnumdepth}{0}
+\renewcommand{\arraystretch}{1.25}
+\emergencystretch=4em
+\sloppy
+\title{05 设计模式与软件构造复习讲义}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+
+\begin{quote}
+范围：\texttt{设计模式.pdf}、\texttt{代码设计.pdf}、\texttt{软件构造.pdf}；结合 Exam/Review 中策略模式、抽象工厂、代码质量、重构、审查、测试和构造管理内容。
+结构：先整理 PPT 主线，再放对应考试模板和快速背诵清单。
+\end{quote}
+
+\bigskip\hrule\bigskip
+
+\section{5. 设计模式}
+
+\subsection{5.1 设计模式的构成}
+
+一个设计模式通常包含：
+
+\begin{itemize}
+\item 名称
+\item 问题
+\item 解决方案
+\item 应用场景
+\item 注意事项
+\end{itemize}
+
+模式不是为了“套模板”，而是把稳定抽象和变化点分开。
+
+\subsection{5.2 Strategy 策略模式}
+
+定义：
+
+\begin{quote}
+定义一组算法，把每个算法封装起来，并让它们可以互换，使算法变化独立于使用算法的客户。
+\end{quote}
+
+结构：
+
+\begin{itemize}
+\item Context：持有 Strategy。
+\item Strategy：算法接口。
+\item ConcreteStrategy：具体算法。
+\end{itemize}
+
+适用场景：
+
+\begin{itemize}
+\item 同一业务存在多种算法。
+\item 需要运行时切换算法。
+\item 代码中存在大量按类型分支选择行为。
+\end{itemize}
+
+例子：充值手续费策略
+
+\small
+\begin{verbatim}
+public interface FeeStrategy {
+    BigDecimal calculateFee(BigDecimal amount);
+}
+
+public class BankCardFeeStrategy implements FeeStrategy {
+    public BigDecimal calculateFee(BigDecimal amount) {
+        return amount.multiply(new BigDecimal("0.005"));
+    }
+}
+
+public class AlipayFeeStrategy implements FeeStrategy {
+    public BigDecimal calculateFee(BigDecimal amount) {
+        return BigDecimal.ZERO;
+    }
+}
+\end{verbatim}
+\normalsize
+
+Context：
+
+\small
+\begin{verbatim}
+public class RechargeServiceImpl implements RechargeService {
+    private final FeeStrategy feeStrategy;
+
+    public RechargeServiceImpl(FeeStrategy feeStrategy) {
+        this.feeStrategy = feeStrategy;
+    }
+
+    public void recharge(BigDecimal amount) {
+        BigDecimal fee = feeStrategy.calculateFee(amount);
+        // 执行业务流程
+    }
+}
+\end{verbatim}
+\normalsize
+
+优点：
+
+\begin{itemize}
+\item 消除复杂条件分支。
+\item 新增算法时新增策略类。
+\item 符合 OCP。
+\end{itemize}
+
+代价：
+
+\begin{itemize}
+\item 类数量增加。
+\item 客户端需要选择策略。
+\item Strategy 与 Context 之间需要约定输入输出。
+\end{itemize}
+
+\subsection{5.3 Abstract Factory 抽象工厂}
+
+定义：
+
+\begin{quote}
+提供一个创建一组相关或相互依赖对象的接口，而不指定它们的具体类。
+\end{quote}
+
+结构：
+
+\begin{itemize}
+\item AbstractFactory
+\item ConcreteFactory
+\item AbstractProduct
+\item ConcreteProduct
+\item Client
+\end{itemize}
+
+适用场景：
+
+\begin{itemize}
+\item 系统需要创建一组相关产品。
+\item 产品族需要整体替换。
+\item 客户端不应依赖具体产品类。
+\end{itemize}
+
+例子：不同平台 UI 组件族
+
+\small
+\begin{verbatim}
+public interface UIFactory {
+    Button createButton();
+    Dialog createDialog();
+}
+
+public class WebUIFactory implements UIFactory {
+    public Button createButton() {
+        return new WebButton();
+    }
+
+    public Dialog createDialog() {
+        return new WebDialog();
+    }
+}
+\end{verbatim}
+\normalsize
+
+优点：
+
+\begin{itemize}
+\item 保证同一产品族一起使用。
+\item 客户端依赖抽象。
+\item 切换产品族集中在工厂。
+\end{itemize}
+
+缺点：
+
+\begin{itemize}
+\item 新增产品种类会修改工厂接口。
+\item 产品族稳定时效果最好。
+\end{itemize}
+
+\subsection{5.4 Factory Method 工厂方法}
+
+定义：
+
+\begin{quote}
+父类定义创建对象的接口，由子类决定实例化哪一个具体类。
+\end{quote}
+
+适用场景：
+
+\begin{itemize}
+\item 父类无法提前确定要创建的具体对象。
+\item 创建逻辑要延迟到子类。
+\end{itemize}
+
+与抽象工厂区别：
+
+\begin{itemize}
+\item 工厂方法关注创建一个产品。
+\item 抽象工厂关注创建一组相关产品。
+\end{itemize}
+
+\subsection{5.5 Singleton 单例}
+
+定义：
+
+\begin{quote}
+保证一个类只有一个实例，并提供全局访问点。
+\end{quote}
+
+使用时要谨慎：
+
+\begin{itemize}
+\item 单例容易形成全局状态。
+\item 会增加隐式耦合。
+\item 测试替换不方便。
+\end{itemize}
+
+适合：
+
+\begin{itemize}
+\item 无状态工具入口。
+\item 全局唯一资源管理器。
+\item 配置对象。
+\end{itemize}
+
+不适合：
+
+\begin{itemize}
+\item 承载业务状态。
+\item 替代依赖注入。
+\end{itemize}
+
+\subsection{5.6 Iterator 迭代器}
+
+定义：
+
+\begin{quote}
+在不暴露聚合对象内部表示的前提下，顺序访问其中元素。
+\end{quote}
+
+结构：
+
+\begin{itemize}
+\item Iterator
+\item ConcreteIterator
+\item Aggregate
+\item ConcreteAggregate
+\end{itemize}
+
+优点：
+
+\begin{itemize}
+\item 隐藏集合内部结构。
+\item 简化聚合对象接口。
+\item 支持多种遍历方式。
+\item 支持多个遍历同时进行。
+\end{itemize}
+
+例子：
+
+客户端使用迭代器遍历充值记录，不关心底层是数组、链表、数据库游标还是分页结果。
+
+\bigskip\hrule\bigskip
+
+\bigskip\hrule\bigskip
+
+\section{6. 代码设计与软件构造}
+
+\subsection{6.1 代码设计关注点}
+
+代码设计关注可读性、可维护性和可验证性。
+
+主要内容：
+
+\begin{itemize}
+\item 布局
+\item 命名
+\item 注释
+\item Javadoc
+\item 小任务拆分
+\item 复杂决策表达
+\item 数据使用
+\item 显式依赖
+\item 断言
+\end{itemize}
+
+\subsection{6.2 布局}
+
+原则：
+
+\begin{itemize}
+\item 缩进表达逻辑层级。
+\item 空行分隔不同语义块。
+\item 长表达式拆行。
+\item 相似语句对齐。
+\item 复杂控制结构保持清楚。
+\end{itemize}
+
+坏布局会让正确代码难以审查。
+
+\subsection{6.3 命名}
+
+命名要求：
+
+\begin{itemize}
+\item 表达含义。
+\item 与领域术语一致。
+\item 避免误导。
+\item 避免无意义缩写。
+\item 避免过长。
+\end{itemize}
+
+Java 约定：
+
+\begin{itemize}
+\item 包名：小写单词。
+\item 类名和接口名：PascalCase。
+\item 变量和方法：camelCase。
+\item 常量：大写字母加下划线。
+\end{itemize}
+
+语义规则：
+
+\begin{itemize}
+\item 类、属性、数据对象用名词。
+\item 接口可用名词或形容词。
+\item 方法用动词或动词加名词。
+\end{itemize}
+
+示例：
+
+\begin{itemize}
+\item \texttt{RechargeService}
+\item \texttt{CampusCardRepository}
+\item \texttt{findRechargeRecordsByCardNo}
+\item \texttt{MAX\_RECHARGE\_AMOUNT}
+\end{itemize}
+
+\subsection{6.4 注释与 Javadoc}
+
+Java 注释：
+
+\begin{itemize}
+\item \texttt{//}：单行注释。
+\item \texttt{/* */}：普通块注释。
+\item \texttt{/** */}：文档注释。
+\end{itemize}
+
+Javadoc 常用标签：
+
+\begin{itemize}
+\item \texttt{@author}
+\item \texttt{@version}
+\item \texttt{@see}
+\item \texttt{@since}
+\item \texttt{@deprecated}
+\item \texttt{@param}
+\item \texttt{@return}
+\item \texttt{@throws}
+\end{itemize}
+
+注释原则：
+
+\begin{itemize}
+\item 解释意图、约束和不直观决策。
+\item 不重复代码表面含义。
+\item 公共 API 要说明参数、返回值和异常。
+\end{itemize}
+
+\subsection{6.5 AI 代码生成 Prompt}
+
+四个元素：
+
+\begin{itemize}
+\item Context：上下文。
+\item Goal：目标。
+\item Format：输出格式。
+\item Steps：步骤。
+\end{itemize}
+
+示例：
+
+\small
+\begin{verbatim}
+Context:
+项目使用 Spring Boot，分层为 controller/service/repository。
+
+Goal:
+实现校园卡充值服务接口和实现类。
+
+Format:
+输出 Java 接口、实现类和单元测试。
+
+Steps:
+先定义 DTO，再定义 Service 接口，再写实现逻辑，最后写测试。
+\end{verbatim}
+\normalsize
+
+\subsection{6.6 软件构造}
+
+SWEBOK 中软件构造覆盖：
+
+\begin{itemize}
+\item 编码
+\item 验证
+\item 单元测试
+\item 集成测试
+\item 调试
+\end{itemize}
+
+构造不是“写代码”一个动作，而是把设计转化为可运行、可验证、可维护的软件制品。
+
+\subsection{6.7 构造技术}
+
+主要技术：
+
+\begin{itemize}
+\item 可理解的源代码
+\item 类、枚举、变量、常量
+\item 控制结构
+\item 错误处理
+\item 代码级安全
+\item 单元测试
+\item 集成测试
+\item 调试
+\end{itemize}
+
+\subsection{6.8 代码审查}
+
+课程给出的审查经验：
+
+\begin{itemize}
+\item 每次审查少于 200 到 400 行代码。
+\item 审查速度控制在每小时 300 到 500 行。
+\item 单次审查时间控制在 60 到 90 分钟。
+\item 开发者先对代码做注解。
+\item 使用检查表。
+\item 确认缺陷已修复。
+\item 保持积极的审查文化。
+\item 借助工具支持轻量化审查。
+\end{itemize}
+
+AI 辅助代码审查适合：
+
+\begin{itemize}
+\item 识别坏味道。
+\item 检查安全问题。
+\item 检查风格问题。
+\item 发现遗漏测试。
+\end{itemize}
+
+最终结论要由人结合需求、设计和上下文确认。
+
+\subsection{6.9 集成与构建}
+
+集成策略：
+
+\begin{itemize}
+\item 大爆炸集成：一次性集成所有模块。
+\item 增量集成：逐步集成并验证模块。
+\end{itemize}
+
+增量集成更利于定位问题和控制风险。
+
+构建：
+
+\begin{quote}
+将源代码、资源、配置和依赖转化为可执行或可部署制品。
+\end{quote}
+
+构建依赖配置管理：
+
+\begin{itemize}
+\item 版本一致。
+\item 依赖可追踪。
+\item 构建脚本受控。
+\item 发布制品可复现。
+\end{itemize}
+
+\subsection{6.10 构造管理}
+
+构造管理内容：
+
+\begin{itemize}
+\item 分配构造任务。
+\item 跟踪代码进度。
+\item 度量复杂度。
+\item 度量代码行数。
+\item 度量注释比例。
+\item 管理分支、合并和发布。
+\item 执行代码审查和测试门禁。
+\end{itemize}
+
+\subsection{6.11 坏味道与重构}
+
+重构定义：
+
+\begin{quote}
+在不改变软件外部行为的前提下，改善内部结构。
+\end{quote}
+
+常见坏味道：
+
+\begin{itemize}
+\item 重复代码。
+\item 长方法。
+\item 大类。
+\item 长参数列表。
+\item Magic Number 或 Magic String。
+\item 空 catch。
+\item 过多注释。
+\item 某个类过度访问其他类属性。
+\item Switch 或 if-else 按类型分发行为。
+\end{itemize}
+
+对应改进：
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+\hline
+\textbf{坏味道} & \textbf{问题} & \textbf{重构} \\
+\hline
+\endfirsthead
+\hline
+\textbf{坏味道} & \textbf{问题} & \textbf{重构} \\
+\hline
+\endhead
+重复代码 & 隐式耦合 & 提取方法或提取类 \\
+\hline
+长方法 & 难理解、难测试 & 提取方法 \\
+\hline
+大类 & 职责过多 & 提取类、按职责拆分 \\
+\hline
+长参数列表 & 调用复杂 & 引入参数对象 \\
+\hline
+Magic Number & 含义不清 & 提取常量 \\
+\hline
+空 catch & 吞掉错误 & 记录日志或抛出业务异常 \\
+\hline
+过多注释 & 结构表达力不足 & 改名、拆分、重组逻辑 \\
+\hline
+过度访问其他类属性 & 职责位置错误 & 移动方法或委托 \\
+\hline
+类型分支 & 违反 OCP & 策略模式或多态 \\
+\hline
+\end{longtable}
+
+\subsection{6.12 TDD}
+
+TDD 循环：
+
+\begin{enumerate}
+\item Red：先写失败测试。
+\item Green：写最少代码让测试通过。
+\item Refactor：在测试保护下重构。
+\end{enumerate}
+
+适合：
+
+\begin{itemize}
+\item 规则明确的业务逻辑。
+\item 算法。
+\item 服务层。
+\item 状态迁移。
+\end{itemize}
+
+\subsection{6.13 AI 编程原则}
+
+使用 AI 写代码时：
+
+\begin{itemize}
+\item 明确意图。
+\item 逐步细化。
+\item 保持对代码的理解。
+\item 先定义测试或验收标准。
+\item 经过验证后再提交。
+\end{itemize}
+
+不能把 AI 输出直接当作正确实现。需要用需求、设计、测试和代码审查约束它。
+
+\bigskip\hrule\bigskip
+
+\bigskip\hrule\bigskip
+
+\section{对应考试模板}
+
+\subsection{7.9 设计模式题模板}
+
+题目出现大量按类型选择算法：
+
+\small
+\begin{verbatim}
+if (payType.equals("BANK")) { ... }
+else if (payType.equals("ALIPAY")) { ... }
+else if (payType.equals("WECHAT")) { ... }
+\end{verbatim}
+\normalsize
+
+答：
+
+\begin{itemize}
+\item 使用 Strategy。
+\item 抽象 \texttt{PaymentStrategy}。
+\item 每种支付方式一个具体策略。
+\item \texttt{RechargeService} 依赖 \texttt{PaymentStrategy} 或策略工厂。
+\item 新增支付方式时新增策略类，减少修改原业务流程。
+\end{itemize}
+
+题目出现一组相关产品整体替换：
+
+\begin{itemize}
+\item 使用 Abstract Factory。
+\item 抽象产品和抽象工厂。
+\item 具体工厂创建同一产品族。
+\end{itemize}
+
+题目要求隐藏集合结构：
+
+\begin{itemize}
+\item 使用 Iterator。
+\item 客户端通过迭代器访问元素。
+\end{itemize}
+
+\subsection{7.10 代码质量题模板}
+
+答题结构：
+
+\small
+\begin{verbatim}
+问题：
+违反原则：
+影响：
+重构：
+测试：
+\end{verbatim}
+\normalsize
+
+示例：
+
+\small
+\begin{verbatim}
+问题：充值方法过长，同时处理参数校验、支付调用、余额更新、记录保存和异常处理。
+违反原则：SRP、SOFA。
+影响：代码难理解、难测试、修改支付逻辑会影响余额更新逻辑。
+重构：提取校验方法、支付网关、余额更新方法和记录保存方法；支付方式变化使用 Strategy。
+测试：为正常充值、支付失败、校园卡挂失、金额非法分别编写单元测试。
+\end{verbatim}
+\normalsize
+
+\bigskip\hrule\bigskip
+
+\section{快速背诵清单}
+
+\subsection{设计模式}
+
+\begin{itemize}
+\item Strategy：封装可互换算法。
+\item Abstract Factory：创建一组相关产品。
+\item Factory Method：子类决定创建哪个产品。
+\item Singleton：唯一实例和全局访问点。
+\item Iterator：隐藏集合内部结构并顺序访问元素。
+\end{itemize}
+
+\subsection{构造}
+
+\begin{itemize}
+\item 构造 = 编码 + 验证 + 单元测试 + 集成测试 + 调试。
+\item 代码审查要小批量、限时、用检查表。
+\item 重构不改变外部行为，只改善内部结构。
+\item TDD：Red、Green、Refactor。
+\end{itemize}
+
+
+\end{document}

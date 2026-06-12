@@ -1,0 +1,570 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setcounter{secnumdepth}{0}
+\renewcommand{\arraystretch}{1.25}
+\emergencystretch=4em
+\sloppy
+\title{04 详细设计与模块化复习讲义}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+
+\begin{quote}
+范围：\texttt{04-01-详细设计.pdf}、\texttt{04-02-面向对象的模块化与信息隐藏.pdf}；结合 Exam/Review 中 GRASP、信息隐藏、耦合、内聚、LSP、DIP 和 OCP 内容。
+结构：先整理 PPT 主线，再放对应考试模板和快速背诵清单。
+\end{quote}
+
+\bigskip\hrule\bigskip
+
+\section{4. 详细设计、模块化与信息隐藏}
+
+\subsection{4.1 详细设计的范围}
+
+详细设计包含：
+
+\begin{itemize}
+\item 中层设计：过程、调用关系、类协作。
+\item 低层设计：数据结构、算法、类型、语句和控制结构。
+\end{itemize}
+
+输入：
+
+\begin{itemize}
+\item 用例
+\item 概念模型
+\item 顺序图
+\item 状态图
+\item 非功能需求
+\item 体系结构模块规格
+\item 导入和导出接口
+\item 组件接口
+\end{itemize}
+
+输出：
+
+\begin{itemize}
+\item 静态结构：类、接口、关系。
+\item 动态行为：对象协作和消息。
+\item 状态行为：对象生命周期。
+\item 实现注解：约束、异常、事务。
+\item 设计理由：关键选择的依据。
+\end{itemize}
+
+\subsection{4.2 责任与协作}
+
+面向对象详细设计的核心是：
+
+\begin{itemize}
+\item 责任
+\item 协作
+\end{itemize}
+
+责任：
+
+\begin{itemize}
+\item 操作责任：对象要执行的任务。
+\item 数据责任：对象要维护的信息。
+\end{itemize}
+
+协作：
+
+\begin{itemize}
+\item 对象之间通过消息调用完成更大的任务。
+\item 一个对象不直接承担全部工作，而是把子任务委托给合适对象。
+\end{itemize}
+
+委托的意义：
+
+\begin{itemize}
+\item 降低耦合。
+\item 分离关注点。
+\item 让职责落在拥有信息的对象上。
+\end{itemize}
+
+\subsection{4.3 详细设计过程}
+
+可按以下顺序答题：
+
+\begin{enumerate}
+\item 根据用例和系统事件识别控制入口。
+\item 根据概念类图分配数据责任。
+\item 根据顺序图分配操作责任。
+\item 明确类、接口、属性、方法和关系。
+\item 用 GRASP 原则检查职责分配。
+\item 用模块化、信息隐藏和设计模式改进结构。
+\item 设计单元测试和集成测试。
+\end{enumerate}
+
+\subsection{4.4 GRASP 原则}
+
+\subsubsection{Low Coupling 低耦合}
+
+类之间依赖越少，修改传播越小。
+
+做法：
+
+\begin{itemize}
+\item 依赖接口。
+\item 避免全局变量。
+\item 避免对象链式访问。
+\item 避免跨层调用。
+\end{itemize}
+
+\subsubsection{High Cohesion 高内聚}
+
+一个类的职责要集中，成员之间围绕同一目标。
+
+坏例子：
+
+\begin{itemize}
+\item 一个 \texttt{Manager} 同时处理用户、订单、支付、日志、报表。
+\end{itemize}
+
+好例子：
+
+\begin{itemize}
+\item \texttt{RechargeService} 处理充值业务。
+\item \texttt{PaymentGateway} 处理支付平台交互。
+\item \texttt{RechargeRecordRepository} 处理充值记录持久化。
+\end{itemize}
+
+\subsubsection{Information Expert 信息专家}
+
+把责任分配给拥有完成该责任所需信息的类。
+
+示例：
+
+\begin{itemize}
+\item 判断校园卡余额是否足够消费，责任应放在 \texttt{CampusCard} 或管理校园卡余额的服务中，而不是界面对象中。
+\end{itemize}
+
+\subsubsection{Creator 创建者}
+
+B 创建 A 的条件：
+
+\begin{itemize}
+\item B 聚合或包含 A。
+\item B 记录 A。
+\item B 紧密使用 A。
+\item B 拥有初始化 A 的数据。
+\end{itemize}
+
+示例：
+
+\begin{itemize}
+\item \texttt{RechargeService} 拥有充值金额、校园卡、支付结果等信息，负责创建 \texttt{RechargeRecord}。
+\end{itemize}
+
+\subsubsection{Controller 控制器}
+
+控制器负责接收系统事件并协调业务对象。
+
+控制器不是所有业务逻辑的堆放点。Controller 接收请求并调用 Service；Service 承担业务流程；领域对象承担自身规则。
+
+\subsection{4.5 控制风格}
+
+\subsubsection{集中式控制}
+
+少数控制对象掌握大量逻辑。
+
+优点：
+
+\begin{itemize}
+\item 决策位置集中。
+\item 流程容易追踪。
+\end{itemize}
+
+缺点：
+
+\begin{itemize}
+\item 控制器臃肿。
+\item 其他对象退化为数据容器。
+\end{itemize}
+
+\subsubsection{委托式控制}
+
+控制器保留主流程，把子任务委托给专业对象。
+
+这是实际项目中较稳妥的风格。
+
+\subsubsection{分散式控制}
+
+控制逻辑分散在大量小对象中。
+
+问题：
+
+\begin{itemize}
+\item 控制流难追踪。
+\item 调试和维护成本高。
+\end{itemize}
+
+\subsection{4.6 Parnas 信息隐藏}
+
+Parnas 的核心思想：
+
+\begin{quote}
+模块隐藏一个重要的设计决策。
+\end{quote}
+
+模块不只是子程序。模块边界要围绕“未来容易变化的设计决策”设置。
+
+例子：
+
+\begin{itemize}
+\item 支付平台接口会变化，应隐藏在 \texttt{PaymentGateway} 接口背后。
+\item 数据库表结构会变化，应隐藏在 Repository 背后。
+\item 余额更新事务策略会变化，应隐藏在 Service 内部。
+\end{itemize}
+
+\subsection{4.7 模块化}
+
+模块是可以被独立设计、实现和测试的自包含单元。
+
+面向对象中的粒度：
+
+\begin{itemize}
+\item 方法
+\item 类
+\item 包
+\end{itemize}
+
+模块化目标：
+
+\begin{itemize}
+\item 降低耦合。
+\item 提高内聚。
+\item 隐藏变化。
+\item 支持独立测试。
+\item 支持并行开发。
+\end{itemize}
+
+\subsection{4.8 耦合}
+
+耦合表示模块之间依赖强度。耦合越低，修改传播越小。
+
+面向对象中两类主要耦合：
+
+\begin{itemize}
+\item 访问耦合
+\item 继承耦合
+\end{itemize}
+
+\subsubsection{访问耦合}
+
+从高到低：
+
+\begin{enumerate}
+\item 隐式访问耦合：全局变量、单例共享状态。
+\item 实现访问耦合：通过反射等方式访问内部实现。
+\item 成员变量访问耦合：直接访问 public 字段。
+\item 参数变量访问耦合：通过参数传递具体类型。
+\item 无访问耦合。
+\end{enumerate}
+
+高风险层级：
+
+\begin{itemize}
+\item 隐式访问耦合
+\item 实现访问耦合
+\item 成员变量访问耦合
+\end{itemize}
+
+可接受结构：
+
+\begin{itemize}
+\item 通过参数和接口协作。
+\item 不访问对方内部结构。
+\end{itemize}
+
+\subsubsection{Law of Demeter}
+
+“只和直接朋友交谈”。
+
+一个方法只调用：
+
+\begin{itemize}
+\item 自身对象的方法。
+\item 参数对象的方法。
+\item 本方法创建对象的方法。
+\item 本对象直接字段的方法。
+\end{itemize}
+
+避免：
+
+\small
+\begin{verbatim}
+order.getCustomer().getAddress().getCity()
+\end{verbatim}
+\normalsize
+
+改进方向：
+
+\small
+\begin{verbatim}
+order.getCustomerCity()
+\end{verbatim}
+\normalsize
+
+或把责任放到合适对象中。
+
+\subsection{4.9 接口隔离与面向接口编程}
+
+面向接口编程：
+
+\begin{itemize}
+\item 客户端依赖抽象接口。
+\item 实现类可以替换。
+\item 测试时可注入 Mock。
+\end{itemize}
+
+接口隔离原则：
+
+\begin{quote}
+客户端不应被迫依赖它不使用的方法。
+\end{quote}
+
+坏接口：
+
+\small
+\begin{verbatim}
+public interface CampusCardService {
+    void recharge();
+    void reportLost();
+    void generateFinanceReport();
+    void repairDevice();
+}
+\end{verbatim}
+\normalsize
+
+改进：
+
+\small
+\begin{verbatim}
+public interface RechargeService {
+    void recharge();
+}
+
+public interface LossReportService {
+    void reportLost();
+}
+\end{verbatim}
+\normalsize
+
+\subsection{4.10 继承耦合}
+
+继承是白盒复用，子类依赖父类内部设计。
+
+继承耦合类型从高到低：
+
+\begin{itemize}
+\item Modification：子类修改父类语义，风险最高。
+\item Refinement：子类细化父类行为。
+\item Extension：子类增加新能力。
+\item Nil：无继承耦合。
+\end{itemize}
+
+优先选择：
+
+\begin{itemize}
+\item 组合
+\item 委托
+\item 接口
+\end{itemize}
+
+\subsection{4.11 LSP}
+
+LSP 要求：
+
+\begin{quote}
+子类型对象替换父类型对象后，程序正确性保持不变。
+\end{quote}
+
+契约要求：
+
+\begin{itemize}
+\item 子类前置条件不能更强。
+\item 子类后置条件不能更弱。
+\item 子类必须维护父类不变式。
+\end{itemize}
+
+例子：
+
+\begin{itemize}
+\item 如果父类 \texttt{Account.withdraw(amount)} 允许在余额足够时取款，子类不能额外要求“amount 必须大于 100”。
+\end{itemize}
+
+\subsection{4.12 组合优于继承}
+
+组合通过对象协作复用行为。
+
+优点：
+
+\begin{itemize}
+\item 运行时可替换。
+\item 不暴露父类内部实现。
+\item 更易遵守 LSP。
+\item 更容易测试。
+\end{itemize}
+
+示例：
+
+\begin{itemize}
+\item \texttt{RechargeService} 组合 \texttt{PaymentGateway}，而不是继承某个支付实现类。
+\end{itemize}
+
+\subsection{4.13 封装}
+
+封装层次：
+
+\begin{itemize}
+\item A：封装数据类型或抽象数据类型。
+\item B：封装内部结构。
+\item C：封装其他对象引用。
+\item D：封装运行时类型信息。
+\item E：封装潜在变化。
+\end{itemize}
+
+Iterator 模式就是封装集合内部结构，让客户端不用知道底层是 \texttt{List}、\texttt{Set} 还是 \texttt{Map}。
+
+\subsection{4.14 设计原则 P1-P14}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+\hline
+\textbf{编号} & \textbf{原则} & \textbf{要点} \\
+\hline
+\endfirsthead
+\hline
+\textbf{编号} & \textbf{原则} & \textbf{要点} \\
+\hline
+\endhead
+P1 & 全局变量有害 & 全局状态导致隐式依赖 \\
+\hline
+P2 & 显式表达 & 依赖、状态、约束要清楚 \\
+\hline
+P3 & DRY & 不重复知识和逻辑 \\
+\hline
+P4 & 面向接口编程 & 依赖抽象而非实现 \\
+\hline
+P5 & Law of Demeter & 只和直接朋友交谈 \\
+\hline
+P6 & ISP & 接口保持小而专用 \\
+\hline
+P7 & LSP & 子类可替换父类 \\
+\hline
+P8 & 组合优于继承 & 降低白盒复用风险 \\
+\hline
+P9 & 封装变化 & 把变化点藏到稳定接口背后 \\
+\hline
+P10 & 最小权限 & 只暴露必要访问权限 \\
+\hline
+P11 & OCP & 对扩展开放，对修改关闭 \\
+\hline
+P12 & DIP & 高层和低层都依赖抽象 \\
+\hline
+P13 & SRP & 一个模块只有一个变化理由 \\
+\hline
+P14 & SOFA & 短、单一、少参数、抽象层一致 \\
+\hline
+\end{longtable}
+
+SOFA：
+
+\begin{itemize}
+\item Short
+\item One thing
+\item Few arguments
+\item Abstraction level consistency
+\end{itemize}
+
+\subsection{4.15 集成测试与 Mock}
+
+集成测试检查类之间的协作。
+
+输入：
+
+\begin{itemize}
+\item 对象组合
+\item 触发消息
+\end{itemize}
+
+输出：
+
+\begin{itemize}
+\item 返回值
+\item 最终对象状态
+\item 外部协作是否被调用
+\end{itemize}
+
+Mock 对象用于替代外部依赖：
+
+\begin{itemize}
+\item 数据库
+\item 支付平台
+\item 第三方 API
+\item 消息队列
+\end{itemize}
+
+充值服务测试示例：
+
+\begin{itemize}
+\item 注入 Mock \texttt{PaymentGateway} 返回支付成功。
+\item 注入 Mock \texttt{CampusCardRepository} 返回状态正常的校园卡。
+\item 调用 \texttt{recharge}。
+\item 断言余额更新、记录保存、返回结果正确。
+\end{itemize}
+
+\bigskip\hrule\bigskip
+
+\bigskip\hrule\bigskip
+
+\section{对应考试模板}
+
+\subsection{7.8 设计原则题模板}
+
+题目给出代码后，按以下结构答：
+
+\begin{enumerate}
+\item 指出问题。
+\item 对应原则。
+\item 说明风险。
+\item 给出改进。
+\end{enumerate}
+
+示例：
+
+\small
+\begin{verbatim}
+问题：Controller 直接访问 Repository，并在 Controller 中完成充值业务规则。
+原则：违反分层职责、低耦合和 SRP。
+风险：界面入口与数据库访问耦合，业务规则无法复用，单元测试困难。
+改进：Controller 只依赖 RechargeService；
+RechargeServiceImpl 注入 Repository 并封装充值流程。
+\end{verbatim}
+\normalsize
+
+\bigskip\hrule\bigskip
+
+\section{快速背诵清单}
+
+\subsection{详细设计}
+
+\begin{itemize}
+\item 核心：责任与协作。
+\item GRASP：低耦合、高内聚、信息专家、创建者、控制器。
+\item 信息隐藏：模块隐藏重要设计决策。
+\item SOFA：短、单一、少参数、抽象层一致。
+\end{itemize}
+
+
+\end{document}
