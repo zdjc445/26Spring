@@ -1,13 +1,17 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
-\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage[a4paper,margin=2.1cm]{geometry}
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.55em}
-\renewcommand{\arraystretch}{1.25}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{3pt}
 \emergencystretch=4em
 \sloppy
 \title{00 前置导入复习讲义}
@@ -17,6 +21,7 @@
 \maketitle
 \tableofcontents
 \newpage
+
 
 整理范围：
 
@@ -63,7 +68,9 @@
 
 \section{二、7 个课件的主线}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{课件} & \textbf{主线} & \textbf{必会关键词} \\
 \hline
@@ -87,6 +94,8 @@
 \texttt{00-06} 项目级 VibeCoding & AI 驱动全栈开发实战 & Stitch、AI Studio、Claude Code、通义灵码、Expo Go、MCP chrome-devtools \\
 \hline
 \end{longtable}
+}
+
 
 \section{三、课程 Overview：AI 时代软件工程的总框架}
 
@@ -97,8 +106,7 @@
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-AI 时代学生最大的短板，不是“用不好 AI”，而是“不知道什么时候不能信 AI
-”。
+AI 时代学生最大的短板，不是“用不好 AI”，而是“不知道什么时候不能信 AI”。
 \end{verbatim}
 \end{quote}
 
@@ -112,7 +120,9 @@ AI 时代学生最大的短板，不是“用不好 AI”，而是“不知道�
 
 \subsection{2. 五类 AI 无法替代的高阶工程能力}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{能力} & \textbf{解释} & \textbf{AI 的局限} \\
 \hline
@@ -132,10 +142,14 @@ AI 时代学生最大的短板，不是“用不好 AI”，而是“不知道�
 伦理责任意识 & 安全、合规、知识产权、社会影响把关 & AI 没有主观责任感 \\
 \hline
 \end{longtable}
+}
+
 
 \subsection{3. 三轨重构}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{区间} & \textbf{含义} & \textbf{复习重点} \\
 \hline
@@ -151,14 +165,15 @@ AI 时代学生最大的短板，不是“用不好 AI”，而是“不知道�
 新增区 & AI 时代特有能力 & 提示词工程、AI 输出审查、人机协作工作流 \\
 \hline
 \end{longtable}
+}
+
 
 常见答题句：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-AI 能提升生成效率，但需求冲突判断、架构权衡、安全合规和最终责任仍必须由
-工程师承担。
+AI 能提升生成效率，但需求冲突判断、架构权衡、安全合规和最终责任仍必须由工程师承担。
 \end{verbatim}
 \end{quote}
 
@@ -171,7 +186,9 @@ AI 能提升生成效率，但需求冲突判断、架构权衡、安全合规�
 \end{verbatim}
 \end{quote}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{步骤} & \textbf{学生行为} & \textbf{考点} \\
 \hline
@@ -189,10 +206,14 @@ AI 能提升生成效率，但需求冲突判断、架构权衡、安全合规�
 优化 & 修订提示词和结果，迭代到规范 & 过程留痕和质量提升 \\
 \hline
 \end{longtable}
+}
+
 
 \subsection{5. K-A-S-D}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{维度} & \textbf{含义} & \textbf{课件中的重点} \\
 \hline
@@ -210,6 +231,8 @@ S & 工程技能 & 文档编写、需求分析、代码产出、工具使用、�
 D & 过程与态度 & 作业态度、时间管理、自主学习、团队协作 \\
 \hline
 \end{longtable}
+}
+
 
 课件写明 A 维度占比 40\%，是 AI 时代软件工程师核心竞争力的直接体现。
 
@@ -217,7 +240,9 @@ D & 过程与态度 & 作业态度、时间管理、自主学习、团队协作 
 
 \subsection{1. AI 编程工具生态}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{工具} & \textbf{定位} & \textbf{核心优势} \\
 \hline
@@ -237,10 +262,14 @@ ChatGPT / Claude & 通用 AI & 架构设计、解释、代码审查 \\
 Claude Code & 终端 AI 编程 Agent & 读写文件、执行命令、管理 Git、完成多步任务 \\
 \hline
 \end{longtable}
+}
+
 
 \subsection{2. AI 编程六大核心能力}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.42\textwidth}|>{\raggedright\arraybackslash}p{0.42\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
 \hline
 \textbf{能力} & \textbf{说明} \\
 \hline
@@ -262,6 +291,8 @@ Bug 修复 & 定位并修复错误 \\
 代码重构 & 优化结构与质量 \\
 \hline
 \end{longtable}
+}
+
 
 答题重点：这些能力都要经过人工审查，不能等同于最终正确结果。
 
@@ -296,7 +327,9 @@ Bug 修复 & 定位并修复错误 \\
 
 \subsection{4. 10 个高频提示词模板}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{类型} & \textbf{模板} & \textbf{作用} \\
 \hline
@@ -326,6 +359,8 @@ Bug 修复 & 定位并修复错误 \\
 重构 & 优化代码结构，使其更加模块化，方便单元测试 & 改善设计 \\
 \hline
 \end{longtable}
+}
+
 
 \subsection{5. AI 辅助 Debug 的标准流程}
 
@@ -341,8 +376,8 @@ Bug 修复 & 定位并修复错误 \\
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-直接让 AI “修复 Bug”容易导致改动范围失控；应先要求根因分析，再要求最小
-修改，并用测试验证。
+直接让 AI “修复 
+Bug”容易导致改动范围失控；应先要求根因分析，再要求最小修改，并用测试验证。
 \end{verbatim}
 \end{quote}
 
@@ -402,8 +437,8 @@ AI Agent：
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-你描述目标 → Agent 自主规划步骤 → Agent 调用工具执行 → Agent 检查结果
- → Agent 调整计划
+你描述目标 → Agent 自主规划步骤 → Agent 调用工具执行 → Agent 
+检查结果 → Agent 调整计划
 \end{verbatim}
 \end{quote}
 
@@ -471,7 +506,9 @@ DevOps：
 
 \subsection{3. Git 六个常用命令}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.42\textwidth}|>{\raggedright\arraybackslash}p{0.42\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
 \hline
 \textbf{命令} & \textbf{作用} \\
 \hline
@@ -493,6 +530,8 @@ DevOps：
 \texttt{git checkout -b} & 创建并切换分支 \\
 \hline
 \end{longtable}
+}
+
 
 其他必会命令：
 
@@ -586,7 +625,8 @@ Asynchronous JavaScript And XML
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-静态 HTML → 动态 JS → AJAX 异步 → 前端框架 → 组件化 → 全栈 JS
+静态 HTML → 动态 JS → AJAX 异步 → 前端框架 → 组件化 → 全栈 
+JS
 \end{verbatim}
 \end{quote}
 
@@ -609,7 +649,9 @@ AJAX 引入的新复杂度：
 
 \subsection{2. Web 前端三层架构}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{层} & \textbf{技术} & \textbf{职责} \\
 \hline
@@ -625,6 +667,8 @@ AJAX 引入的新复杂度：
 行为层 & JavaScript & DOM 操作、事件、异步通信、逻辑计算 \\
 \hline
 \end{longtable}
+}
+
 
 JavaScript 四大核心能力：
 
@@ -666,7 +710,9 @@ Vue 的核心思想：
 
 MVVM：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.42\textwidth}|>{\raggedright\arraybackslash}p{0.42\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
 \hline
 \textbf{部分} & \textbf{含义} \\
 \hline
@@ -682,6 +728,8 @@ View & HTML 模板 / 用户界面 \\
 ViewModel & Vue 实例，负责数据绑定和响应式更新 \\
 \hline
 \end{longtable}
+}
+
 
 Vue 三大核心特性：
 
@@ -717,7 +765,9 @@ SFC 文件扩展名：
 
 \subsection{6. Vue 核心指令}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.42\textwidth}|>{\raggedright\arraybackslash}p{0.42\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
 \hline
 \textbf{指令} & \textbf{用途} \\
 \hline
@@ -739,6 +789,8 @@ SFC 文件扩展名：
 \texttt{v-on} / \texttt{@} & 事件监听 \\
 \hline
 \end{longtable}
+}
+
 
 口诀：
 
@@ -751,7 +803,9 @@ bind 绑属性，model 双向，if 条件，for 列表，on 事件。
 
 \subsection{7. Options API 与 Composition API}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{对比项} & \textbf{Options API} & \textbf{Composition API} \\
 \hline
@@ -769,6 +823,8 @@ TypeScript & 支持有限 & 完整支持 \\
 课件建议 & 简单组件 / 迁移项目 & 新项目 / 复杂逻辑 \\
 \hline
 \end{longtable}
+}
+
 
 Vue 3 官方推荐 Composition API + \texttt{<script setup>}。
 
@@ -828,7 +884,9 @@ Vue(5173) ← axios → Node.js(8081)
 
 前端路由与后端路由：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}p{0.22\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|}
 \hline
 \textbf{类型} & \textbf{处理者} & \textbf{刷新方式} & \textbf{特点} \\
 \hline
@@ -842,6 +900,8 @@ Vue(5173) ← axios → Node.js(8081)
 后端路由 & 服务器 & 整页刷新 & SEO 友好 \\
 \hline
 \end{longtable}
+}
+
 
 \section{七、Java Web 后端开发}
 
@@ -849,7 +909,9 @@ Vue(5173) ← axios → Node.js(8081)
 
 TCP/IP 四层：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{层} & \textbf{协议示例} & \textbf{作用} \\
 \hline
@@ -867,6 +929,8 @@ TCP/IP 四层：
 网络接口层 & SLIP、PPP、IEEE802 & 物理可靠传输 \\
 \hline
 \end{longtable}
+}
+
 
 HTTP：
 
@@ -899,7 +963,8 @@ URL 结构：
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-http://blog.example.com:8080/users?gender=male&page=1
+http://blog.example.com:8080/users?gender=ma
+le&page=1
 协议   主机名             端口  路径   查询参数
 \end{verbatim}
 \end{quote}
@@ -917,7 +982,9 @@ Body
 
 常用 HTTP 方法：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.42\textwidth}|>{\raggedright\arraybackslash}p{0.42\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
 \hline
 \textbf{方法} & \textbf{用途} \\
 \hline
@@ -935,6 +1002,8 @@ PUT & 更新资源，替换整体 \\
 DELETE & 删除资源 \\
 \hline
 \end{longtable}
+}
+
 
 HTTP Response：
 
@@ -950,7 +1019,9 @@ Body
 
 状态码：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{范围} & \textbf{含义} & \textbf{示例} \\
 \hline
@@ -968,6 +1039,8 @@ Body
 5xx & 服务器错误 & 500 \\
 \hline
 \end{longtable}
+}
+
 
 \subsection{3. Tomcat 与 Servlet}
 
@@ -1039,7 +1112,9 @@ REST API 设计：
 
 示例：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{操作} & \textbf{方法} & \textbf{URL} \\
 \hline
@@ -1061,6 +1136,8 @@ REST API 设计：
 获取商品评论 & GET & \texttt{/api/products/123/reviews} \\
 \hline
 \end{longtable}
+}
+
 
 JSON：
 
@@ -1076,7 +1153,9 @@ JSON：
 
 Spring Boot 核心优势：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.42\textwidth}|>{\raggedright\arraybackslash}p{0.42\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
 \hline
 \textbf{特性} & \textbf{说明} \\
 \hline
@@ -1094,10 +1173,14 @@ Starter 依赖 & 一行引入一组依赖 \\
 内嵌服务器 & fat JAR，\texttt{java -jar} 运行，自带 Tomcat \\
 \hline
 \end{longtable}
+}
+
 
 常用注解：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.42\textwidth}|>{\raggedright\arraybackslash}p{0.42\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
 \hline
 \textbf{注解} & \textbf{作用} \\
 \hline
@@ -1121,13 +1204,16 @@ Starter 依赖 & 一行引入一组依赖 \\
 \texttt{@RequestParam} & 从 URL 查询字符串读取值 \\
 \hline
 \end{longtable}
+}
+
 
 关系：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-@RestController = @Controller + @ResponseBody
+@RestController = @Controller + 
+@ResponseBody
 \end{verbatim}
 \end{quote}
 
@@ -1189,12 +1275,11 @@ Exam 对应：
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Controller 层负责接收 HTTP 请求、解析参数、进行基础校验、调用 Service，
-并将结果组织为 HTTP/JSON 响应。
-Service 层负责业务逻辑、业务规则编排、事务边界和对下层数据访问接口的调用
-。
-Repository/Mapper 层负责数据访问，封装数据库查询、插入、更新、删除操作，
-向上层返回实体对象或数据结果。
+Controller 层负责接收 HTTP 请求、解析参数、进行基础校验、调用 
+Service，并将结果组织为 HTTP/JSON 响应。
+Service 层负责业务逻辑、业务规则编排、事务边界和对下层数据访问接口的调用。
+Repository/Mapper 
+层负责数据访问，封装数据库查询、插入、更新、删除操作，向上层返回实体对象或数据结果。
 \end{verbatim}
 \end{quote}
 
@@ -1202,7 +1287,9 @@ Repository/Mapper 层负责数据访问，封装数据库查询、插入、更�
 
 认证与授权：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}p{0.22\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|}
 \hline
 \textbf{概念} & \textbf{英文} & \textbf{回答的问题} & \textbf{示例} \\
 \hline
@@ -1216,6 +1303,8 @@ Repository/Mapper 层负责数据访问，封装数据库查询、插入、更�
 授权 & Authorization / AuthZ & 你能做什么 & 管理员才能删除用户 \\
 \hline
 \end{longtable}
+}
+
 
 Spring Security 核心机制：
 
@@ -1276,8 +1365,7 @@ Review 中对安全性的定义：
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-软件阻止对其程序和数据进行未授权访问的能力，未授权访问包括有意访问和无意
-访问两类。
+软件阻止对其程序和数据进行未授权访问的能力，未授权访问包括有意访问和无意访问两类。
 \end{verbatim}
 \end{quote}
 
@@ -1296,8 +1384,7 @@ Equifax 案例的三层原因：
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-安全认证和访问授权不是孤立功能点，而是安全性质量属性在架构和实现层面的落
-地。
+安全认证和访问授权不是孤立功能点，而是安全性质量属性在架构和实现层面的落地。
 \end{verbatim}
 \end{quote}
 
@@ -1323,7 +1410,9 @@ VibeCoding 的核心思想：
 
 \subsection{2. 工具链}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{阶段} & \textbf{工具} & \textbf{作用} \\
 \hline
@@ -1345,6 +1434,8 @@ Web 后端 & Claude Code & 生成 Express 后端 API，读写项目文件，执�
 Web 自动调试 & MCP chrome-devtools & 读取 Console、Network、DOM，辅助定位前端问题 \\
 \hline
 \end{longtable}
+}
+
 
 \subsection{3. 完整工作流}
 
@@ -1432,14 +1523,16 @@ VibeCoding 没有改变：
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-VibeCoding 降低了代码生成门槛，但提高了对需求表达、Spec、审查、测试和集
-成能力的要求。
+VibeCoding 
+降低了代码生成门槛，但提高了对需求表达、Spec、审查、测试和集成能力的要求。
 \end{verbatim}
 \end{quote}
 
 \section{九、Exam / Review 对应表}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{来源} & \textbf{对应内容} & \textbf{复习用法} \\
 \hline
@@ -1463,6 +1556,17 @@ VibeCoding 降低了代码生成门槛，但提高了对需求表达、Spec、�
 \texttt{Review/软工II复习提纲by孙泽嵩.pdf}、\texttt{Review/软件工程与计算II重点整理(完整版).pdf} & MVC 典型实现：View：JSP、HTML；Controller：Servlet；Model：JavaBean & 对接 00-04 前端、00-05 Servlet 和 Spring Boot 的现代实现 \\
 \hline
 \end{longtable}
+}
+
+
+Review 高频补强：
+
+\begin{itemize}
+\item \texttt{Review/Final\_Reference.pdf} 把质量保障拆到需求、体系结构、详细设计、构造、测试阶段；00 中的 AI 生成代码也要落回这些质量活动，用评审、测试、质量度量和持续集成兜底。
+\item \texttt{Review/summary-重点.pdf} 明确登录、安全性、数据验证、连接数据库、网络传输不能写成业务用例；00 中的认证、授权、REST、数据库访问都要按质量属性、对外接口、约束或实现机制回答。
+\item \texttt{Review/summary-重点.pdf} 强调体系结构接口定义：先确定模块对外接口，再确定接口规范；00 中的 \texttt{Controller}、\texttt{Service}、\texttt{Repository} 代码题按这个顺序写。
+\item \texttt{Exam/2020.pdf}、\texttt{Exam/2022.pdf}、\texttt{Exam/2025.pdf} 连续考分层包图、REST API、三层接口、依赖注入和顺序图；00 的 Web 基础要能直接服务这些题。
+\end{itemize}
 
 \section{十、常见答题模板}
 
@@ -1471,9 +1575,9 @@ VibeCoding 降低了代码生成门槛，但提高了对需求表达、Spec、�
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-AI 可以生成代码，但生成结果需要人审查。没有编程基础，就无法判断代码是否
-正确、安全、可维护，也无法识别边界条件、并发安全和性能问题。提示词质量取
-决于对问题的理解深度，基础越扎实，约束越明确，AI 输出越可控。
+AI 可以生成代码，但生成结果需要人审查。没有编程基础，就无法判断代码是否正确、安全、可
+维护，也无法识别边界条件、并发安全和性能问题。提示词质量取决于对问题的理解深度，基础
+越扎实，约束越明确，AI 输出越可控。
 \end{verbatim}
 \end{quote}
 
@@ -1482,8 +1586,8 @@ AI 可以生成代码，但生成结果需要人审查。没有编程基础，�
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-好提示词应包含角色、任务、约束和格式。角色限定 AI 的专业视角，任务说明要
-完成什么，约束控制修改范围和工程边界，格式规定输出形态，便于审查和落地。
+好提示词应包含角色、任务、约束和格式。角色限定 AI 的专业视角，任务说明要完成什么，约
+束控制修改范围和工程边界，格式规定输出形态，便于审查和落地。
 \end{verbatim}
 \end{quote}
 
@@ -1492,9 +1596,9 @@ AI 可以生成代码，但生成结果需要人审查。没有编程基础，�
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-不能。AI 擅长发现语法错误、常见安全漏洞、局部性能问题和可维护性问题，但
-不了解业务逻辑、组织规范、隐式约束和需求合理性。AI Code Review 是人工审
-查的补充，不是替代。
+不能。AI 擅长发现语法错误、常见安全漏洞、局部性能问题和可维护性问题，但不了解业务逻辑
+、组织规范、隐式约束和需求合理性。AI Code Review 
+是人工审查的补充，不是替代。
 \end{verbatim}
 \end{quote}
 
@@ -1503,9 +1607,8 @@ AI 可以生成代码，但生成结果需要人审查。没有编程基础，�
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-DevOps 通过文化、工具和实践打通开发与运维，将代码提交、自动测试、自动构
-建、自动部署、监控反馈连接为持续循环，从而提升交付速度、降低手工部署风险
-，并支持快速回滚。
+DevOps 通过文化、工具和实践打通开发与运维，将代码提交、自动测试、自动构建、自动部
+署、监控反馈连接为持续循环，从而提升交付速度、降低手工部署风险，并支持快速回滚。
 \end{verbatim}
 \end{quote}
 
@@ -1514,9 +1617,10 @@ DevOps 通过文化、工具和实践打通开发与运维，将代码提交、�
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-REST 以资源为中心设计 URL，用 HTTP 方法表达操作。GET 获取资源，POST 新增
-或提交资源，PUT 更新资源，DELETE 删除资源。REST API 通常返回 JSON 数据，
-适合前后端分离。
+REST 以资源为中心设计 URL，用 HTTP 方法表达操作。GET 
+获取资源，POST 新增或提交资源，PUT 更新资源，DELETE 删除资源。REST 
+API 
+通常返回 JSON 数据，适合前后端分离。
 \end{verbatim}
 \end{quote}
 
@@ -1525,9 +1629,10 @@ REST 以资源为中心设计 URL，用 HTTP 方法表达操作。GET 获取资�
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Controller 层负责接收 HTTP 请求、解析参数、基础校验和返回响应；Service 
-层负责业务逻辑、业务规则编排和事务边界；Repository/Mapper 层负责数据访问
-，封装数据库 CRUD 操作。
+Controller 层负责接收 HTTP 
+请求、解析参数、基础校验和返回响应；Service 
+层负责业务逻辑、业务规则编排和事务边界；Repository/Mapper 
+层负责数据访问，封装数据库 CRUD 操作。
 \end{verbatim}
 \end{quote}
 
@@ -1536,8 +1641,8 @@ Controller 层负责接收 HTTP 请求、解析参数、基础校验和返回响
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-`#{id}` 是预编译参数绑定，可以防止 SQL 注入；`${id}` 是字符串拼接，会把
-用户输入直接拼进 SQL，存在注入风险，不能用于用户输入。
+`#{id}` 是预编译参数绑定，可以防止 SQL 注入；`${id}` 
+是字符串拼接，会把用户输入直接拼进 SQL，存在注入风险，不能用于用户输入。
 \end{verbatim}
 \end{quote}
 
@@ -1546,8 +1651,8 @@ Controller 层负责接收 HTTP 请求、解析参数、基础校验和返回响
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-认证 Authentication 回答“你是谁”，例如用户名密码登录；授权 Authorizati
-on 回答“你能做什么”，例如只有 ADMIN 角色才能删除用户。
+认证 Authentication 回答“你是谁”，例如用户名密码登录；授权 
+Authorization 回答“你能做什么”，例如只有 ADMIN 角色才能删除用户。
 \end{verbatim}
 \end{quote}
 
@@ -1556,8 +1661,9 @@ on 回答“你能做什么”，例如只有 ADMIN 角色才能删除用户。
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-JWT 的 Payload 只是 Base64 编码，不是加密，任何人都可以解码查看。因此不
-能把密码等敏感信息放入 Payload。密码应使用 BCrypt 哈希存储。
+JWT 的 Payload 只是 Base64 
+编码，不是加密，任何人都可以解码查看。因此不能把密码等敏感信息放入 
+Payload。密码应使用 BCrypt 哈希存储。
 \end{verbatim}
 \end{quote}
 
@@ -1566,86 +1672,208 @@ JWT 的 Payload 只是 Base64 编码，不是加密，任何人都可以解码�
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-VibeCoding 能用自然语言驱动原型、前端、后端和调试，显著提升原型验证和开
-发速度。但 AI 生成代码需要检查需求偏差、安全漏洞、数据格式不一致和可维护
-性问题，因此必须保留 Spec、测试、审查、联调和上线前安全检查。
+VibeCoding 
+能用自然语言驱动原型、前端、后端和调试，显著提升原型验证和开发速度。但 AI 
+生成代码需要检查需求偏差、安全漏洞、数据格式不一致和可维护性问题，因此必须保留 
+Spec、测试、审查、联调和上线前安全检查。
 \end{verbatim}
 \end{quote}
 
-\section{十一、按考试方式整理的自测题}
+\section{十一、自测题与答案}
 
 \subsection{1. 概念题}
 
-\begin{enumerate}
-\item 解释 K-A-S-D 四个维度。
-\item 解释“提示 → 生成 → 审查 → 优化”四步范式。
-\item 写出 AI 编程的六大核心能力。
-\item 写出提示词四要素。
-\item 解释 Agent、Spec、Skill 的关系。
-\item 写出 Git 四个区域和六个常用命令。
-\item 解释 AJAX 的工作流程。
-\item 解释 MVVM、SFC、Composition API。
-\item 解释 REST、JSON、HTTP 无状态。
-\item 解释认证、授权、JWT、BCrypt。
-\end{enumerate}
+题 1：解释 K-A-S-D 四个维度。
+
+答案：K 是知识掌握，覆盖概念、规范和原理；A 是 AI 协作与判断，覆盖提示词、审查、冲突识别和伦理把关；S 是工程技能，覆盖文档、需求、设计、编码、调试、版本管理和测试；D 是过程与态度，覆盖时间管理、团队协作和持续改进。
+
+题 2：解释“提示 → 生成 → 审查 → 优化”四步范式。
+
+答案：提示阶段把任务、约束和输出格式说明清楚；生成阶段让 AI 形成初稿；审查阶段检查需求偏差、边界条件、安全风险和可维护性；优化阶段修改提示词和结果，形成可落地制品。
+
+题 3：写出 AI 编程的六大核心能力。
+
+答案：代码生成、代码解释、Bug 修复、代码注释、测试生成、代码重构。
+
+题 4：写出提示词四要素。
+
+答案：角色、任务、约束、格式。
+
+题 5：解释 Agent、Spec、Skill 的关系。
+
+答案：Agent 是能执行多步任务的 AI 系统；Spec 是任务目标、约束、接口和验收标准；Skill 是可复用的专门能力。项目级 AI 协作中，Spec 负责把目标说清楚，Skill 负责让 Agent 按固定方法执行。
+
+题 6：写出 Git 四个区域和六个常用命令。
+
+答案：四个区域是工作区、暂存区、本地仓库、远程仓库。六个常用命令是 \texttt{git status}、\texttt{git add}、\texttt{git commit}、\texttt{git pull}、\texttt{git push}、\texttt{git branch} 或 \texttt{git checkout}。
+
+题 7：解释 AJAX 的工作流程。
+
+答案：浏览器中的 JavaScript 发起异步 HTTP 请求；服务器返回 JSON、HTML 片段或文本；JavaScript 在不刷新整个页面的前提下更新 DOM；用户看到局部刷新结果。
+
+题 8：解释 MVVM、SFC、Composition API。
+
+答案：MVVM 把界面 View、状态 ViewModel 和数据 Model 分开；SFC 是 Vue 单文件组件，把模板、脚本和样式放在同一个 \texttt{.vue} 文件；Composition API 用 \texttt{setup}、\texttt{ref}、\texttt{computed} 等方式按功能组织响应式逻辑。
+
+题 9：解释 REST、JSON、HTTP 无状态。
+
+答案：REST 以资源为中心组织 URL，用 HTTP 方法表达操作；JSON 是前后端交换结构化数据的常用格式；HTTP 无状态表示服务器不会自动记住上一次请求，需要用 Cookie、Session、Token 等机制维护登录状态。
+
+题 10：解释认证、授权、JWT、BCrypt。
+
+答案：认证回答“你是谁”；授权回答“你能做什么”；JWT 用于携带已认证用户的声明和权限信息；BCrypt 用于密码哈希存储，不能反推出原始密码。
 
 \subsection{2. 简答题}
 
+题 1：为什么 AI 工具不能替代工程师？
+
+答案：AI 可以提高生成效率，但不能承担需求判断、架构权衡、安全合规、组织规范和最终责任。工程师必须审查 AI 输出，确认它满足需求、边界、质量和安全约束。
+
+题 2：如何用 AI 辅助 Debug，并控制改动范围？
+
+答案：先提供错误堆栈、出错方法、调用链和复现步骤；要求 AI 先分析根因；确认后要求最小修改；最后补正常路径、边界条件和异常路径测试。提示词中要写明“只修改指定位置”和“保持接口不变”。
+
+题 3：DevOps 如何降低线上事故风险？
+
+答案：DevOps 把提交、构建、测试、制品、部署、监控、回滚连接起来。自动化测试减少漏测，自动化部署减少手工操作错误，版本标签和发布记录支持定位问题，回滚策略降低故障恢复时间。
+
+题 4：为什么 Git commit 要做到“一次只做一件事”？
+
+答案：单一职责的提交便于代码审查、定位缺陷、回滚变更和理解历史。把多个目标混在一次提交中，会增加评审和回滚成本。
+
+题 5：为什么前后端分离通常使用 REST API 和 JSON？
+
+答案：REST API 提供稳定的资源接口，JSON 易于浏览器解析，前后端可以按接口并行开发。接口稳定后，前端框架、移动端和外部系统都能通过同一组 API 访问服务。
+
+题 6：为什么安全认证属于安全性质量属性，而不是普通业务用例？
+
+答案：认证和授权是保护系统资源的横切机制，它支撑多个业务用例，不直接代表用户业务目标。用例图中应写用户目标，例如充值、查询余额；登录、权限校验和 Token 校验放在安全性质量属性或约束中。
+
+题 7：Spring Boot 为什么能简化传统 Java Web 开发？
+
+答案：Spring Boot 提供自动配置、内嵌 Web 容器、统一依赖管理和约定式项目结构，减少 XML 配置和容器部署步骤。开发者可以直接编写 Controller、Service、Repository 并运行应用。
+
+题 8：MyBatis 相比 JDBC 解决了哪些问题？
+
+答案：MyBatis 封装连接、参数绑定、结果映射和异常处理，减少重复 JDBC 样板代码。\texttt{\#\{\}} 使用预编译参数绑定，能防止用户输入直接拼接进 SQL。
+
+题 9：Spring Security 为什么用过滤器链处理安全逻辑？
+
+答案：HTTP 请求进入 Controller 之前就需要完成认证、授权、CSRF、CORS、Token 解析等检查。过滤器链能把这些横切逻辑集中处理，避免业务 Controller 重复安全代码。
+
+题 10：MCP chrome-devtools 为什么能提高前端调试效率？
+
+答案：它让 Agent 读取页面结构、控制浏览器、查看控制台和网络请求，从而把“观察页面状态”和“修改代码验证”连成闭环。前端问题不再只靠截图描述，调试证据更完整。
+
+\subsection{3. 画图题答案}
+
+题 1：按 \texttt{Exam/2020.pdf} 的要求画 Web 分层体系结构物理包图。
+
+
+\begin{center}
+\resizebox{0.98\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, node distance=9mm and 12mm, box/.style={draw, rounded corners, align=center, minimum width=30mm, minimum height=8mm, fill=blue!5}, srv/.style={draw, rounded corners, align=center, minimum width=42mm, minimum height=9mm, fill=green!6}]
+\node[box] (html) {html};
+\node[box, below=of html] (css) {css};
+\node[box, below=of css] (js) {javascript};
+\node[box, below=of js, minimum width=46mm] (view) {presentation 展示层\\页面、组件、表单};
+\node[draw, rounded corners, fit=(html)(css)(js)(view), inner sep=6mm, label={[align=center]above:客户端 / 浏览器}] (client) {};
+\node[srv, right=36mm of html] (api) {api / controller\\REST Controller};
+\node[srv, below=of api] (service) {service 逻辑层\\业务规则、事务};
+\node[srv, below=of service] (repo) {repository / mapper\\数据访问接口};
+\node[srv, below=of repo] (db) {database\\表、索引、约束};
+\node[draw, rounded corners, fit=(api)(service)(repo)(db), inner sep=6mm, label={[align=center]above:服务器端}] (server) {};
+\draw[->, thick] (html) -- (view);
+\draw[->, thick] (css) -- (view);
+\draw[->, thick] (js) -- (view);
+\draw[->, thick] (view.east) -- node[above, align=center]{HTTP + REST API\\JSON} (api.west);
+\draw[->, thick] (api) -- (service);
+\draw[->, thick] (service) -- (repo);
+\draw[->, thick] (repo) -- (db);
+\end{tikzpicture}}
+\end{center}
+
+
+
+作图要点：浏览器端必须包含 \texttt{html}、\texttt{css}、\texttt{javascript} 和展示层；服务器端必须包含逻辑层和数据层；跨网络连线标注 \texttt{HTTP + REST API}。
+
+题 2：画 Spring Boot 三层顺序图。
+
+\begin{center}
+\resizebox{0.99\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, lifeline/.style={dashed, gray}, head/.style={draw, rounded corners, fill=blue!5, align=center, minimum width=24mm, minimum height=7mm}, msg/.style={->, thick}, ret/.style={->, thick, dashed}]
+\node[head] (p0) at (0.0,0) {User};
+\draw[lifeline] (0.0,-0.35) -- (0.0,-7.16);
+\node[head] (p1) at (2.8,0) {Controller};
+\draw[lifeline] (2.8,-0.35) -- (2.8,-7.16);
+\node[head] (p2) at (5.6,0) {Service};
+\draw[lifeline] (5.6,-0.35) -- (5.6,-7.16);
+\node[head] (p3) at (8.399999999999999,0) {Repository};
+\draw[lifeline] (8.399999999999999,-0.35) -- (8.399999999999999,-7.16);
+\node[head] (p4) at (11.2,0) {Database};
+\draw[lifeline] (11.2,-0.35) -- (11.2,-7.16);
+\draw[msg] (0.0,-0.85) -- node[above, font=\scriptsize, align=center] {HTTP request} (2.8,-0.85);
+\draw[msg] (2.8,-1.57) -- node[above, font=\scriptsize, align=center] {call business method} (5.6,-1.57);
+\draw[msg] (5.6,-2.29) -- node[above, font=\scriptsize, align=center] {query / save entity} (8.399999999999999,-2.29);
+\draw[msg] (8.399999999999999,-3.01) -- node[above, font=\scriptsize, align=center] {SQL} (11.2,-3.01);
+\draw[ret] (11.2,-3.73) -- node[above, font=\scriptsize, align=center] {rows} (8.399999999999999,-3.73);
+\draw[ret] (8.399999999999999,-4.45) -- node[above, font=\scriptsize, align=center] {entity} (5.6,-4.45);
+\draw[ret] (5.6,-5.17) -- node[above, font=\scriptsize, align=center] {DTO / result} (2.8,-5.17);
+\draw[ret] (2.8,-5.89) -- node[above, font=\scriptsize, align=center] {HTTP response} (0.0,-5.89);
+\end{tikzpicture}}
+\end{center}
+
+
+
+作图要点：Controller 只接收请求和返回响应；Service 处理业务逻辑；Repository 或 Mapper 访问数据库；箭头方向不能从 Repository 反向调用 Service。
+
+题 3：画 JWT 登录流程。
+
+\begin{center}
+\resizebox{1.0\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, lifeline/.style={dashed, gray}, head/.style={draw, rounded corners, fill=blue!5, align=center, minimum width=24mm, minimum height=7mm}, msg/.style={->, thick}, ret/.style={->, thick, dashed}]
+\node[head] (p0) at (0.0,0) {User};
+\draw[lifeline] (0.0,-0.35) -- (0.0,-9.32);
+\node[head] (p1) at (2.8,0) {AuthController};
+\draw[lifeline] (2.8,-0.35) -- (2.8,-9.32);
+\node[head] (p2) at (5.6,0) {AuthService};
+\draw[lifeline] (5.6,-0.35) -- (5.6,-9.32);
+\node[head] (p3) at (8.399999999999999,0) {UserRepository};
+\draw[lifeline] (8.399999999999999,-0.35) -- (8.399999999999999,-9.32);
+\node[head] (p4) at (11.2,0) {BCrypt};
+\draw[lifeline] (11.2,-0.35) -- (11.2,-9.32);
+\node[head] (p5) at (14.0,0) {JwtProvider};
+\draw[lifeline] (14.0,-0.35) -- (14.0,-9.32);
+\draw[msg] (0.0,-0.85) -- node[above, font=\scriptsize, align=center] {POST /login} (2.8,-0.85);
+\draw[msg] (2.8,-1.57) -- node[above, font=\scriptsize, align=center] {login(username, password)} (5.6,-1.57);
+\draw[msg] (5.6,-2.29) -- node[above, font=\scriptsize, align=center] {findByUsername} (8.399999999999999,-2.29);
+\draw[ret] (8.399999999999999,-3.01) -- node[above, font=\scriptsize, align=center] {User(hash, roles)} (5.6,-3.01);
+\draw[msg] (5.6,-3.73) -- node[above, font=\scriptsize, align=center] {matches(password, hash)} (11.2,-3.73);
+\draw[ret] (11.2,-4.45) -- node[above, font=\scriptsize, align=center] {true} (5.6,-4.45);
+\draw[msg] (5.6,-5.17) -- node[above, font=\scriptsize, align=center] {createToken(userId, roles)} (14.0,-5.17);
+\draw[ret] (14.0,-5.89) -- node[above, font=\scriptsize, align=center] {token} (5.6,-5.89);
+\draw[ret] (5.6,-6.61) -- node[above, font=\scriptsize, align=center] {LoginResult(token)} (2.8,-6.61);
+\draw[ret] (2.8,-7.33) -- node[above, font=\scriptsize, align=center] {200 + token} (0.0,-7.33);
+\draw[msg] (0.0,-8.05) -- node[above, font=\scriptsize, align=center] {Authorization: Bearer token} (2.8,-8.05);
+\end{tikzpicture}}
+\end{center}
+
+
+
+作图要点：JWT 只保存声明和权限信息，不保存密码；密码用 BCrypt 比对；后续请求通过 \texttt{Authorization: Bearer ...} 携带 Token。
+
+\subsection{4. 代码分析题答案}
+
+结合 \texttt{Exam/2022.pdf} 的 \texttt{doPost} 题型，分析 Web 后端代码时按下面结构答：
+
 \begin{enumerate}
-\item 为什么 AI 工具不能替代工程师？
-\item 如何用 AI 辅助 Debug，并控制改动范围？
-\item DevOps 如何降低线上事故风险？
-\item 为什么 Git commit 要做到“一次只做一件事”？
-\item 为什么前后端分离通常使用 REST API 和 JSON？
-\item 为什么安全认证属于安全性质量属性，而不是普通业务用例？
-\item Spring Boot 为什么能简化传统 Java Web 开发？
-\item MyBatis 相比 JDBC 解决了哪些问题？
-\item Spring Security 为什么用过滤器链处理安全逻辑？
-\item MCP chrome-devtools 为什么能提高前端调试效率？
+\item 可读性：参数命名要准确，方法长度要受控，条件表达式要拆分成有业务含义的布尔变量。
+\item 模块化：Servlet 或 Controller 不应堆满业务规则，应把业务逻辑下沉到 Service，把数据访问下沉到 Repository 或 Mapper。
+\item 异常路径：检查空值、非法参数、外部服务失败、数据库异常和重复提交。
+\item 安全性：检查 SQL 注入、越权访问、敏感信息泄露、密码明文处理和 CSRF 风险。
+\item 资源管理：数据库连接、文件流和网络连接要被正确关闭，事务要能回滚。
+\item 测试覆盖：至少覆盖正常路径、边界条件、非法输入、异常路径和权限失败。
 \end{enumerate}
-
-\subsection{3. 画图题}
-
-\begin{enumerate}
-\item 按 \texttt{Exam/2020.pdf} 的要求，画 Web 分层体系结构物理包图：
-\begin{itemize}
-\item 客户端：浏览器，包含 \texttt{html}、\texttt{css}、\texttt{js}。
-\item 网络通信：HTTP。
-\item 接口：REST 风格 API。
-\item 服务端：逻辑层和数据层。
-\end{itemize}
-\item 画 SpringBoot 三层顺序图：
-\begin{itemize}
-\item \texttt{Controller} 接收请求。
-\item 调用 \texttt{Service}。
-\item \texttt{Service} 调用 \texttt{Repository} 或 \texttt{Mapper}。
-\item 返回结果到 \texttt{Controller}。
-\end{itemize}
-\item 画 JWT 登录流程：
-\begin{itemize}
-\item 登录请求。
-\item 用户名密码验证。
-\item BCrypt 比对。
-\item 生成 Token。
-\item 后续请求携带 \texttt{Authorization: Bearer ...}。
-\end{itemize}
-\end{enumerate}
-
-\subsection{4. 代码分析题}
-
-结合 \texttt{Exam/2022.pdf} 的 \texttt{doPost} 题型，分析 Web 后端代码时至少检查：
-
-\begin{itemize}
-\item 参数命名是否清晰。
-\item 条件表达式是否过长。
-\item 是否存在重复逻辑。
-\item 是否处理空值。
-\item 是否处理异常路径。
-\item 是否有安全风险。
-\item 是否正确关闭资源。
-\item 是否便于单元测试。
-\item 是否有足够的正常路径、边界条件、异常路径测试。
-\end{itemize}
 
 \section{十二、最后复习抓手}
 
@@ -1683,5 +1911,5 @@ AI 协作意识
 \item 不要把 JWT Payload 当作加密存储。
 \item 不要只写工具名，要写工具在工程流程中的作用。
 \end{itemize}
-
 \end{document}
+

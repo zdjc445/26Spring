@@ -1,14 +1,17 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
-\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage[a4paper,margin=2.1cm]{geometry}
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.55em}
-\setcounter{secnumdepth}{0}
-\renewcommand{\arraystretch}{1.25}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{3pt}
 \emergencystretch=4em
 \sloppy
 \title{03 体系结构与人机交互复习讲义}
@@ -20,22 +23,72 @@
 \newpage
 
 
-\begin{quote}
-范围：\texttt{03-01-软件设计基础与体系结构概念.pdf} 到 \texttt{03-04-人机交互设计.pdf}；结合 Exam/Review 中分层架构、MVC、物理包图、REST API 和 HCI 评价内容。
-结构：先整理 PPT 主线，再放对应考试模板和快速背诵清单。
-\end{quote}
+整理范围：
+
+\begin{itemize}
+\item \texttt{PPT/03-01-软件设计基础与体系结构概念.pdf}
+\item \texttt{PPT/03-02-体系结构风格与设计过程.pdf}
+\item \texttt{PPT/03-03-体系结构设计实践与验证.pdf}
+\item \texttt{PPT/03-04-人机交互设计.pdf}
+\end{itemize}
+
+交叉参考：
+
+\begin{itemize}
+\item \texttt{Exam/2012.pdf}：分层原型、信息隐藏、数据层替换。
+\item \texttt{Exam/2014.pdf}：用例顺序图到设计顺序图、HCI 原则分析。
+\item \texttt{Exam/2016.pdf}：支付模块物理包图、展示层与逻辑层接口、逻辑层与数据层接口。
+\item \texttt{Exam/2020.pdf}：进销存 Web 分层物理包图、采购补货接口设计、HCI 页面点评。
+\item \texttt{Exam/2022.pdf}：校园卡自助系统物理包图、充值服务接口、HCI 分析。
+\item \texttt{Exam/2025.pdf}：Spring Boot 三层职责、Service/Repository/Controller 代码、界面截图评价。
+\item \texttt{Review/summary-重点.pdf}、\texttt{Review/Final\_Reference.pdf}：分层风格、MVC、体系结构设计过程、HCI 原则。
+\end{itemize}
+
+说明：
+
+\begin{itemize}
+\item 本部分要把“图”和“代码接口”连起来。物理包图回答部署和分层，接口代码回答层间依赖，HCI 题回答用户任务和交互原则。
+\item Spring Boot 常见三层不是 MVC 的全部含义；MVC 从交互职责划分，Controller/Service/Repository 从后端实现职责划分。
+\end{itemize}
+
+\section{二、4 个课件的主线}
+
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
+\hline
+\textbf{课件} & \textbf{主线} & \textbf{必会关键词} \\
+\hline
+\endfirsthead
+\hline
+\textbf{课件} & \textbf{主线} & \textbf{必会关键词} \\
+\hline
+\endhead
+\texttt{03-01} 软件设计基础与体系结构概念 & 设计如何管理复杂度，体系结构由什么构成 & 关注点分离、分解、抽象、组件、连接件、配置、4+1 \\
+\hline
+\texttt{03-02} 体系结构风格与设计过程 & 如何选择分层、MVC 等风格并设计接口 & 分层风格、MVC、DIP、ADR、设计过程 \\
+\hline
+\texttt{03-03} 体系结构设计实践与验证 & 如何把用例映射到包、接口、部署和验证 & 逻辑视图、开发视图、物理视图、集成、架构坏味道 \\
+\hline
+\texttt{03-04} 人机交互设计 & 如何评价和改进界面 & 可用性、Fitts 定律、识别优于回忆、反馈、Nielsen \\
+\hline
+\end{longtable}
+}
+
 
 \bigskip\hrule\bigskip
 
 \section{3. 软件体系结构与人机交互}
 
-\subsection{3.1 设计的任务}
+\section{3.1 设计的任务}
 
 设计回答“如何实现需求”。
 
 与需求和编程的区别：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{阶段} & \textbf{回答问题} & \textbf{关注模型} \\
 \hline
@@ -51,6 +104,8 @@
 编程 & 如何用代码实现 & 类、方法、语句、数据结构 \\
 \hline
 \end{longtable}
+}
+
 
 设计管理复杂度的基本手段：
 
@@ -62,9 +117,9 @@
 \item 信息隐藏
 \end{itemize}
 
-\subsection{3.2 设计层次}
+\section{3.2 设计层次}
 
-\subsubsection{高层设计：体系结构设计}
+\subsection{高层设计：体系结构设计}
 
 关注整个系统结构：
 
@@ -85,7 +140,7 @@
 \item 高层包图
 \end{itemize}
 
-\subsubsection{中层设计}
+\subsection{中层设计}
 
 关注包、模块、类之间如何协作。
 
@@ -97,7 +152,7 @@
 \item 设计类图
 \end{itemize}
 
-\subsubsection{低层设计}
+\subsection{低层设计}
 
 关注单个类、方法、数据结构和算法。
 
@@ -112,7 +167,7 @@
 \item 异常处理
 \end{itemize}
 
-\subsection{3.3 体系结构的组成}
+\section{3.3 体系结构的组成}
 
 体系结构由三类内容构成：
 
@@ -132,7 +187,7 @@
 
 体系结构决策一旦落地，修改成本高。错误的层次、错误的依赖方向和错误的部署结构会形成长期技术债。
 
-\subsection{3.4 4+1 视图}
+\section{3.4 4+1 视图}
 
 4+1 视图用于从多个角度描述体系结构：
 
@@ -150,7 +205,7 @@
 使用场景视图验证架构是否支持核心用例；使用逻辑视图说明业务分层；使用开发视图说明代码组织；使用进程视图说明运行时并发和通信；使用物理视图说明客户端、服务器和数据库部署。
 \end{quote}
 
-\subsection{3.5 体系结构风格}
+\section{3.5 体系结构风格}
 
 体系结构风格定义：
 
@@ -160,7 +215,7 @@
 \item 拓扑约束
 \end{itemize}
 
-\subsubsection{分层风格}
+\subsection{分层风格}
 
 典型三层：
 
@@ -187,7 +242,7 @@
 \item 层次划分错误会导致绕层访问和依赖混乱。
 \end{itemize}
 
-\subsubsection{MVC}
+\subsection{MVC}
 
 MVC 分离：
 
@@ -207,7 +262,7 @@ Web 项目中常见对应关系：
 \item DTO 或 VO：接口传输对象或界面展示对象。
 \end{itemize}
 
-\subsection{3.6 体系结构设计过程}
+\section{3.6 体系结构设计过程}
 
 课程中的过程可概括为：
 
@@ -229,7 +284,7 @@ Web 项目中常见对应关系：
 企业信息系统强调可维护性、安全性和分工协作，适合采用分层架构。表示层处理用户交互，业务逻辑层封装业务规则，数据访问层封装持久化细节。上层依赖接口而非实现，以降低层间耦合。
 \end{quote}
 
-\subsection{3.7 接口与依赖倒置}
+\section{3.7 接口与依赖倒置}
 
 分层系统中要避免上层直接依赖下层实现类。
 
@@ -260,7 +315,7 @@ Web 项目中常见对应关系：
 \item Controller 不直接访问 Repository。
 \end{itemize}
 
-\subsection{3.8 体系结构验证}
+\section{3.8 体系结构验证}
 
 验证关注：
 
@@ -286,7 +341,7 @@ Web 项目中常见对应关系：
 
 \bigskip\hrule\bigskip
 
-\subsection{3.9 人机交互设计}
+\section{3.9 人机交互设计}
 
 人机交互关注用户、任务、界面和系统反馈之间的关系。
 
@@ -302,7 +357,7 @@ Web 项目中常见对应关系：
 
 易学性和效率存在取舍。新手需要清晰入口和提示，熟练用户需要快捷键、批量操作和命令式能力。
 
-\subsection{3.10 人的认知特点}
+\section{3.10 人的认知特点}
 
 设计原则：
 
@@ -313,7 +368,7 @@ Web 项目中常见对应关系：
 \item CLI 对专家高效，但学习成本高。
 \end{itemize}
 
-\subsection{3.11 Fitts 定律}
+\section{3.11 Fitts 定律}
 
 Fitts 定律说明：
 
@@ -331,7 +386,7 @@ Fitts 定律说明：
 \item 小图标按钮需要足够点击区域。
 \end{itemize}
 
-\subsection{3.12 用户类型}
+\section{3.12 用户类型}
 
 \begin{itemize}
 \item 新手：需要清晰导航、提示和容错。
@@ -341,7 +396,7 @@ Fitts 定律说明：
 
 好的界面同时服务不同熟练度用户：入口清楚，操作路径短，反馈及时，并提供快捷方式。
 
-\subsection{3.13 直接操纵}
+\section{3.13 直接操纵}
 
 直接操纵的特点：
 
@@ -368,7 +423,7 @@ Fitts 定律说明：
 \item 复杂系统需要良好导航结构。
 \end{itemize}
 
-\subsection{3.14 导航与反馈}
+\section{3.14 导航与反馈}
 
 导航设计：
 
@@ -386,7 +441,7 @@ Fitts 定律说明：
 \item 更长操作要显示进度、状态或队列。
 \end{itemize}
 
-\subsection{3.15 黄金规则与 Nielsen 启发式}
+\section{3.15 黄金规则与 Nielsen 启发式}
 
 三条黄金规则：
 
@@ -411,7 +466,7 @@ Nielsen 十项启发式：
 \item 帮助和文档。
 \end{enumerate}
 
-\subsection{3.16 HCI 设计过程与评估}
+\section{3.16 HCI 设计过程与评估}
 
 常用过程：
 
@@ -448,11 +503,9 @@ AI 交互设计补充：
 
 \bigskip\hrule\bigskip
 
-\bigskip\hrule\bigskip
-
 \section{对应考试模板}
 
-\subsection{7.1 分层接口代码模板}
+\section{7.1 分层接口代码模板}
 
 题型：
 
@@ -473,7 +526,8 @@ AI 交互设计补充：
 
 示例：校园卡充值
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.service;
 
@@ -481,14 +535,17 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface RechargeService {
-    RechargeResult recharge(RechargeCommand command);
+    RechargeResult recharge(RechargeCommand 
+command);
 
-    List<RechargeRecordView> findRechargeRecords(String cardNo);
+    List<RechargeRecordView> 
+findRechargeRecords(String cardNo);
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.repository;
 
@@ -496,111 +553,158 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CampusCardRepository {
-    Optional<CampusCard> findByCardNo(String cardNo);
+    Optional<CampusCard> findByCardNo(String
+ cardNo);
 
     void save(CampusCard campusCard);
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.repository;
 
 import java.util.List;
 
 public interface RechargeRecordRepository {
-    void save(RechargeRecord rechargeRecord);
+    void save(RechargeRecord 
+rechargeRecord);
 
-    List<RechargeRecord> findByCardNo(String cardNo);
+    List<RechargeRecord> findByCardNo(String
+ cardNo);
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.controller;
 
-import edu.school.card.service.RechargeCommand;
-import edu.school.card.service.RechargeResult;
-import edu.school.card.service.RechargeService;
-import edu.school.card.service.RechargeRecordView;
+import 
+edu.school.card.service.RechargeCommand;
+import 
+edu.school.card.service.RechargeResult;
+import 
+edu.school.card.service.RechargeService;
+import 
+edu.school.card.service.RechargeRecordView;
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotati
+on.GetMapping;
+import org.springframework.web.bind.annotati
+on.PathVariable;
+import org.springframework.web.bind.annotati
+on.PostMapping;
+import org.springframework.web.bind.annotati
+on.RequestBody;
+import org.springframework.web.bind.annotati
+on.RequestMapping;
+import org.springframework.web.bind.annotati
+on.RestController;
 
 @RestController
 @RequestMapping("/api/recharges")
 public class RechargeController {
-    private final RechargeService rechargeService;
+    private final RechargeService 
+rechargeService;
 
-    public RechargeController(RechargeService rechargeService) {
-        this.rechargeService = rechargeService;
+    public 
+RechargeController(RechargeService 
+rechargeService) {
+        this.rechargeService = 
+rechargeService;
     }
 
     @PostMapping
-    public RechargeResult recharge(@RequestBody RechargeCommand command) {
-        return rechargeService.recharge(command);
+    public RechargeResult 
+recharge(@RequestBody RechargeCommand 
+command) {
+        return 
+rechargeService.recharge(command);
     }
 
     @GetMapping("/cards/{cardNo}")
-    public List<RechargeRecordView> findRechargeRecords(
+    public List<RechargeRecordView> 
+findRechargeRecords(
             @PathVariable String cardNo) {
-        return rechargeService.findRechargeRecords(cardNo);
+        return 
+rechargeService.findRechargeRecords(cardNo);
     }
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.service.impl;
 
-import edu.school.card.repository.CampusCardRepository;
-import edu.school.card.repository.RechargeRecordRepository;
-import edu.school.card.service.RechargeCommand;
-import edu.school.card.service.RechargeRecordView;
-import edu.school.card.service.RechargeResult;
-import edu.school.card.service.RechargeService;
+import edu.school.card.repository.CampusCard
+Repository;
+import edu.school.card.repository.RechargeRe
+cordRepository;
+import 
+edu.school.card.service.RechargeCommand;
+import 
+edu.school.card.service.RechargeRecordView;
+import 
+edu.school.card.service.RechargeResult;
+import 
+edu.school.card.service.RechargeService;
 import java.util.List;
 
-public class RechargeServiceImpl implements RechargeService {
-    private final CampusCardRepository campusCardRepository;
-    private final RechargeRecordRepository rechargeRecordRepository;
+public class RechargeServiceImpl implements 
+RechargeService {
+    private final CampusCardRepository 
+campusCardRepository;
+    private final RechargeRecordRepository 
+rechargeRecordRepository;
 
     public RechargeServiceImpl(
-            CampusCardRepository campusCardRepository,
-            RechargeRecordRepository rechargeRecordRepository) {
-        this.campusCardRepository = campusCardRepository;
-        this.rechargeRecordRepository = rechargeRecordRepository;
+            CampusCardRepository 
+campusCardRepository,
+            RechargeRecordRepository 
+rechargeRecordRepository) {
+        this.campusCardRepository = 
+campusCardRepository;
+        this.rechargeRecordRepository = 
+rechargeRecordRepository;
     }
 
     @Override
-    public RechargeResult recharge(RechargeCommand command) {
-        CampusCard card = campusCardRepository.findByCardNo(command.cardNo())
-                .orElseThrow(CardNotFoundException::new);
+    public RechargeResult 
+recharge(RechargeCommand command) {
+        CampusCard card = campusCardReposito
+ry.findByCardNo(command.cardNo())
+                
+.orElseThrow(CardNotFoundException::new);
         card.recharge(command.amount());
-        RechargeRecord record = RechargeRecord.success(
+        RechargeRecord record = 
+RechargeRecord.success(
                 command.cardNo(),
                 command.amount());
         campusCardRepository.save(card);
-        rechargeRecordRepository.save(record);
-        return RechargeResult.success(record.id());
+        
+rechargeRecordRepository.save(record);
+        return 
+RechargeResult.success(record.id());
     }
 
     @Override
-    public List<RechargeRecordView> findRechargeRecords(String cardNo) {
-        return rechargeRecordRepository.findByCardNo(cardNo).stream()
-                .map(RechargeRecordView::from)
+    public List<RechargeRecordView> 
+findRechargeRecords(String cardNo) {
+        return rechargeRecordRepository.find
+ByCardNo(cardNo).stream()
+                
+.map(RechargeRecordView::from)
                 .toList();
     }
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
 答题说明：
 
@@ -612,7 +716,7 @@ public class RechargeServiceImpl implements RechargeService {
 \item 代码里出现的 DTO、Entity 和异常类可以只声明名称，重点是层间依赖方向。
 \end{itemize}
 
-\subsection{7.2 校园卡自助系统物理包图文字版}
+\section{7.2 校园卡自助系统物理包图图示版}
 
 题型：
 
@@ -633,95 +737,70 @@ public class RechargeServiceImpl implements RechargeService {
 \item 服务器端内部体现 Controller、Service、Repository、数据库。
 \end{itemize}
 
-文字图：
+图示答案：
 
-\small
-\begin{verbatim}
-<<device>> Client
-  package html
-  package css
-  package javascript
-  package presentation
-    module LoginPage
-    module RechargePage
-    module RechargeRecordPage
-    module LossReportPage
-    module BalanceQueryPage
-    module ProfilePage
 
-  presentation --HTTP/REST API--> server.api
+\begin{center}
+\resizebox{0.99\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, node distance=7mm and 9mm, cbox/.style={draw, rounded corners, align=center, minimum width=38mm, minimum height=8mm, fill=blue!5}, sbox/.style={draw, rounded corners, align=center, minimum width=48mm, minimum height=9mm, fill=green!6}]
+\node[cbox] (html) {html};
+\node[cbox, below=of html] (css) {css};
+\node[cbox, below=of css] (js) {javascript};
+\node[cbox, below=of js, minimum width=56mm] (presentation) {presentation 展示层\\LoginPage / RechargePage\\RechargeRecordPage / LossReportPage\\BalanceQueryPage / ProfilePage};
+\node[draw, rounded corners, fit=(html)(css)(js)(presentation), inner sep=5mm, label=above:{客户端 / 浏览器}] (client) {};
+\node[sbox, right=34mm of html] (api) {api / controller\\AuthController / RechargeController\\BalanceController / LossReportController\\CardController};
+\node[sbox, below=of api] (service) {service 逻辑层\\AuthService / RechargeService\\BalanceService / LossReportService / CardService};
+\node[sbox, below=of service] (repo) {repository 数据层接口\\UserRepository / CampusCardRepository\\RechargeRecordRepository / LossReportRepository};
+\node[sbox, below=of repo] (domain) {domain\\User / CampusCard / RechargeRecord\\LossReport / Transaction};
+\node[sbox, below=of domain] (database) {database\\user / campus\_card / recharge\_record\\loss\_report / transaction};
+\node[draw, rounded corners, fit=(api)(service)(repo)(domain)(database), inner sep=5mm, label=above:{服务器端}] (server) {};
+\draw[->, thick] (html) -- (presentation);
+\draw[->, thick] (css) -- (presentation);
+\draw[->, thick] (js) -- (presentation);
+\draw[->, thick] (presentation.east) -- node[above, align=center]{HTTP + REST API\\JSON} (api.west);
+\draw[->, thick] (api) -- (service);
+\draw[->, thick] (service) -- (repo);
+\draw[->, thick] (service.east) to[out=0,in=0] (domain.east);
+\draw[->, thick] (repo) -- (domain);
+\draw[->, thick] (repo) to[out=0,in=0] (database.east);
+\end{tikzpicture}}
+\end{center}
 
-<<server>> Server
-  package api
-    module AuthController
-    module RechargeController
-    module BalanceController
-    module LossReportController
-    module CardController
 
-  package service
-    interface AuthService
-    interface RechargeService
-    interface BalanceService
-    interface LossReportService
-    interface CardService
-
-  package service.impl
-    class AuthServiceImpl
-    class RechargeServiceImpl
-    class BalanceServiceImpl
-    class LossReportServiceImpl
-    class CardServiceImpl
-
-  package repository
-    interface UserRepository
-    interface CampusCardRepository
-    interface RechargeRecordRepository
-    interface LossReportRepository
-    interface TransactionRepository
-
-  package repository.impl
-    class UserRepositoryImpl
-    class CampusCardRepositoryImpl
-    class RechargeRecordRepositoryImpl
-    class LossReportRepositoryImpl
-    class TransactionRepositoryImpl
-
-  package domain
-    class User
-    class CampusCard
-    class RechargeRecord
-    class LossReport
-    class Transaction
-
-  package database
-    table user
-    table campus_card
-    table recharge_record
-    table loss_report
-    table transaction
-\end{verbatim}
-\normalsize
 
 依赖方向：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
-presentation -> api -> service -> repository -> database
+presentation -> api -> service -> repository
+ -> database
 service.impl -> domain
 repository.impl -> domain
 \end{verbatim}
-\normalsize
+\end{quote}
 
 图上必须体现：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
-Client.presentation -- HTTP + REST API --> Server.api
+Client.presentation -- HTTP + REST API --> 
+Server.api
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\subsection{7.3 充值服务接口题模板}
+阅卷点：
+
+\begin{itemize}
+\item “三包”写成 \texttt{html}、\texttt{css}、\texttt{javascript}，并放在客户端。
+\item 展示层放在客户端，逻辑层和数据层放在服务器端。
+\item 不能把数据库画到客户端。
+\item 跨网络连线必须标注 \texttt{HTTP} 和 \texttt{REST API}。
+\item 功能模块要覆盖认证、充值、余额查询、挂失、卡片信息、交易或消费记录。
+\end{itemize}
+
+\section{7.3 充值服务接口题模板}
 
 题型：
 
@@ -731,73 +810,86 @@ Client.presentation -- HTTP + REST API --> Server.api
 
 展示层和逻辑层之间接口：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.service;
 
 import java.util.List;
 
 public interface RechargeService {
-    RechargeResult recharge(RechargeCommand command);
+    RechargeResult recharge(RechargeCommand 
+command);
 
-    List<RechargeRecordView> findRechargeRecords(String cardNo);
+    List<RechargeRecordView> 
+findRechargeRecords(String cardNo);
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
 逻辑层和数据层之间接口：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.repository;
 
 import java.util.Optional;
 
 public interface CampusCardRepository {
-    Optional<CampusCard> findByCardNo(String cardNo);
+    Optional<CampusCard> findByCardNo(String
+ cardNo);
 
     void save(CampusCard campusCard);
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.repository;
 
 import java.util.List;
 
 public interface RechargeRecordRepository {
-    void save(RechargeRecord rechargeRecord);
+    void save(RechargeRecord 
+rechargeRecord);
 
-    List<RechargeRecord> findByCardNo(String cardNo);
+    List<RechargeRecord> findByCardNo(String
+ cardNo);
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
 DTO 示例：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.service;
 
 import java.math.BigDecimal;
 
-public record RechargeCommand(String cardNo, BigDecimal amount, String payChannel) {
+public record RechargeCommand(String cardNo,
+ BigDecimal amount, String payChannel) {
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.service;
 
-public record RechargeResult(String recordId, String status, String message) {
+public record RechargeResult(String 
+recordId, String status, String message) {
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 package edu.school.card.service;
 
@@ -812,7 +904,7 @@ public record RechargeRecordView(
         LocalDateTime createdAt) {
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
 答题解释：
 
@@ -823,35 +915,212 @@ public record RechargeRecordView(
 \item \texttt{Repository} 不处理充值业务规则，只负责数据读取和保存。
 \end{itemize}
 
-\subsection{7.11 HCI 题模板}
+\section{7.11 HCI 题模板}
 
 题目要求评价界面：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 问题：充值按钮太小且远离金额输入区域。
 原则：违反 Fitts 定律和效率原则。
 影响：用户完成高频充值操作的时间增加，误触风险上升。
 改进：增大按钮点击区域，把提交按钮放在金额输入区域附近，并对危险操作使用确认反馈。
 \end{verbatim}
-\normalsize
+\end{quote}
 
 题目要求设计反馈：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 充值提交后，系统立即显示处理中状态；
 支付成功后显示余额变化和充值记录编号；
 支付失败时显示失败原因和重试入口；
 长时间等待时显示进度或可取消操作。
 \end{verbatim}
-\normalsize
+\end{quote}
+
+\bigskip\hrule\bigskip
+
+\section{高频考点展开}
+
+\section{MVC 与后端三层的区别}
+
+MVC 从用户交互角度划分职责：
+
+\begin{itemize}
+\item Model：业务数据、业务状态和业务规则。
+\item View：界面显示。
+\item Controller：接收输入并协调 Model 和 View。
+\end{itemize}
+
+后端三层从代码实现角度划分职责：
+
+\begin{itemize}
+\item Controller：HTTP 请求入口，解析参数，调用服务。
+\item Service：业务逻辑和事务边界。
+\item Repository、DAO 或 Mapper：数据访问。
+\end{itemize}
+
+在 Spring Boot 中，\texttt{Service + Repository + Entity + DTO} 属于广义 Model 的实现内容。不要把 Mapper 直接等同于 MVC 的 Model；Mapper 只是数据访问部分。
+
+\section{物理包图答题清单}
+
+画 Web 系统物理包图时必须体现：
+
+\begin{enumerate}
+\item 客户端节点和服务器端节点。
+\item 客户端有 \texttt{html}、\texttt{css}、\texttt{javascript} 三包。
+\item 展示层在客户端。
+\item 服务器端有 API、Service、Repository、Domain、Database。
+\item 客户端和服务器通过 HTTP 通信。
+\item API 采用 REST 风格。
+\item 依赖方向是展示层到 API，再到 Service，再到 Repository，再到数据库。
+\end{enumerate}
+
+简化作图模板：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Client
+  html
+  css
+  javascript
+  presentation
+
+Client.presentation --HTTP/REST API--> 
+Server.api
+
+Server
+  api
+  service
+  service.impl
+  repository
+  repository.impl
+  domain
+  database
+\end{verbatim}
+\end{quote}
+
+\section{Service 与 Repository 接口分布}
+
+考试写接口时，先声明包：
+
+\begin{itemize}
+\item \texttt{service} 包：展示层调用逻辑层。
+\item \texttt{service.impl} 包：业务实现。
+\item \texttt{repository} 包：逻辑层调用数据层。
+\item \texttt{repository.impl} 包：数据访问实现。
+\end{itemize}
+
+依赖规则：
+
+\begin{itemize}
+\item Controller 只依赖 Service 接口。
+\item ServiceImpl 只依赖 Repository 接口。
+\item Repository 不写业务规则。
+\item Controller 不直接访问数据库。
+\end{itemize}
+
+\section{4+1 视图答题方式}
+
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
+\hline
+\textbf{视图} & \textbf{答题内容} \\
+\hline
+\endfirsthead
+\hline
+\textbf{视图} & \textbf{答题内容} \\
+\hline
+\endhead
+逻辑视图 & 类、包、业务职责、领域结构 \\
+\hline
+开发视图 & 工程目录、模块、组件、依赖 \\
+\hline
+进程视图 & 线程、进程、并发、异步任务 \\
+\hline
+物理视图 & 客户端、服务器、数据库、网络部署 \\
+\hline
+场景视图 & 用核心用例验证前四个视图 \\
+\hline
+\end{longtable}
+}
+
+
+如果题目问“如何验证架构”，答核心用例穿透、层间依赖检查、接口稳定性、质量属性场景、集成测试和架构评审。
+
+\section{HCI 评价答题结构}
+
+界面评价不要只说“好看”或“不好看”，按下面结构写：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+现象：说明界面中看到的具体设计。
+原则：对应 HCI 原则。
+影响：说明对用户任务的影响。
+改进：给出可执行修改。
+\end{verbatim}
+\end{quote}
+
+常用原则：
+
+\begin{itemize}
+\item Fitts 定律：目标越大、越近，操作越快。
+\item 识别优于回忆：菜单、图标、历史记录能减轻记忆负担。
+\item 一致性：同类操作位置、颜色和交互保持一致。
+\item 反馈：操作后立即显示状态、结果或进度。
+\item 错误预防：危险操作提供确认、撤销或约束输入。
+\item 用户控制：允许取消、返回、撤销和修改。
+\end{itemize}
+
+\section{自测题与答案}
+
+\section{题 1：体系结构由哪三部分组成？}
+
+答案：
+
+体系结构由组件、连接件和配置组成。组件承担计算、存储或业务职责；连接件定义组件之间的交互方式，如方法调用、REST API、消息队列；配置说明组件和连接件如何组合成整体系统。
+
+\section{题 2：为什么分层架构适合企业信息系统？}
+
+答案：
+
+企业信息系统功能多、生命周期长、人员分工明显。分层架构把表示、业务逻辑和数据访问分开，使界面变化不直接影响业务规则，数据库变化不直接影响 Controller，便于维护、测试、复用和权限控制。
+
+\section{题 3：REST API 在物理包图里怎么体现？}
+
+答案：
+
+在客户端展示层和服务器端 API 包之间画跨网络连接，标注 \texttt{HTTP/REST API}。客户端包包含 \texttt{html}、\texttt{css}、\texttt{javascript}，服务器端包包含 \texttt{api}、\texttt{service}、\texttt{repository} 和 \texttt{database}。
+
+\section{题 4：Controller、Service、Repository 的职责是什么？}
+
+答案：
+
+Controller 接收 HTTP 请求、解析输入、调用 Service 并返回响应；Service 封装业务流程、业务规则和事务边界；Repository 封装数据读取和保存，不处理业务规则。
+
+\section{题 5：Fitts 定律对按钮设计有什么启发？}
+
+答案：
+
+高频按钮要更大并靠近用户当前操作区域；危险按钮要和常用按钮保持距离；图标按钮要保证足够点击面积；移动端底部和边缘位置要结合拇指可达性设计。
+
+\section{题 6：AI 交互界面为什么要有人类确认和撤销？}
+
+答案：
+
+AI 输出存在错误和不符合上下文的风险。显示计划、允许确认、支持撤销和保留日志，可以让用户保持控制权，降低误操作影响，并提升可审计性。
 
 \bigskip\hrule\bigskip
 
 \section{快速背诵清单}
 
-\subsection{体系结构}
+\section{体系结构}
 
 \begin{itemize}
 \item 架构 = 组件 + 连接件 + 配置。
@@ -860,7 +1129,7 @@ public record RechargeRecordView(
 \item 依赖倒置：上层依赖接口，不依赖实现。
 \end{itemize}
 
-\subsection{HCI}
+\section{HCI}
 
 \begin{itemize}
 \item 可用性：易学、效率、易记、错误恢复、满意度。
@@ -868,6 +1137,5 @@ public record RechargeRecordView(
 \item 识别优于回忆。
 \item 黄金规则：用户控制、减少记忆负担、一致性。
 \end{itemize}
-
-
 \end{document}
+

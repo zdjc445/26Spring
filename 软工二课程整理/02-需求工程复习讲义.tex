@@ -1,14 +1,17 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
-\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage[a4paper,margin=2.1cm]{geometry}
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.55em}
-\setcounter{secnumdepth}{0}
-\renewcommand{\arraystretch}{1.25}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{3pt}
 \emergencystretch=4em
 \sloppy
 \title{02 需求工程复习讲义}
@@ -20,16 +23,69 @@
 \newpage
 
 
-\begin{quote}
-范围：\texttt{02-01-需求工程基础.pdf} 到 \texttt{02-05-需求文档化验证与冲突检测.pdf}；结合 Exam/Review 中需求类型、用例、概念类图、顺序图和状态图内容。
-结构：先整理 PPT 主线，再放对应考试模板和快速背诵清单。
-\end{quote}
+整理范围：
+
+\begin{itemize}
+\item \texttt{PPT/02-01-需求工程基础.pdf}
+\item \texttt{PPT/02-02-AI辅助需求获取.pdf}
+\item \texttt{PPT/02-03-用例建模与用户故事.pdf}
+\item \texttt{PPT/02-04-需求分析与AI辅助建模.pdf}
+\item \texttt{PPT/02-05-需求文档化验证与冲突检测.pdf}
+\end{itemize}
+
+交叉参考：
+
+\begin{itemize}
+\item \texttt{Exam/2012.pdf}：销售用例分析类图。
+\item \texttt{Exam/2013A.pdf}：ATM 业务需求、用户需求、系统级需求、功能需求与非功能需求。
+\item \texttt{Exam/2013B.pdf}：ATM 用例图和系统顺序图。
+\item \texttt{Exam/2014.pdf}：图书馆系统用例建模、用例顺序图到分析类图。
+\item \texttt{Exam/2016.pdf}：支付宝支付用例图、概念类图。
+\item \texttt{Exam/2020.pdf}：采购补货用例、需求分类、概念类图。
+\item \texttt{Exam/2022.pdf}：校园卡自助系统用例、充值需求、概念类图。
+\item \texttt{Exam/2025.pdf}：判断需求级别和需求类型、从用户级需求到系统级需求。
+\item \texttt{Review/summary-重点.pdf}、\texttt{Review/Final\_Reference.pdf}：需求分类、用例粒度、概念类图、顺序图、状态图、SRS。
+\end{itemize}
+
+说明：
+
+\begin{itemize}
+\item 本部分是考试综合题最多的部分之一。答题重点不是画图好看，而是概念、关系、边界、粒度和可验证性正确。
+\item AI 相关内容按“生成初稿 + 人工审查”的工程流程理解，不把 AI 输出直接当作需求结论。
+\end{itemize}
+
+\section{二、5 个课件的主线}
+
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
+\hline
+\textbf{课件} & \textbf{主线} & \textbf{必会关键词} \\
+\hline
+\endfirsthead
+\hline
+\textbf{课件} & \textbf{主线} & \textbf{必会关键词} \\
+\hline
+\endhead
+\texttt{02-01} 需求工程基础 & 需求层次、需求类型、问题域 & 业务需求、用户需求、系统级需求、功能需求、非功能需求 \\
+\hline
+\texttt{02-02} AI 辅助需求获取 & AI 如何辅助访谈、整理和检查需求 & Prompt、利益相关者、隐含约束、人工审查 \\
+\hline
+\texttt{02-03} 用例建模与用户故事 & 从用户目标到用例图和用例描述 & Actor、Use Case、include、extend、前置条件、后置条件 \\
+\hline
+\texttt{02-04} 需求分析与 AI 辅助建模 & 从需求文本到分析模型 & 概念类图、顺序图、状态图、OCL \\
+\hline
+\texttt{02-05} 需求文档化验证与冲突检测 & SRS、追踪、验证与冲突处理 & SRS、可验证性、追踪矩阵、歧义、冲突、Spec \\
+\hline
+\end{longtable}
+}
+
 
 \bigskip\hrule\bigskip
 
 \section{2. 需求工程}
 
-\subsection{2.1 需求工程的含义}
+\section{2.1 需求工程的含义}
 
 需求工程覆盖所有围绕需求展开的活动。
 
@@ -45,7 +101,7 @@
 
 需求工程不是简单“问用户要功能”。它需要理解问题域、利益相关者、业务流程、约束条件、数据规则和外部系统。
 
-\subsection{2.2 问题域}
+\section{2.2 问题域}
 
 问题域包含：
 
@@ -62,9 +118,9 @@
 
 需求工程的关键是先理解问题域，再定义系统边界和解决方案。
 
-\subsection{2.3 需求层次}
+\section{2.3 需求层次}
 
-\subsubsection{业务需求}
+\subsection{业务需求}
 
 回答“为什么建设系统”。
 
@@ -83,7 +139,7 @@
 建设校园卡自助系统，提高充值、挂失、查询等业务的自助化比例，降低人工窗口压力。
 \end{quote}
 
-\subsubsection{用户需求}
+\subsection{用户需求}
 
 回答“用户想用系统完成什么任务”。
 
@@ -101,7 +157,7 @@
 学生希望在网页或移动端自助完成校园卡充值，并查看充值记录。
 \end{quote}
 
-\subsubsection{系统级需求}
+\subsection{系统级需求}
 
 回答“系统必须提供什么能力和约束”。
 
@@ -120,23 +176,51 @@
 系统接收充值请求后，应校验校园卡状态和支付结果；支付成功后创建充值记录并更新账户余额。
 \end{quote}
 
-\subsection{2.4 需求类型}
+\section{2.4 需求类型}
 
-\subsubsection{功能需求}
+Review 中常用两级分类：
+
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
+\hline
+\textbf{分类层次} & \textbf{类型} & \textbf{说明} \\
+\hline
+\endfirsthead
+\hline
+\textbf{分类层次} & \textbf{类型} & \textbf{说明} \\
+\hline
+\endhead
+总体需求 & 项目需求 & 人员、成本、时间、交付物、计划约束。 \\
+\hline
+总体需求 & 过程需求 & 开发方法、协作方式、文档提交、持续集成、评审要求。 \\
+\hline
+总体需求 & 系统需求 & 软件、硬件和外部系统共同承担的系统能力。 \\
+\hline
+总体需求 & 其他需求 & 培训、人力、硬件采购、部署环境等配套要求。 \\
+\hline
+软件需求 & 功能、性能、质量属性、对外接口、约束、数据需求 & 直接描述软件产品要做什么、做到什么质量、遵守什么限制。 \\
+\hline
+\end{longtable}
+}
+
+
+\subsection{功能需求}
 
 说明系统做什么。
 
 示例：
 
 \begin{itemize}
-\item 用户登录。
 \item 查询校园卡余额。
 \item 提交充值订单。
 \item 查询充值记录。
 \item 挂失校园卡。
 \end{itemize}
 
-\subsubsection{非功能需求}
+说明：登录和权限校验通常服务于安全性质量属性，不作为普通业务用例；认证系统本身作为考试题目时，登录才作为该系统的核心功能。
+
+\subsection{非功能需求}
 
 说明系统达到什么质量或约束。
 
@@ -162,7 +246,7 @@
 \item 时效性或实时性
 \end{itemize}
 
-\subsubsection{外部接口需求}
+\subsection{外部接口需求}
 
 说明系统与外部系统、硬件、用户界面之间的交互约束。
 
@@ -174,7 +258,7 @@
 \item 前端通过 REST API 调用后端服务。
 \end{itemize}
 
-\subsubsection{约束}
+\subsection{约束}
 
 说明系统建设必须遵守的限制。
 
@@ -186,7 +270,7 @@
 \item 后端采用 Java Spring Boot。
 \end{itemize}
 
-\subsubsection{数据需求}
+\subsection{数据需求}
 
 说明系统需要管理的数据对象、数据字段、完整性规则和保留策略。
 
@@ -197,7 +281,7 @@
 \item 充值金额必须大于 0。
 \end{itemize}
 
-\subsection{2.5 AI 辅助需求获取}
+\section{2.5 AI 辅助需求获取}
 
 AI 适合：
 
@@ -229,7 +313,7 @@ AI 的薄弱点：
 
 \bigskip\hrule\bigskip
 
-\subsection{2.6 用例建模}
+\section{2.6 用例建模}
 
 用例描述系统与外部对象之间的一组交互行为。它从用户目标出发，描述系统如何向参与者提供有价值的服务。
 
@@ -240,7 +324,7 @@ Cockburn 的区分：
 \item 场景：用例中的一条具体路径。
 \end{itemize}
 
-\subsubsection{基本元素}
+\subsection{基本元素}
 
 \begin{itemize}
 \item 参与者 Actor：系统外部与系统交互的角色。
@@ -251,7 +335,7 @@ Cockburn 的区分：
 
 参与者可以是人、外部系统、硬件设备或定时器。参与者位于系统边界外，用例位于系统边界内。
 
-\subsubsection{include 与 extend}
+\subsection{include 与 extend}
 
 include：
 
@@ -276,7 +360,7 @@ extend：
 \item “充值失败处理” extend “充值”：只有支付失败或写入余额失败时触发。
 \end{itemize}
 
-\subsubsection{用例粒度}
+\subsection{用例粒度}
 
 合格用例通常满足：
 
@@ -296,7 +380,7 @@ extend：
 \item 在用例图里写实现细节。
 \end{itemize}
 
-\subsubsection{Cockburn 层次}
+\subsection{Cockburn 层次}
 
 \begin{itemize}
 \item 概要层：范围太大，适合说明系统目标。
@@ -304,7 +388,7 @@ extend：
 \item 子功能层：粒度较小，常用于 include 或内部步骤。
 \end{itemize}
 
-\subsection{2.7 用例描述模板}
+\section{2.7 用例描述模板}
 
 十项模板：
 
@@ -325,7 +409,9 @@ extend：
 
 示例：充值用例简表
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.28\textwidth}|>{\raggedright\arraybackslash}p{0.62\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
 \hline
 \textbf{项目} & \textbf{内容} \\
 \hline
@@ -353,8 +439,10 @@ extend：
 特殊需求 & 充值结果写入和记录生成保持一致 \\
 \hline
 \end{longtable}
+}
 
-\subsection{2.8 用户故事与 BDD}
+
+\section{2.8 用户故事与 BDD}
 
 用户故事常用格式：
 
@@ -370,19 +458,20 @@ extend：
 
 BDD 使用 Given-When-Then：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 Given 持卡人已登录且校园卡状态正常
 When 持卡人提交 100 元充值并完成支付
 Then 系统增加校园卡余额并生成一条成功充值记录
 \end{verbatim}
-\normalsize
+\end{quote}
 
 ATDD 强调先定义验收测试，再驱动设计和实现。
 
 \bigskip\hrule\bigskip
 
-\subsection{2.9 需求分析模型}
+\section{2.9 需求分析模型}
 
 常用模型：
 
@@ -405,13 +494,15 @@ ATDD 强调先定义验收测试，再驱动设计和实现。
 \item OCL 约束
 \end{itemize}
 
-\subsection{2.10 概念类图}
+\section{2.10 概念类图}
 
 概念类图描述问题域中的概念及其关系，属于分析模型。
 
 它与设计类图的区别：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{项目} & \textbf{概念类图} & \textbf{设计类图} \\
 \hline
@@ -429,8 +520,10 @@ ATDD 强调先定义验收测试，再驱动设计和实现。
 来源 & 用例、业务文本、领域知识 & 架构、设计原则、实现技术 \\
 \hline
 \end{longtable}
+}
 
-\subsubsection{从文本提取概念类}
+
+\subsection{从文本提取概念类}
 
 步骤：
 
@@ -460,7 +553,7 @@ ATDD 强调先定义验收测试，再驱动设计和实现。
 \item “支付平台”是外部系统，在系统边界外。
 \end{itemize}
 
-\subsubsection{关联与多重性}
+\subsection{关联与多重性}
 
 动词短语常提示关联：
 
@@ -478,7 +571,7 @@ ATDD 强调先定义验收测试，再驱动设计和实现。
 \item 一条充值记录对应一个支付订单。
 \end{itemize}
 
-\subsection{2.11 顺序图}
+\section{2.11 顺序图}
 
 顺序图描述对象之间按时间顺序发生的消息交互。
 
@@ -517,7 +610,7 @@ ATDD 强调先定义验收测试，再驱动设计和实现。
 \item 控制器返回充值结果。
 \end{enumerate}
 
-\subsection{2.12 状态图}
+\section{2.12 状态图}
 
 状态图描述一个对象在生命周期内的状态变化。
 
@@ -548,7 +641,7 @@ ATDD 强调先定义验收测试，再驱动设计和实现。
 \item 每条非法迁移对应一个异常测试。
 \end{itemize}
 
-\subsection{2.13 OCL}
+\section{2.13 OCL}
 
 OCL 是附着在 UML 模型上的声明式约束语言。
 
@@ -572,15 +665,17 @@ OCL 是附着在 UML 模型上的声明式约束语言。
 
 示例：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 context Recharge
 inv PositiveAmount:
   self.amount > 0
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 context CampusCard::recharge(amount)
 pre ValidAmount:
@@ -588,17 +683,19 @@ pre ValidAmount:
 post BalanceIncreased:
   self.balance = self.balance@pre + amount
 \end{verbatim}
-\normalsize
+\end{quote}
 
 \bigskip\hrule\bigskip
 
-\subsection{2.14 SRS 与需求验证}
+\section{2.14 SRS 与需求验证}
 
 SRS 是系统级需求规格说明，从产品和系统视角列出需求。
 
 用例文档和 SRS 的区别：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{项目} & \textbf{用例文档} & \textbf{SRS} \\
 \hline
@@ -614,6 +711,8 @@ SRS 是系统级需求规格说明，从产品和系统视角列出需求。
 重点 & 场景和流程 & 可验证、可追踪的需求条目 \\
 \hline
 \end{longtable}
+}
+
 
 SRS 条目要使用刺激-响应结构：
 
@@ -627,7 +726,7 @@ SRS 条目要使用刺激-响应结构：
 当持卡人完成支付且支付平台返回成功结果时，系统应更新校园卡余额并生成成功充值记录。
 \end{quote}
 
-\subsection{2.15 好需求的标准}
+\section{2.15 好需求的标准}
 
 常见标准：
 
@@ -651,7 +750,7 @@ SRS 条目要使用刺激-响应结构：
 \item 追踪矩阵检查
 \end{itemize}
 
-\subsection{2.16 需求追踪}
+\section{2.16 需求追踪}
 
 前向追踪：
 
@@ -691,7 +790,7 @@ SRS 条目要使用刺激-响应结构：
 \item 变更历史
 \end{itemize}
 
-\subsection{2.17 歧义与冲突}
+\section{2.17 歧义与冲突}
 
 歧义类型：
 
@@ -720,7 +819,7 @@ SRS 条目要使用刺激-响应结构：
 \item 更新 SRS、追踪矩阵和变更历史。
 \end{enumerate}
 
-\subsection{2.18 Spec 驱动开发}
+\section{2.18 Spec 驱动开发}
 
 SDD 链路：
 
@@ -744,50 +843,52 @@ Spec → Design → Tasks → Code
 
 \bigskip\hrule\bigskip
 
-\bigskip\hrule\bigskip
-
 \section{对应考试模板}
 
-\subsection{7.4 需求题答题模板}
+\section{7.4 需求题答题模板}
 
-\subsubsection{写业务需求}
+\subsection{写业务需求}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 BR-01 建设校园卡自助系统，提高校园卡充值、查询、挂失等业务的
 自助办理比例，减少人工窗口处理压力。
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\subsubsection{写用户需求}
+\subsection{写用户需求}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 UR-01 作为持卡人，我想在线充值校园卡，以便在余额不足时继续使用校园卡。
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\subsubsection{写系统级功能需求}
+\subsection{写系统级功能需求}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 FR-01 当持卡人提交充值请求时，系统应校验持卡人身份、校园卡状态和充值金额。
 FR-02 当支付平台返回支付成功结果时，系统应更新校园卡余额并生成成功充值记录。
 FR-03 当持卡人查询充值记录时，系统应返回该校园卡的充值记录列表。
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\subsubsection{写非功能需求}
+\subsection{写非功能需求}
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 NFR-01 系统应通过 HTTPS 提供充值接口。
 NFR-02 充值成功响应时间应不超过 3 秒，不包含第三方支付平台处理时间。
 NFR-03 系统应记录每次充值请求、支付结果和余额更新结果。
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\subsection{7.5 概念类图题模板}
+\section{7.5 概念类图题模板}
 
 校园卡系统概念类：
 
@@ -812,7 +913,8 @@ NFR-03 系统应记录每次充值请求、支付结果和余额更新结果。
 
 概念类示例：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 User
   userId
@@ -836,28 +938,40 @@ PaymentOrder
   status
   paidAt
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\subsection{7.6 顺序图题模板}
+\section{7.6 顺序图题模板}
 
 充值基本流程：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 Actor -> RechargePage: 输入金额并提交
-RechargePage -> RechargeController: POST /api/recharges
-RechargeController -> RechargeService: recharge(command)
-RechargeService -> CampusCardRepository: findByCardNo(cardNo)
-CampusCardRepository --> RechargeService: CampusCard
-RechargeService -> PaymentGateway: pay(order)
-PaymentGateway --> RechargeService: PaymentResult
-RechargeService -> CampusCard: recharge(amount)
-RechargeService -> CampusCardRepository: save(card)
-RechargeService -> RechargeRecordRepository: save(record)
-RechargeService --> RechargeController: RechargeResult
-RechargeController --> RechargePage: JSON result
+RechargePage -> RechargeController: POST 
+/api/recharges
+RechargeController -> RechargeService: 
+recharge(command)
+RechargeService -> CampusCardRepository: 
+findByCardNo(cardNo)
+CampusCardRepository --> RechargeService: 
+CampusCard
+RechargeService -> PaymentGateway: 
+pay(order)
+PaymentGateway --> RechargeService: 
+PaymentResult
+RechargeService -> CampusCard: 
+recharge(amount)
+RechargeService -> CampusCardRepository: 
+save(card)
+RechargeService -> RechargeRecordRepository:
+ save(record)
+RechargeService --> RechargeController: 
+RechargeResult
+RechargeController --> RechargePage: JSON 
+result
 \end{verbatim}
-\normalsize
+\end{quote}
 
 异常分支：
 
@@ -868,11 +982,12 @@ RechargeController --> RechargePage: JSON result
 \item 保存余额失败：执行事务回滚并记录错误。
 \end{itemize}
 
-\subsection{7.7 状态图题模板}
+\section{7.7 状态图题模板}
 
 校园卡状态：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 Normal -> Lost: reportLost
 Lost -> Normal: cancelLossReport
@@ -882,11 +997,12 @@ Normal -> Cancelled: cancel
 Lost -> Cancelled: cancel
 Frozen -> Cancelled: cancel
 \end{verbatim}
-\normalsize
+\end{quote}
 
 充值记录状态：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 Created -> Paying: startPayment
 Paying -> Success: paymentSucceeded
@@ -894,7 +1010,7 @@ Paying -> Failed: paymentFailed
 Created -> Cancelled: cancel
 Failed -> Created: retry
 \end{verbatim}
-\normalsize
+\end{quote}
 
 测试点：
 
@@ -906,9 +1022,271 @@ Failed -> Created: retry
 
 \bigskip\hrule\bigskip
 
+\section{高频考点展开}
+
+\section{需求级别判断}
+
+判断需求级别时，先看它回答的问题：
+
+\begin{itemize}
+\item 业务需求回答“为什么建系统”，对应组织目标和业务价值。
+\item 用户需求回答“用户要完成什么任务”，对应用户目标和业务流程。
+\item 系统级需求回答“系统接收什么输入、做什么处理、给出什么输出”，对应可实现、可测试、可追踪的系统行为。
+\end{itemize}
+
+示例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+业务需求：提高校园卡充值和查询业务的自助办理比例。
+用户需求：持卡人要在线完成校园卡充值并查看结果。
+系统级需求：当支付平台返回支付成功结果时，系统应更新校园卡余额并生成充值记录。
+\end{verbatim}
+\end{quote}
+
+\section{需求类型判断}
+
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
+\hline
+\textbf{需求表述} & \textbf{类型} & \textbf{判断依据} \\
+\hline
+\endfirsthead
+\hline
+\textbf{需求表述} & \textbf{类型} & \textbf{判断依据} \\
+\hline
+\endhead
+系统应支持用户查询余额 & 功能需求 & 说明系统做什么 \\
+\hline
+充值结果应在 3 秒内返回 & 性能需求 & 说明响应时间 \\
+\hline
+系统通过 HTTPS 提供接口 & 对外接口需求或约束 & 说明外部通信方式 \\
+\hline
+金额字段只能包含数字且大于 0 & 数据需求 & 说明数据格式和取值范围 \\
+\hline
+系统应记录充值操作日志 & 功能需求，也服务于可审计性 & 说明系统行为 \\
+\hline
+\end{longtable}
+}
+
+
+需求表述要避免“很快”“方便”“尽量”等不可验证词。改写时使用具体条件、阈值、输入和输出。
+
+\section{用例粒度判断}
+
+合格用例的判断标准：
+
+\begin{enumerate}
+\item 由外部参与者触发。
+\item 对参与者产生业务价值。
+\item 在连续时间内完成。
+\item 对应一个用户目标或业务事件。
+\end{enumerate}
+
+不适合作为业务用例的内容：
+
+\begin{itemize}
+\item 登录：通常是前置条件或 include，除非题目专门考认证系统。
+\item 数据校验：属于步骤或规则。
+\item 连接数据库：属于实现细节。
+\item 点击按钮：属于界面动作，不是完整用户目标。
+\end{itemize}
+
+\section{概念类图答题步骤}
+
+\begin{enumerate}
+\item 从用例文本中提取名词和名词短语。
+\item 删除属性词、动作词、界面词、临时消息和外部系统。
+\item 保留系统需要长期记录并参与业务规则的概念。
+\item 给每个概念补关键属性。
+\item 根据动词短语补关联。
+\item 根据数量词补多重性。
+\end{enumerate}
+
+示例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+“一张校园卡可以有多条充值记录”：
+CampusCard 1 ---- 0..* RechargeRecord
+\end{verbatim}
+\end{quote}
+
+\section{顺序图答题步骤}
+
+顺序图从一个用例的基本流程开始：
+
+\begin{enumerate}
+\item 左侧放参与者。
+\item 按层次放界面、控制器、服务、仓储、外部接口。
+\item 每个用例步骤转成一条消息。
+\item 查询用返回虚线表示。
+\item 异常流程用 \texttt{alt} 描述。
+\end{enumerate}
+
+评分点是消息顺序和职责边界，不是图形装饰。
+
+\section{校园卡图形题示例}
+
+用例图：
+
+
+\begin{center}
+\resizebox{0.9\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, actor/.style={draw, align=center, fill=gray!10}, usecase/.style={draw, ellipse, align=center, minimum width=30mm, minimum height=9mm, fill=blue!5}, node distance=10mm and 18mm]
+\node[actor] (student) {持卡人};
+\node[usecase, right=of student] (balance) {查询余额};
+\node[usecase, below=of balance] (recharge) {校园卡充值};
+\node[usecase, below=of recharge] (records) {查询充值记录};
+\node[usecase, below=of records] (loss) {挂失校园卡};
+\node[usecase, below=of loss] (detail) {查询消费明细};
+\node[actor, right=36mm of recharge] (bank) {支付平台};
+\node[actor, right=36mm of records] (center) {校园卡中心};
+\foreach \u in {balance,recharge,records,loss,detail}{\draw[-] (student) -- (\u);}
+\draw[-] (bank) -- (recharge);
+\draw[-] (center) -- (balance);
+\draw[-] (center) -- (recharge);
+\end{tikzpicture}}
+\end{center}
+
+
+
+概念类图：
+
+
+\begin{center}
+\resizebox{0.92\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, cls/.style={draw, rounded corners, align=center, minimum width=28mm, minimum height=8mm, fill=yellow!10}, node distance=15mm and 18mm]
+\node[cls] (user) {User};
+\node[cls, right=of user] (card) {CampusCard};
+\node[cls, right=of card] (record) {RechargeRecord};
+\node[cls, below=of user] (bank) {BankCard};
+\node[cls, below=of card] (detail) {TransactionDetail};
+\node[cls, below=of record] (order) {PaymentOrder};
+\draw[-{Stealth}] (user) -- node[above]{1 / 0..*} (card);
+\draw[-{Stealth}] (user) -- node[left]{1 / 0..*} (bank);
+\draw[-{Stealth}] (card) -- node[above]{1 / 0..*} (record);
+\draw[-{Stealth}] (card) -- node[left]{1 / 0..*} (detail);
+\draw[-{Stealth}] (record) -- node[right]{1 / 1} (order);
+\end{tikzpicture}}
+\end{center}
+
+
+
+充值顺序图：
+
+\begin{center}
+\resizebox{1.0\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, lifeline/.style={dashed, gray}, head/.style={draw, rounded corners, fill=blue!5, align=center, minimum width=24mm, minimum height=7mm}, msg/.style={->, thick}, ret/.style={->, thick, dashed}]
+\node[head] (p0) at (0.0,0) {User};
+\draw[lifeline] (0.0,-0.35) -- (0.0,-8.60);
+\node[head] (p1) at (2.8,0) {RechargePage};
+\draw[lifeline] (2.8,-0.35) -- (2.8,-8.60);
+\node[head] (p2) at (5.6,0) {Controller};
+\draw[lifeline] (5.6,-0.35) -- (5.6,-8.60);
+\node[head] (p3) at (8.399999999999999,0) {RechargeService};
+\draw[lifeline] (8.399999999999999,-0.35) -- (8.399999999999999,-8.60);
+\node[head] (p4) at (11.2,0) {CardRepo};
+\draw[lifeline] (11.2,-0.35) -- (11.2,-8.60);
+\node[head] (p5) at (14.0,0) {RecordRepo};
+\draw[lifeline] (14.0,-0.35) -- (14.0,-8.60);
+\node[head] (p6) at (16.799999999999997,0) {PaymentGateway};
+\draw[lifeline] (16.799999999999997,-0.35) -- (16.799999999999997,-8.60);
+\draw[msg] (0.0,-0.85) -- node[above, font=\scriptsize, align=center] {输入充值金额} (2.8,-0.85);
+\draw[msg] (2.8,-1.57) -- node[above, font=\scriptsize, align=center] {POST /recharges} (5.6,-1.57);
+\draw[msg] (5.6,-2.29) -- node[above, font=\scriptsize, align=center] {recharge(command)} (8.399999999999999,-2.29);
+\draw[msg] (8.399999999999999,-3.01) -- node[above, font=\scriptsize, align=center] {findByCardNo} (11.2,-3.01);
+\draw[msg] (8.399999999999999,-3.73) -- node[above, font=\scriptsize, align=center] {pay(amount)} (16.799999999999997,-3.73);
+\draw[ret] (16.799999999999997,-4.45) -- node[above, font=\scriptsize, align=center] {success} (8.399999999999999,-4.45);
+\draw[msg] (8.399999999999999,-5.17) -- node[above, font=\scriptsize, align=center] {save(card)} (11.2,-5.17);
+\draw[msg] (8.399999999999999,-5.89) -- node[above, font=\scriptsize, align=center] {save(record)} (14.0,-5.89);
+\draw[ret] (8.399999999999999,-6.61) -- node[above, font=\scriptsize, align=center] {result} (5.6,-6.61);
+\draw[ret] (5.6,-7.33) -- node[above, font=\scriptsize, align=center] {JSON} (2.8,-7.33);
+\end{tikzpicture}}
+\end{center}
+
+
+
+\section{SRS 与验收标准}
+
+SRS 条目要能导出测试：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FR-01 当持卡人提交充值请求时，系统应校验校园卡状态和充值金额。
+AC-01 Given 校园卡状态正常且金额为 100 元，
+When 持卡人提交充值请求，
+Then 系统创建充值订单。
+\end{verbatim}
+\end{quote}
+
+一个好的需求条目要满足：
+
+\begin{itemize}
+\item 有编号。
+\item 描述单一行为。
+\item 条件清楚。
+\item 响应清楚。
+\item 可以被测试。
+\item 能追踪到设计、代码和测试。
+\end{itemize}
+
+\section{自测题与答案}
+
+\section{题 1：需求的分类有哪些？}
+
+答案：
+
+按层次分为业务需求、用户需求、系统级需求。按类型分为功能需求、非功能需求、对外接口需求、约束和数据需求。非功能需求还可细分为性能、安全、可靠性、可维护性、易用性等质量属性。
+
+\section{题 2：需求的层次性是什么？}
+
+答案：
+
+业务需求说明组织为什么建设系统；用户需求说明用户要用系统完成什么任务；系统级需求说明系统在具体输入和条件下必须提供什么行为和响应。三者从目标到任务再到系统规格逐层细化。
+
+\section{题 3：如何改写“所有用户查询都必须在很快的时间内完成”？}
+
+答案：
+
+原表述不可测试，“很快”没有阈值。可改为：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+当用户提交余额查询请求时，
+系统应在 2 秒内返回查询结果；
+该时间不包含外部支付平台响应时间。
+\end{verbatim}
+\end{quote}
+
+\section{题 4：什么情况下使用 include，什么情况下使用 extend？}
+
+答案：
+
+多个用例都必须执行同一段公共行为时使用 include；某行为只在特定条件下发生时使用 extend。include 的方向是基本用例指向被包含用例；extend 的方向是扩展用例指向基本用例。
+
+\section{题 5：概念类图和设计类图的区别是什么？}
+
+答案：
+
+概念类图属于需求分析，描述问题域概念、属性、关联和多重性，不写方法和实现细节。设计类图属于详细设计，描述软件类、接口、方法、可见性、继承、依赖和实现结构。
+
+\section{题 6：AI 生成需求模型后要审查什么？}
+
+答案：
+
+审查系统边界、术语一致性、遗漏的异常流程、隐含业务规则、关联方向、多重性、状态迁移条件、需求编号和追踪关系。AI 输出只能作为初稿，最终模型要由工程师根据问题域验证。
+
+\bigskip\hrule\bigskip
+
 \section{快速背诵清单}
 
-\subsection{需求工程}
+\section{需求工程}
 
 \begin{itemize}
 \item 活动：获取、分析、规格说明、验证、管理。
@@ -917,6 +1295,5 @@ Failed -> Created: retry
 \item 用例：用户目标、参与者、系统边界、include、extend。
 \item SRS：系统视角、刺激-响应、可验证、可追踪。
 \end{itemize}
-
-
 \end{document}
+

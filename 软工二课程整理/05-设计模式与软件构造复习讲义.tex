@@ -1,14 +1,17 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
-\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage[a4paper,margin=2.1cm]{geometry}
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.55em}
-\setcounter{secnumdepth}{0}
-\renewcommand{\arraystretch}{1.25}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{3pt}
 \emergencystretch=4em
 \sloppy
 \title{05 设计模式与软件构造复习讲义}
@@ -20,16 +23,63 @@
 \newpage
 
 
-\begin{quote}
-范围：\texttt{设计模式.pdf}、\texttt{代码设计.pdf}、\texttt{软件构造.pdf}；结合 Exam/Review 中策略模式、抽象工厂、代码质量、重构、审查、测试和构造管理内容。
-结构：先整理 PPT 主线，再放对应考试模板和快速背诵清单。
-\end{quote}
+整理范围：
+
+\begin{itemize}
+\item \texttt{PPT/设计模式.pdf}
+\item \texttt{PPT/代码设计.pdf}
+\item \texttt{PPT/软件构造.pdf}
+\end{itemize}
+
+交叉参考：
+
+\begin{itemize}
+\item \texttt{Exam/2012.pdf}：Singleton、防御式编程、测试驱动、团队管理。
+\item \texttt{Exam/2013A.pdf}：设计模式重构、表驱动、栈测试、税率代码改进。
+\item \texttt{Exam/2013B.pdf}：借阅者多态、有理数黑盒测试、月份天数表驱动。
+\item \texttt{Exam/2014.pdf}：Observer 模式、HCI、白盒与黑盒测试。
+\item \texttt{Exam/2016.pdf}：会员等级积分策略、表驱动、黑盒测试。
+\item \texttt{Exam/2020.pdf}：DAO 设计模式、订货规则代码质量、边界值测试。
+\item \texttt{Exam/2022.pdf}：优惠券和支付方式模式、\texttt{doPost} 构造分析、条件覆盖。
+\item \texttt{Exam/2025.pdf}：策略模式、坏代码改写、圈复杂度、分支覆盖。
+\item \texttt{Review/summary-重点.pdf}、\texttt{Review/Final\_Reference.pdf}：Strategy、Abstract Factory、Iterator、代码质量、重构、测试。
+\end{itemize}
+
+说明：
+
+\begin{itemize}
+\item 设计模式题要写“问题、模式、类结构、原则、代价”，不能只写模式名。
+\item 构造题要从命名、布局、控制结构、异常处理、职责、测试和重构多个角度分析。
+\end{itemize}
+
+\section{二、3 个课件的主线}
+
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
+\hline
+\textbf{课件} & \textbf{主线} & \textbf{必会关键词} \\
+\hline
+\endfirsthead
+\hline
+\textbf{课件} & \textbf{主线} & \textbf{必会关键词} \\
+\hline
+\endhead
+\texttt{设计模式} & 用稳定抽象隔离变化点 & Strategy、Abstract Factory、Factory Method、Singleton、Iterator \\
+\hline
+\texttt{代码设计} & 写出可读、可维护、可审查的代码 & 命名、布局、注释、Javadoc、Prompt 四要素 \\
+\hline
+\texttt{软件构造} & 从设计到可运行制品的工程活动 & 编码、单元测试、集成测试、调试、代码审查、重构、TDD \\
+\hline
+\end{longtable}
+}
+
 
 \bigskip\hrule\bigskip
 
 \section{5. 设计模式}
 
-\subsection{5.1 设计模式的构成}
+\section{5.1 设计模式的构成}
 
 一个设计模式通常包含：
 
@@ -43,7 +93,7 @@
 
 模式不是为了“套模板”，而是把稳定抽象和变化点分开。
 
-\subsection{5.2 Strategy 策略模式}
+\section{5.2 Strategy 策略模式}
 
 定义：
 
@@ -59,6 +109,24 @@
 \item ConcreteStrategy：具体算法。
 \end{itemize}
 
+类图：
+
+
+\begin{center}
+\resizebox{0.75\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, cls/.style={draw, rounded corners, align=center, minimum width=36mm, minimum height=10mm, fill=yellow!10}, iface/.style={draw, rounded corners, align=center, minimum width=36mm, minimum height=10mm, fill=blue!5}, node distance=16mm and 20mm]
+\node[cls] (context) {Context\\- strategy: Strategy\\+ execute()};
+\node[iface, right=of context] (strategy) {<<interface>>\\Strategy\\+ algorithm()};
+\node[cls, below left=of strategy] (a) {ConcreteStrategyA};
+\node[cls, below right=of strategy] (b) {ConcreteStrategyB};
+\draw[-{Stealth}] (context) -- node[above]{uses} (strategy);
+\draw[-{Triangle[open]}] (a) -- (strategy);
+\draw[-{Triangle[open]}] (b) -- (strategy);
+\end{tikzpicture}}
+\end{center}
+
+
+
 适用场景：
 
 \begin{itemize}
@@ -69,44 +137,56 @@
 
 例子：充值手续费策略
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 public interface FeeStrategy {
-    BigDecimal calculateFee(BigDecimal amount);
+    BigDecimal calculateFee(BigDecimal 
+amount);
 }
 
-public class BankCardFeeStrategy implements FeeStrategy {
-    public BigDecimal calculateFee(BigDecimal amount) {
-        return amount.multiply(new BigDecimal("0.005"));
+public class BankCardFeeStrategy implements 
+FeeStrategy {
+    public BigDecimal 
+calculateFee(BigDecimal amount) {
+        return amount.multiply(new 
+BigDecimal("0.005"));
     }
 }
 
-public class AlipayFeeStrategy implements FeeStrategy {
-    public BigDecimal calculateFee(BigDecimal amount) {
+public class AlipayFeeStrategy implements 
+FeeStrategy {
+    public BigDecimal 
+calculateFee(BigDecimal amount) {
         return BigDecimal.ZERO;
     }
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
 Context：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
-public class RechargeServiceImpl implements RechargeService {
+public class RechargeServiceImpl implements 
+RechargeService {
     private final FeeStrategy feeStrategy;
 
-    public RechargeServiceImpl(FeeStrategy feeStrategy) {
+    public RechargeServiceImpl(FeeStrategy 
+feeStrategy) {
         this.feeStrategy = feeStrategy;
     }
 
-    public void recharge(BigDecimal amount) {
-        BigDecimal fee = feeStrategy.calculateFee(amount);
+    public void recharge(BigDecimal amount) 
+{
+        BigDecimal fee = 
+feeStrategy.calculateFee(amount);
         // 执行业务流程
     }
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
 优点：
 
@@ -124,7 +204,7 @@ public class RechargeServiceImpl implements RechargeService {
 \item Strategy 与 Context 之间需要约定输入输出。
 \end{itemize}
 
-\subsection{5.3 Abstract Factory 抽象工厂}
+\section{5.3 Abstract Factory 抽象工厂}
 
 定义：
 
@@ -152,14 +232,16 @@ public class RechargeServiceImpl implements RechargeService {
 
 例子：不同平台 UI 组件族
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 public interface UIFactory {
     Button createButton();
     Dialog createDialog();
 }
 
-public class WebUIFactory implements UIFactory {
+public class WebUIFactory implements 
+UIFactory {
     public Button createButton() {
         return new WebButton();
     }
@@ -169,7 +251,7 @@ public class WebUIFactory implements UIFactory {
     }
 }
 \end{verbatim}
-\normalsize
+\end{quote}
 
 优点：
 
@@ -186,7 +268,7 @@ public class WebUIFactory implements UIFactory {
 \item 产品族稳定时效果最好。
 \end{itemize}
 
-\subsection{5.4 Factory Method 工厂方法}
+\section{5.4 Factory Method 工厂方法}
 
 定义：
 
@@ -208,7 +290,7 @@ public class WebUIFactory implements UIFactory {
 \item 抽象工厂关注创建一组相关产品。
 \end{itemize}
 
-\subsection{5.5 Singleton 单例}
+\section{5.5 Singleton 单例}
 
 定义：
 
@@ -239,7 +321,7 @@ public class WebUIFactory implements UIFactory {
 \item 替代依赖注入。
 \end{itemize}
 
-\subsection{5.6 Iterator 迭代器}
+\section{5.6 Iterator 迭代器}
 
 定义：
 
@@ -271,11 +353,9 @@ public class WebUIFactory implements UIFactory {
 
 \bigskip\hrule\bigskip
 
-\bigskip\hrule\bigskip
-
 \section{6. 代码设计与软件构造}
 
-\subsection{6.1 代码设计关注点}
+\section{6.1 代码设计关注点}
 
 代码设计关注可读性、可维护性和可验证性。
 
@@ -293,7 +373,7 @@ public class WebUIFactory implements UIFactory {
 \item 断言
 \end{itemize}
 
-\subsection{6.2 布局}
+\section{6.2 布局}
 
 原则：
 
@@ -307,7 +387,7 @@ public class WebUIFactory implements UIFactory {
 
 坏布局会让正确代码难以审查。
 
-\subsection{6.3 命名}
+\section{6.3 命名}
 
 命名要求：
 
@@ -345,7 +425,7 @@ Java 约定：
 \item \texttt{MAX\_RECHARGE\_AMOUNT}
 \end{itemize}
 
-\subsection{6.4 注释与 Javadoc}
+\section{6.4 注释与 Javadoc}
 
 Java 注释：
 
@@ -376,7 +456,7 @@ Javadoc 常用标签：
 \item 公共 API 要说明参数、返回值和异常。
 \end{itemize}
 
-\subsection{6.5 AI 代码生成 Prompt}
+\section{6.5 AI 代码生成 Prompt}
 
 四个元素：
 
@@ -389,10 +469,12 @@ Javadoc 常用标签：
 
 示例：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 Context:
-项目使用 Spring Boot，分层为 controller/service/repository。
+项目使用 Spring Boot，分层为 
+controller/service/repository。
 
 Goal:
 实现校园卡充值服务接口和实现类。
@@ -403,9 +485,9 @@ Format:
 Steps:
 先定义 DTO，再定义 Service 接口，再写实现逻辑，最后写测试。
 \end{verbatim}
-\normalsize
+\end{quote}
 
-\subsection{6.6 软件构造}
+\section{6.6 软件构造}
 
 SWEBOK 中软件构造覆盖：
 
@@ -419,7 +501,7 @@ SWEBOK 中软件构造覆盖：
 
 构造不是“写代码”一个动作，而是把设计转化为可运行、可验证、可维护的软件制品。
 
-\subsection{6.7 构造技术}
+\section{6.7 构造技术}
 
 主要技术：
 
@@ -434,7 +516,7 @@ SWEBOK 中软件构造覆盖：
 \item 调试
 \end{itemize}
 
-\subsection{6.8 代码审查}
+\section{6.8 代码审查}
 
 课程给出的审查经验：
 
@@ -460,7 +542,7 @@ AI 辅助代码审查适合：
 
 最终结论要由人结合需求、设计和上下文确认。
 
-\subsection{6.9 集成与构建}
+\section{6.9 集成与构建}
 
 集成策略：
 
@@ -486,7 +568,7 @@ AI 辅助代码审查适合：
 \item 发布制品可复现。
 \end{itemize}
 
-\subsection{6.10 构造管理}
+\section{6.10 构造管理}
 
 构造管理内容：
 
@@ -500,7 +582,7 @@ AI 辅助代码审查适合：
 \item 执行代码审查和测试门禁。
 \end{itemize}
 
-\subsection{6.11 坏味道与重构}
+\section{6.11 坏味道与重构}
 
 重构定义：
 
@@ -524,7 +606,9 @@ AI 辅助代码审查适合：
 
 对应改进：
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|>{\raggedright\arraybackslash}p{0.31\textwidth}|}
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
 \hline
 \textbf{坏味道} & \textbf{问题} & \textbf{重构} \\
 \hline
@@ -552,8 +636,10 @@ Magic Number & 含义不清 & 提取常量 \\
 类型分支 & 违反 OCP & 策略模式或多态 \\
 \hline
 \end{longtable}
+}
 
-\subsection{6.12 TDD}
+
+\section{6.12 TDD}
 
 TDD 循环：
 
@@ -572,7 +658,7 @@ TDD 循环：
 \item 状态迁移。
 \end{itemize}
 
-\subsection{6.13 AI 编程原则}
+\section{6.13 AI 编程原则}
 
 使用 AI 写代码时：
 
@@ -588,21 +674,20 @@ TDD 循环：
 
 \bigskip\hrule\bigskip
 
-\bigskip\hrule\bigskip
-
 \section{对应考试模板}
 
-\subsection{7.9 设计模式题模板}
+\section{7.9 设计模式题模板}
 
 题目出现大量按类型选择算法：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 if (payType.equals("BANK")) { ... }
 else if (payType.equals("ALIPAY")) { ... }
 else if (payType.equals("WECHAT")) { ... }
 \end{verbatim}
-\normalsize
+\end{quote}
 
 答：
 
@@ -629,11 +714,12 @@ else if (payType.equals("WECHAT")) { ... }
 \item 客户端通过迭代器访问元素。
 \end{itemize}
 
-\subsection{7.10 代码质量题模板}
+\section{7.10 代码质量题模板}
 
 答题结构：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 问题：
 违反原则：
@@ -641,25 +727,244 @@ else if (payType.equals("WECHAT")) { ... }
 重构：
 测试：
 \end{verbatim}
-\normalsize
+\end{quote}
 
 示例：
 
-\small
+\begin{quote}
+\footnotesize
 \begin{verbatim}
 问题：充值方法过长，同时处理参数校验、支付调用、余额更新、记录保存和异常处理。
 违反原则：SRP、SOFA。
 影响：代码难理解、难测试、修改支付逻辑会影响余额更新逻辑。
-重构：提取校验方法、支付网关、余额更新方法和记录保存方法；支付方式变化使用 Strategy。
+重构：提取校验方法、支付网关、余额更新方法和记录保存方法；支付方式变化使用 
+Strategy。
 测试：为正常充值、支付失败、校园卡挂失、金额非法分别编写单元测试。
 \end{verbatim}
-\normalsize
+\end{quote}
+
+\bigskip\hrule\bigskip
+
+\section{高频考点展开}
+
+\section{Strategy 策略模式答题模板}
+
+使用场景：
+
+\begin{itemize}
+\item 同一业务存在多种算法。
+\item 算法需要运行时切换。
+\item 代码中存在 \texttt{if-else} 或 \texttt{switch} 按类型选择行为。
+\end{itemize}
+
+标准结构：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Context 持有 Strategy
+Strategy 定义算法接口
+ConcreteStrategy 实现具体算法
+\end{verbatim}
+\end{quote}
+
+原则：
+
+\begin{itemize}
+\item OCP：新增策略时新增类，不修改原算法选择代码。
+\item DIP：Context 依赖 Strategy 抽象。
+\item SRP：每个策略只负责一种算法。
+\end{itemize}
+
+代价：
+
+\begin{itemize}
+\item 类数量增加。
+\item 调用方需要选择策略。
+\item Strategy 和 Context 之间要有稳定的数据接口。
+\end{itemize}
+
+\section{Abstract Factory 与 Factory Method}
+
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|}
+\hline
+\textbf{模式} & \textbf{解决问题} & \textbf{关键词} \\
+\hline
+\endfirsthead
+\hline
+\textbf{模式} & \textbf{解决问题} & \textbf{关键词} \\
+\hline
+\endhead
+Factory Method & 创建一个产品，把实例化延迟到子类 & 一个产品、子类决定 \\
+\hline
+Abstract Factory & 创建一组相关产品，保证产品族一致 & 产品族、整体替换 \\
+\hline
+\end{longtable}
+}
+
+
+题目出现“数据库从 MySQL 换成 SQL Server”，DAO 层可以用抽象工厂或工厂方法组织创建；业务层依赖 DAO 接口，具体 DAO 由工厂提供。
+
+\section{Singleton 使用边界}
+
+Singleton 解决全局唯一对象问题，但会带来全局状态和隐式耦合。
+
+适合：
+
+\begin{itemize}
+\item 无状态配置入口。
+\item 全局唯一资源管理器。
+\item 需要集中访问的只读服务。
+\end{itemize}
+
+不适合：
+
+\begin{itemize}
+\item 保存业务状态。
+\item 替代依赖注入。
+\item 隐藏可变共享数据。
+\end{itemize}
+
+\section{表驱动改写}
+
+表驱动适合替换大量规则分支。例：月份天数。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+private static final int[] DAYS = {
+        0, 31, 28, 31, 30, 31, 30,
+        31, 31, 30, 31, 30, 31
+};
+
+public int getMonthDays(int month) {
+    if (month < 1 || month > 12) {
+        throw new 
+IllegalArgumentException("invalid month");
+    }
+    return DAYS[month];
+}
+\end{verbatim}
+\end{quote}
+
+优点：
+
+\begin{itemize}
+\item 规则集中。
+\item 分支减少。
+\item 可读性提高。
+\item 修改规则时只改表。
+\end{itemize}
+
+\section{构造题分析清单}
+
+看到代码题，按下面角度写：
+
+\begin{itemize}
+\item 命名：是否表达业务含义。
+\item 布局：是否易读。
+\item 常量：是否有 magic number。
+\item 分支：是否冗长或重复。
+\item 异常：是否吞掉错误。
+\item 职责：方法是否过长、类是否过大。
+\item 耦合：是否直接访问内部结构。
+\item 测试：是否覆盖边界和异常。
+\end{itemize}
+
+\section{圈复杂度与覆盖}
+
+圈复杂度常用计算：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+V(G) = 判定节点数 + 1
+\end{verbatim}
+\end{quote}
+
+覆盖类型：
+
+\begin{itemize}
+\item 语句覆盖：每条语句至少执行一次。
+\item 分支覆盖：每个判定的真分支和假分支至少执行一次。
+\item 条件覆盖：每个基本条件的真值和假值至少出现一次。
+\item 路径覆盖：覆盖独立路径，成本最高。
+\end{itemize}
+
+Review 高频测试框架：
+
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.45\textwidth}|>{\raggedright\arraybackslash}p{0.45\textwidth}|}
+\hline
+\textbf{类别} & \textbf{重点} \\
+\hline
+\endfirsthead
+\hline
+\textbf{类别} & \textbf{重点} \\
+\hline
+\endhead
+单元测试 & 测单个类或方法，常用白盒覆盖和 Mock。 \\
+\hline
+集成测试 & 测模块协作，关注接口、数据传递和外部依赖替身。 \\
+\hline
+系统测试 & 把软件作为整体，对照 SRS 验证功能和质量属性。 \\
+\hline
+验收测试 & 对照用户需求和验收标准，确认用户目标是否满足。 \\
+\hline
+回归测试 & 变更后重新执行测试，确认旧功能未被破坏。 \\
+\hline
+\end{longtable}
+}
+
+
+黑盒测试基于规格，不看内部代码，常用等价类划分、边界值分析、决策表、状态转换。白盒测试基于代码结构，常用语句覆盖、分支覆盖、条件覆盖、路径覆盖。题目给出复杂条件和要求“每个判断结果都满足一次”时，按条件覆盖或分支覆盖设计用例。
+
+\section{自测题与答案}
+
+\section{题 1：支付方式未来会增加，用什么模式？}
+
+答案：
+
+使用 Strategy。定义 \texttt{PaymentStrategy}，微信、支付宝、银行卡分别实现该接口，充值服务依赖 \texttt{PaymentStrategy}。新增支付方式时新增策略类，减少修改原有业务流程，符合 OCP 和 DIP。
+
+\section{题 2：优惠券有固定金额折扣和比例折扣，用什么模式？}
+
+答案：
+
+使用 Strategy。定义 \texttt{CouponPolicy} 或 \texttt{DiscountStrategy}，固定金额折扣和比例折扣分别实现计算方法。订单或充值上下文调用策略计算优惠金额。
+
+\section{题 3：如何评价一段命名为 \texttt{aa(int aa)} 的订货规则代码？}
+
+答案：
+
+问题包括命名无意义、magic number 多、分支重复、边界条件不清、缺少非法输入处理、可读性差、测试困难。改进方式是使用有意义命名、提取常量或规则表、明确边界、对非法输入抛异常，并补边界值测试。
+
+\section{题 4：什么是重构？}
+
+答案：
+
+重构是在不改变软件外部行为的前提下改善内部结构。重构目标是提升可读性、可维护性、可测试性和扩展性。重构前后要用测试保证行为不变。
+
+\section{题 5：代码审查每次为什么不宜太大？}
+
+答案：
+
+审查行数过多会降低注意力和缺陷发现率。课程建议每次审查少于 200 到 400 行，速度控制在每小时 300 到 500 行，单次控制在 60 到 90 分钟，并配合检查表。
+
+\section{题 6：边界值测试如何设计？}
+
+答案：
+
+对每个输入边界，选择边界值、刚低于边界、刚高于边界。例：订货规则边界是 3、7、10、15、20 天，测试值取 2、3、4、6、7、8、9、10、11、14、15、16、19、20、21。
 
 \bigskip\hrule\bigskip
 
 \section{快速背诵清单}
 
-\subsection{设计模式}
+\section{设计模式}
 
 \begin{itemize}
 \item Strategy：封装可互换算法。
@@ -669,7 +974,7 @@ else if (payType.equals("WECHAT")) { ... }
 \item Iterator：隐藏集合内部结构并顺序访问元素。
 \end{itemize}
 
-\subsection{构造}
+\section{构造}
 
 \begin{itemize}
 \item 构造 = 编码 + 验证 + 单元测试 + 集成测试 + 调试。
@@ -677,6 +982,5 @@ else if (payType.equals("WECHAT")) { ... }
 \item 重构不改变外部行为，只改善内部结构。
 \item TDD：Red、Green、Refactor。
 \end{itemize}
-
-
 \end{document}
+

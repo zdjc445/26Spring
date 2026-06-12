@@ -1,0 +1,2504 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.1cm]{geometry}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{3pt}
+\emergencystretch=4em
+\sloppy
+\title{期末试题答案汇总}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+
+整理范围：
+
+\begin{itemize}
+\item \texttt{Exam/2012.pdf}
+\item \texttt{Exam/2013A.pdf}
+\item \texttt{Exam/2013B.pdf}
+\item \texttt{Exam/2014.pdf}
+\item \texttt{Exam/2016.pdf}
+\item \texttt{Exam/2020.pdf}
+\item \texttt{Exam/2022.pdf}
+\item \texttt{Exam/2025.pdf}
+\end{itemize}
+
+说明：
+
+\begin{itemize}
+\item \texttt{2016-Ans.pdf}、\texttt{2020-Ans.pdf} 已作为参考材料纳入本答案稿。
+\item \texttt{2014.pdf} 是扫描版，普通文本抽取失败；本答案按页面图片可读题面整理。
+\item 图形题已在“图形题作图答案索引”中集中绘制，正文保留文字说明和接口代码。
+\item 接口题中的包名是本答案采用的命名约定，用于体现分层和依赖方向。
+\end{itemize}
+
+\bigskip\hrule\bigskip
+
+\section{图形题作图答案索引}
+
+\subsection{图 1：螺旋模型}
+
+对应 \texttt{Exam/2013A.pdf} 和 \texttt{Exam/2014.pdf} 的螺旋模型题。
+
+
+\begin{center}
+\resizebox{0.74\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, node distance=16mm, box/.style={draw, rounded corners, align=center, minimum width=28mm, minimum height=9mm, fill=blue!5}]
+\draw[->, thick] (0,0) arc[start angle=0,end angle=330,radius=0.35];
+\draw[->, thick] (0.2,-0.08) arc[start angle=-20,end angle=700,radius=0.75];
+\draw[->, thick] (0.55,-0.18) arc[start angle=-20,end angle=1060,radius=1.15];
+\node[box] (goal) at (-3.2,1.8) {目标设定\\确定目标、约束、方案};
+\node[box] (risk) at (3.2,1.8) {风险分析\\识别、评估、原型验证};
+\node[box] (build) at (3.2,-1.8) {开发与验证\\设计、实现、测试};
+\node[box] (plan) at (-3.2,-1.8) {计划下一轮\\评审制品、安排迭代};
+\draw[->, thick] (goal) -- (risk);
+\draw[->, thick] (risk) -- (build);
+\draw[->, thick] (build) -- (plan);
+\draw[->, thick] (plan) -- (goal);
+\node[align=center] at (0,-2.9) {风险驱动：每一圈解决一组主要风险，自内向外逐步细化系统};
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：每一圈围绕风险展开，顺序写目标设定、风险分析、开发验证、计划下一轮；内圈处理需求和原型风险，外圈处理设计、实现、测试和发布风险。
+
+\subsection{图 2：Web / 校园卡物理包图}
+
+对应 \texttt{Exam/2020.pdf} 和 \texttt{Exam/2022.pdf} 的物理包图题。
+
+
+\begin{center}
+\resizebox{0.99\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, node distance=7mm and 9mm, cbox/.style={draw, rounded corners, align=center, minimum width=38mm, minimum height=8mm, fill=blue!5}, sbox/.style={draw, rounded corners, align=center, minimum width=48mm, minimum height=9mm, fill=green!6}]
+\node[cbox] (html) {html};
+\node[cbox, below=of html] (css) {css};
+\node[cbox, below=of css] (js) {javascript};
+\node[cbox, below=of js, minimum width=56mm] (presentation) {presentation 展示层\\LoginPage / RechargePage\\RechargeRecordPage / LossReportPage\\BalanceQueryPage / ProfilePage};
+\node[draw, rounded corners, fit=(html)(css)(js)(presentation), inner sep=5mm, label=above:{客户端 / 浏览器}] (client) {};
+\node[sbox, right=34mm of html] (api) {api / controller\\AuthController / RechargeController\\BalanceController / LossReportController\\CardController};
+\node[sbox, below=of api] (service) {service 逻辑层\\AuthService / RechargeService\\BalanceService / LossReportService / CardService};
+\node[sbox, below=of service] (repo) {repository 数据层接口\\UserRepository / CampusCardRepository\\RechargeRecordRepository / LossReportRepository};
+\node[sbox, below=of repo] (domain) {domain\\User / CampusCard / RechargeRecord\\LossReport / Transaction};
+\node[sbox, below=of domain] (database) {database\\user / campus\_card / recharge\_record\\loss\_report / transaction};
+\node[draw, rounded corners, fit=(api)(service)(repo)(domain)(database), inner sep=5mm, label=above:{服务器端}] (server) {};
+\draw[->, thick] (html) -- (presentation);
+\draw[->, thick] (css) -- (presentation);
+\draw[->, thick] (js) -- (presentation);
+\draw[->, thick] (presentation.east) -- node[above, align=center]{HTTP + REST API\\JSON} (api.west);
+\draw[->, thick] (api) -- (service);
+\draw[->, thick] (service) -- (repo);
+\draw[->, thick] (service.east) to[out=0,in=0] (domain.east);
+\draw[->, thick] (repo) -- (domain);
+\draw[->, thick] (repo) to[out=0,in=0] (database.east);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：客户端必须出现 \texttt{html}、\texttt{css}、\texttt{javascript} 和展示层；服务器端必须出现逻辑层和数据层；跨网络连线标注 \texttt{HTTP + REST API}。
+
+\subsection{图 3：Controller-Service-Repository 顺序图}
+
+对应 \texttt{Exam/2025.pdf} 的三层代码与顺序图题，也可用于 \texttt{Exam/2022.pdf} 充值服务。
+
+\begin{center}
+\resizebox{0.99\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, lifeline/.style={dashed, gray}, head/.style={draw, rounded corners, fill=blue!5, align=center, minimum width=24mm, minimum height=7mm}, msg/.style={->, thick}, ret/.style={->, thick, dashed}]
+\node[head] (p0) at (0.0,0) {User};
+\draw[lifeline] (0.0,-0.35) -- (0.0,-7.16);
+\node[head] (p1) at (2.8,0) {Controller};
+\draw[lifeline] (2.8,-0.35) -- (2.8,-7.16);
+\node[head] (p2) at (5.6,0) {Service};
+\draw[lifeline] (5.6,-0.35) -- (5.6,-7.16);
+\node[head] (p3) at (8.399999999999999,0) {Repository};
+\draw[lifeline] (8.399999999999999,-0.35) -- (8.399999999999999,-7.16);
+\node[head] (p4) at (11.2,0) {Database};
+\draw[lifeline] (11.2,-0.35) -- (11.2,-7.16);
+\draw[msg] (0.0,-0.85) -- node[above, font=\scriptsize, align=center] {HTTP request} (2.8,-0.85);
+\draw[msg] (2.8,-1.57) -- node[above, font=\scriptsize, align=center] {call business method} (5.6,-1.57);
+\draw[msg] (5.6,-2.29) -- node[above, font=\scriptsize, align=center] {query / save entity} (8.399999999999999,-2.29);
+\draw[msg] (8.399999999999999,-3.01) -- node[above, font=\scriptsize, align=center] {SQL} (11.2,-3.01);
+\draw[ret] (11.2,-3.73) -- node[above, font=\scriptsize, align=center] {rows} (8.399999999999999,-3.73);
+\draw[ret] (8.399999999999999,-4.45) -- node[above, font=\scriptsize, align=center] {entity} (5.6,-4.45);
+\draw[ret] (5.6,-5.17) -- node[above, font=\scriptsize, align=center] {DTO / result} (2.8,-5.17);
+\draw[ret] (2.8,-5.89) -- node[above, font=\scriptsize, align=center] {HTTP response} (0.0,-5.89);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：Controller 用构造器注入 Service；Service 注入 Repository；Repository 只负责数据访问。
+
+\subsection{图 4：校园卡概念类图}
+
+对应 \texttt{Exam/2022.pdf} 的校园卡概念类图题。
+
+
+\begin{center}
+\resizebox{0.92\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, cls/.style={draw, rounded corners, align=center, minimum width=28mm, minimum height=8mm, fill=yellow!10}, node distance=15mm and 18mm]
+\node[cls] (user) {User};
+\node[cls, right=of user] (card) {CampusCard};
+\node[cls, right=of card] (record) {RechargeRecord};
+\node[cls, below=of user] (bank) {BankCard};
+\node[cls, below=of card] (detail) {TransactionDetail};
+\node[cls, below=of record] (order) {PaymentOrder};
+\draw[-{Stealth}] (user) -- node[above]{1 / 0..*} (card);
+\draw[-{Stealth}] (user) -- node[left]{1 / 0..*} (bank);
+\draw[-{Stealth}] (card) -- node[above]{1 / 0..*} (record);
+\draw[-{Stealth}] (card) -- node[left]{1 / 0..*} (detail);
+\draw[-{Stealth}] (record) -- node[right]{1 / 1} (order);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：概念类图只画问题域概念、属性、关联和多重性，不写 Controller、Service、Repository。
+
+\subsection{图 5：充值服务顺序图}
+
+对应 \texttt{Exam/2022.pdf} 的充值与查询充值记录题。
+
+\begin{center}
+\resizebox{1.0\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, lifeline/.style={dashed, gray}, head/.style={draw, rounded corners, fill=blue!5, align=center, minimum width=24mm, minimum height=7mm}, msg/.style={->, thick}, ret/.style={->, thick, dashed}]
+\node[head] (p0) at (0.0,0) {User};
+\draw[lifeline] (0.0,-0.35) -- (0.0,-8.60);
+\node[head] (p1) at (2.8,0) {RechargePage};
+\draw[lifeline] (2.8,-0.35) -- (2.8,-8.60);
+\node[head] (p2) at (5.6,0) {Controller};
+\draw[lifeline] (5.6,-0.35) -- (5.6,-8.60);
+\node[head] (p3) at (8.399999999999999,0) {RechargeService};
+\draw[lifeline] (8.399999999999999,-0.35) -- (8.399999999999999,-8.60);
+\node[head] (p4) at (11.2,0) {CardRepo};
+\draw[lifeline] (11.2,-0.35) -- (11.2,-8.60);
+\node[head] (p5) at (14.0,0) {RecordRepo};
+\draw[lifeline] (14.0,-0.35) -- (14.0,-8.60);
+\node[head] (p6) at (16.799999999999997,0) {PaymentGateway};
+\draw[lifeline] (16.799999999999997,-0.35) -- (16.799999999999997,-8.60);
+\draw[msg] (0.0,-0.85) -- node[above, font=\scriptsize, align=center] {输入充值金额} (2.8,-0.85);
+\draw[msg] (2.8,-1.57) -- node[above, font=\scriptsize, align=center] {POST /recharges} (5.6,-1.57);
+\draw[msg] (5.6,-2.29) -- node[above, font=\scriptsize, align=center] {recharge(command)} (8.399999999999999,-2.29);
+\draw[msg] (8.399999999999999,-3.01) -- node[above, font=\scriptsize, align=center] {findByCardNo} (11.2,-3.01);
+\draw[msg] (8.399999999999999,-3.73) -- node[above, font=\scriptsize, align=center] {pay(amount)} (16.799999999999997,-3.73);
+\draw[ret] (16.799999999999997,-4.45) -- node[above, font=\scriptsize, align=center] {success} (8.399999999999999,-4.45);
+\draw[msg] (8.399999999999999,-5.17) -- node[above, font=\scriptsize, align=center] {save(card)} (11.2,-5.17);
+\draw[msg] (8.399999999999999,-5.89) -- node[above, font=\scriptsize, align=center] {save(record)} (14.0,-5.89);
+\draw[ret] (8.399999999999999,-6.61) -- node[above, font=\scriptsize, align=center] {result} (5.6,-6.61);
+\draw[ret] (5.6,-7.33) -- node[above, font=\scriptsize, align=center] {JSON} (2.8,-7.33);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：支付接口属于外部接口；余额更新和充值记录保存属于 Service 事务范围。
+
+\subsection{图 6：Strategy 策略模式类图}
+
+对应 \texttt{Exam/2020.pdf}、\texttt{Exam/2022.pdf}、\texttt{Exam/2025.pdf} 中支付方式、优惠券、课程冲突检测等题。
+
+
+\begin{center}
+\resizebox{0.75\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, cls/.style={draw, rounded corners, align=center, minimum width=36mm, minimum height=10mm, fill=yellow!10}, iface/.style={draw, rounded corners, align=center, minimum width=36mm, minimum height=10mm, fill=blue!5}, node distance=16mm and 20mm]
+\node[cls] (context) {Context\\- strategy: Strategy\\+ execute()};
+\node[iface, right=of context] (strategy) {<<interface>>\\Strategy\\+ algorithm()};
+\node[cls, below left=of strategy] (a) {ConcreteStrategyA};
+\node[cls, below right=of strategy] (b) {ConcreteStrategyB};
+\draw[-{Stealth}] (context) -- node[above]{uses} (strategy);
+\draw[-{Triangle[open]}] (a) -- (strategy);
+\draw[-{Triangle[open]}] (b) -- (strategy);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：把变化的算法抽成接口，新增策略时新增实现类，Context 不改核心流程。
+
+\subsection{图 7：Observer 观察者模式类图}
+
+对应 \texttt{Exam/2014.pdf} 的 \texttt{Student} 与多个 \texttt{Display} 更新题。
+
+
+\begin{center}
+\resizebox{0.84\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, cls/.style={draw, rounded corners, align=center, minimum width=36mm, minimum height=10mm, fill=yellow!10}, iface/.style={draw, rounded corners, align=center, minimum width=38mm, minimum height=10mm, fill=blue!5}, node distance=14mm and 18mm]
+\node[cls] (subject) {Subject\\+ attach()\\+ detach()\\+ notifyObservers()};
+\node[iface, right=of subject] (observer) {<<interface>>\\Observer\\+ update(student)};
+\node[cls, below=of subject] (student) {Student\\- observers\\- grade\\+ setGrade()};
+\node[cls, below left=of observer] (d1) {Display1};
+\node[cls, below right=of observer] (d2) {Display2};
+\draw[-{Stealth}] (subject) -- node[above]{notifies} (observer);
+\draw[-{Triangle[open]}] (student) -- (subject);
+\draw[-{Triangle[open]}] (d1) -- (observer);
+\draw[-{Triangle[open]}] (d2) -- (observer);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：\texttt{Student} 是 Subject，\texttt{Display1} 和 \texttt{Display2} 是 Observer；状态变化时通知所有观察者。
+
+\subsection{图 8：ATM 用例图与取款系统顺序图}
+
+对应 \texttt{Exam/2013B.pdf} 的 ATM 图形题。
+
+
+\begin{center}
+\resizebox{0.92\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, actor/.style={draw, align=center, fill=gray!10}, usecase/.style={draw, ellipse, align=center, minimum width=32mm, minimum height=9mm, fill=blue!5}, node distance=10mm and 17mm]
+\node[actor] (customer) {客户};
+\node[usecase, right=of customer] (auth) {登录 / 验证 PIN};
+\node[usecase, below=of auth] (withdraw) {取款};
+\node[usecase, below=of withdraw] (deposit) {存款};
+\node[usecase, below=of deposit] (balance) {查询余额};
+\node[usecase, below=of balance] (transfer) {转账};
+\node[actor, right=32mm of deposit] (bank) {银行账户系统};
+\foreach \u in {auth,withdraw,deposit,balance,transfer}{\draw[-] (customer) -- (\u); \draw[-] (bank) -- (\u);}
+\end{tikzpicture}}
+\end{center}
+\vspace{0.2em}
+\begin{center}\small 取款顺序：插卡 → 验证 PIN → 输入金额 → 账户系统扣款 → ATM 出钞 → 打印凭条 → 退卡。\end{center}
+
+
+
+顺序图答题主线：客户插卡；系统验证 PIN；客户输入取款金额；系统向账户系统请求扣款；ATM 出钞；系统打印凭条并退卡。
+
+\subsection{图 9：图书馆系统用例图}
+
+对应 \texttt{Exam/2014.pdf} 的大学图书馆系统用例建模题。
+
+
+\begin{center}
+\resizebox{0.92\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, actor/.style={draw, align=center, fill=gray!10}, usecase/.style={draw, ellipse, align=center, minimum width=34mm, minimum height=9mm, fill=blue!5}, node distance=10mm and 18mm]
+\node[actor] (reader) {读者};
+\node[actor, below=28mm of reader] (librarian) {馆员};
+\node[actor, below=28mm of librarian] (manager) {管理员};
+\node[usecase, right=of reader] (search) {查询图书};
+\node[usecase, below=of search] (borrow) {借出图书};
+\node[usecase, below=of borrow] (reserve) {预约图书};
+\node[usecase, below=of reserve] (return) {归还图书};
+\node[usecase, right=30mm of reserve] (print) {分类打印\\图书标题表};
+\node[usecase, below=of print] (check) {检查过期\\未还图书};
+\draw[-] (reader) -- (search);
+\draw[-] (reader) -- (borrow);
+\draw[-] (reader) -- (reserve);
+\draw[-] (reader) -- (return);
+\draw[-] (librarian) -- (borrow);
+\draw[-] (librarian) -- (return);
+\draw[-] (manager) -- (print);
+\draw[-] (manager) -- (check);
+\draw[->, dashed] (borrow) -- node[above]{include} (search);
+\draw[->, dashed] (reserve) -- node[above]{extend} (search);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：参与者在系统边界外，用例在系统边界内；\texttt{include} 表示必做公共行为，\texttt{extend} 表示条件扩展。
+
+\subsection{图 10：付款模块物理包图}
+
+对应 \texttt{Exam/2016.pdf} 的支付宝付款模块物理包图题。
+
+
+\begin{center}
+\resizebox{0.96\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, node distance=8mm and 20mm, cbox/.style={draw, rounded corners, align=center, minimum width=42mm, minimum height=8mm, fill=blue!5}, sbox/.style={draw, rounded corners, align=center, minimum width=46mm, minimum height=9mm, fill=green!6}]
+\node[cbox] (view) {payment.ui\\LoginView / PaymentView\\PasswordView};
+\node[draw, rounded corners, fit=(view), inner sep=7mm, label=above:{客户端}] (client) {};
+\node[sbox, right=36mm of view] (api) {payment.api\\PaymentController};
+\node[sbox, below=of api] (logic) {payment.service\\PaymentService / AccountService};
+\node[sbox, below=of logic] (data) {payment.repository\\AccountRepository / PaymentRepository\\PointRepository};
+\node[sbox, below=of data] (db) {payment database};
+\node[draw, rounded corners, fit=(api)(logic)(data)(db), inner sep=6mm, label=above:{服务器端}] (server) {};
+\draw[->, thick] (view.east) -- node[above]{HTTP + REST API} (api.west);
+\draw[->, thick] (api) -- (logic);
+\draw[->, thick] (logic) -- (data);
+\draw[->, thick] (data) -- (db);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：展示层与逻辑层接口按界面需要定义；逻辑层与数据层接口按业务规则需要定义。
+
+\subsection{图 11：采购补货概念类图}
+
+对应 \texttt{Exam/2020.pdf} 的采购补货概念类图题。
+
+
+\begin{center}
+\resizebox{0.96\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, cls/.style={draw, rounded corners, align=center, minimum width=27mm, minimum height=8mm, fill=yellow!10}, node distance=12mm and 14mm]
+\node[cls] (supplier) {Supplier};
+\node[cls, right=of supplier] (inquiry) {Inquiry};
+\node[cls, right=of inquiry] (item) {InquiryItem};
+\node[cls, right=of item] (product) {Product};
+\node[cls, below=of inquiry] (po) {PurchaseOrder};
+\node[cls, right=of po] (poi) {PurchaseOrderItem};
+\node[cls, below=of product] (inv) {Inventory};
+\node[cls, left=of inv] (warehouse) {Warehouse};
+\draw[-{Stealth}] (supplier) -- node[above]{1 / 0..*} (inquiry);
+\draw[-{Stealth}] (inquiry) -- node[above]{1 / 1..*} (item);
+\draw[-{Stealth}] (product) -- node[above]{1 / 0..*} (item);
+\draw[-{Stealth}] (po) -- node[above]{1 / 1..*} (poi);
+\draw[-{Stealth}] (product) -- node[right]{1 / 0..*} (poi);
+\draw[-{Stealth}] (warehouse) -- node[above]{1 / 0..*} (inv);
+\draw[-{Stealth}] (product) -- node[right]{1 / 0..*} (inv);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：先从采购、询价、商品、库存、供应商等名词建立概念，再补充一对多关系和明细类。
+
+\subsection{图 12：CD 推荐设计顺序图}
+
+对应 \texttt{Exam/2014.pdf} 的职责分配与详细设计顺序图题。
+
+\begin{center}
+\resizebox{1.0\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, lifeline/.style={dashed, gray}, head/.style={draw, rounded corners, fill=blue!5, align=center, minimum width=24mm, minimum height=7mm}, msg/.style={->, thick}, ret/.style={->, thick, dashed}]
+\node[head] (p0) at (0.0,0) {Customer};
+\draw[lifeline] (0.0,-0.35) -- (0.0,-7.88);
+\node[head] (p1) at (2.8,0) {RecommendUI};
+\draw[lifeline] (2.8,-0.35) -- (2.8,-7.88);
+\node[head] (p2) at (5.6,0) {Controller};
+\draw[lifeline] (5.6,-0.35) -- (5.6,-7.88);
+\node[head] (p3) at (8.399999999999999,0) {Profile};
+\draw[lifeline] (8.399999999999999,-0.35) -- (8.399999999999999,-7.88);
+\node[head] (p4) at (11.2,0) {History};
+\draw[lifeline] (11.2,-0.35) -- (11.2,-7.88);
+\node[head] (p5) at (14.0,0) {RecommendService};
+\draw[lifeline] (14.0,-0.35) -- (14.0,-7.88);
+\node[head] (p6) at (16.799999999999997,0) {CDRepository};
+\draw[lifeline] (16.799999999999997,-0.35) -- (16.799999999999997,-7.88);
+\draw[msg] (0.0,-0.85) -- node[above, font=\scriptsize, align=center] {请求推荐} (2.8,-0.85);
+\draw[msg] (2.8,-1.57) -- node[above, font=\scriptsize, align=center] {requestRecommend} (5.6,-1.57);
+\draw[msg] (5.6,-2.29) -- node[above, font=\scriptsize, align=center] {loadPreference} (8.399999999999999,-2.29);
+\draw[msg] (5.6,-3.01) -- node[above, font=\scriptsize, align=center] {loadHistory} (11.2,-3.01);
+\draw[msg] (5.6,-3.73) -- node[above, font=\scriptsize, align=center] {recommend(profile, history)} (14.0,-3.73);
+\draw[msg] (14.0,-4.45) -- node[above, font=\scriptsize, align=center] {findMatchedCDs} (16.799999999999997,-4.45);
+\draw[ret] (16.799999999999997,-5.17) -- node[above, font=\scriptsize, align=center] {CDs} (14.0,-5.17);
+\draw[ret] (14.0,-5.89) -- node[above, font=\scriptsize, align=center] {recommendations} (5.6,-5.89);
+\draw[ret] (5.6,-6.61) -- node[above, font=\scriptsize, align=center] {show} (2.8,-6.61);
+\end{tikzpicture}}
+\end{center}
+
+
+
+答题要点：信息专家负责掌握数据的对象；Controller 负责接收系统事件；推荐规则放在 Service 中，Repository 负责持久化查询。
+
+\section{2012 答案}
+
+\subsection{一、名词解释}
+
+\subsubsection{软件工程}
+
+软件工程是把系统化、规范化、可度量的方法应用于软件开发、运行和维护的工程活动，并研究这些方法。它关注程序、数据、文档和知识等完整软件制品，目标是在受控的质量、成本和进度下交付可维护的软件系统。
+
+\subsubsection{可用性}
+
+可用性是软件被指定用户在指定使用环境中有效、高效、满意地完成指定任务的程度。常用维度包括易学性、效率、易记性、错误率与恢复能力、用户满意度。
+
+\subsubsection{功能内聚}
+
+功能内聚是高内聚的一种形式，模块内部所有元素共同完成一个明确功能。模块只有一个清晰目标，内部语句和数据都服务于该功能。
+
+\subsection{二、增量交付模型与演化开发模型}
+
+增量交付模型把系统按功能优先级拆成多个增量，每个增量经历需求、设计、构造和测试，并交付可运行版本。优点是早交付、早反馈、风险分散；缺点是需要稳定架构和良好的增量规划。
+
+演化开发模型先交付初始版本，再根据用户反馈持续修改和扩展。优点是适合需求变化和探索型系统；缺点是范围控制、进度控制和架构保持更难。
+
+共同点：都不是一次性完成系统，都强调迭代和反馈。区别：增量交付更强调有计划地分批交付功能；演化开发更强调在使用和反馈中持续调整系统。
+
+\subsection{三、超市销售用例分析类图}
+
+概念类：
+
+\begin{itemize}
+\item \texttt{Cashier}：收银员。
+\item \texttt{Customer}：顾客。
+\item \texttt{Sale}：销售。
+\item \texttt{SalesLineItem}：销售明细项。
+\item \texttt{Product}：商品。
+\item \texttt{Payment}：付款。
+\item \texttt{Receipt}：收据。
+\end{itemize}
+
+关系：
+
+\begin{itemize}
+\item 一个 \texttt{Sale} 由一个 \texttt{Cashier} 处理。
+\item 一个 \texttt{Sale} 面向一个 \texttt{Customer}。
+\item 一个 \texttt{Sale} 组合多个 \texttt{SalesLineItem}。
+\item 每个 \texttt{SalesLineItem} 关联一个 \texttt{Product}，并记录数量和小计。
+\item 一个 \texttt{Sale} 关联一个 \texttt{Payment}。
+\item 一个 \texttt{Sale} 生成一个 \texttt{Receipt}。
+\end{itemize}
+
+重要属性：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Sale: saleId, dateTime, total
+SalesLineItem: quantity, subtotal
+Product: productId, description, price
+Payment: amount, change
+Receipt: receiptNo, printTime
+\end{verbatim}
+\end{quote}
+
+\subsection{四、销售用例详细设计}
+
+题目要求所有销售设计因素写在一个模块、数据在 \texttt{Sales.txt}、集中式控制。可设计为：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+SalesModule
+  SalesView
+  SalesController
+  SalesLogic
+  SalesData
+\end{verbatim}
+\end{quote}
+
+集中式顺序：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Cashier -> SalesView: 
+inputProduct(productId, quantity)
+SalesView -> SalesController: 
+enterItem(productId, quantity)
+SalesController -> SalesLogic: 
+addLineItem(productId, quantity)
+SalesLogic -> SalesData: 
+findProduct(productId)
+SalesData --> SalesLogic: Product
+SalesLogic -> SalesLogic: 
+calculateSubtotal()
+SalesController -> SalesView: showLineItem()
+Cashier -> SalesView: finishSale()
+SalesView -> SalesController: finish()
+SalesController -> SalesLogic: 
+calculateTotal()
+SalesLogic -> SalesData: saveSale(sale)
+SalesController -> SalesView: printReceipt()
+\end{verbatim}
+\end{quote}
+
+设计过程：
+
+\begin{enumerate}
+\item 从用例事件识别界面事件。
+\item 由 \texttt{SalesController} 集中接收系统事件。
+\item 由 \texttt{SalesLogic} 处理销售规则。
+\item 由 \texttt{SalesData} 隐藏 \texttt{Sales.txt} 读写。
+\item 由 \texttt{SalesView} 只负责显示和输入。
+\end{enumerate}
+
+\subsection{五、信息隐藏分析}
+
+\texttt{SalesView} 隐藏界面控件和事件响应；\texttt{SalesLogic} 隐藏销售总额计算规则；\texttt{SalesData} 隐藏文件名、文件格式、记录读取和解析。
+
+违反信息隐藏的点：\texttt{SalesLogic} 直接创建 \texttt{SalesData} 并依赖其具体实现，且调用数据层文件相关方法时会暴露存储细节。改进方式：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public interface SalesRepository {
+    int getTotalBySalesId(int id);
+}
+
+public class FileSalesRepository implements 
+SalesRepository {
+    public int getTotalBySalesId(int id) {
+        return 0;
+    }
+}
+
+public class SalesLogic {
+    private final SalesRepository 
+salesRepository;
+
+    public SalesLogic(SalesRepository 
+salesRepository) {
+        this.salesRepository = 
+salesRepository;
+    }
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{六、DIP 分析}
+
+\texttt{SalesLogic} 直接依赖 \texttt{SalesData} 违反依赖倒置原则。高层业务逻辑不应依赖低层数据访问实现，二者都应依赖抽象接口。修正方式是定义 \texttt{SalesRepository} 接口，\texttt{SalesLogic} 依赖接口，文件存储和数据库存储分别实现接口。
+
+\subsection{七、Singleton}
+
+题目要求 \texttt{SalesData} 只有一个实例，可使用 Singleton。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public final class SalesData {
+    private static final SalesData INSTANCE 
+= new SalesData();
+
+    private SalesData() {
+    }
+
+    public static SalesData getInstance() {
+        return INSTANCE;
+    }
+}
+\end{verbatim}
+\end{quote}
+
+注意：现代项目中优先使用依赖注入管理单例生命周期，避免可变全局状态。
+
+\subsection{八、防御式编程与测试驱动}
+
+\texttt{num1} 范围是 \texttt{-1..22767}，\texttt{num2} 范围是 \texttt{-100..12767}。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public int add(int num1, int num2) {
+    if (num1 < -1 || num1 > 22767) {
+        throw new 
+IllegalArgumentException("num1 out of 
+range");
+    }
+    if (num2 < -100 || num2 > 12767) {
+        throw new 
+IllegalArgumentException("num2 out of 
+range");
+    }
+    return num1 + num2;
+}
+\end{verbatim}
+\end{quote}
+
+测试用例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+(-1, -100) -> -101
+(22767, 12767) -> 35534
+(-2, 0) -> exception
+(22768, 0) -> exception
+(0, -101) -> exception
+(0, 12768) -> exception
+\end{verbatim}
+\end{quote}
+
+\subsection{九、团队管理}
+
+团队管理要覆盖角色分工、任务拆分、进度跟踪、版本管理、代码审查、持续集成、测试计划、风险管理和沟通机制。答题时结合实验说明，可写：
+
+\begin{itemize}
+\item 需求和任务进入迭代计划。
+\item 每个任务有负责人和验收标准。
+\item 使用 Git 分支和 Pull Request。
+\item 合并前通过测试和审查。
+\item 每周同步风险、进度和接口变化。
+\end{itemize}
+
+\bigskip\hrule\bigskip
+
+\section{2013A 答案}
+
+\subsection{一、名词解释}
+
+\subsubsection{软件工程}
+
+同 2012 第一题。
+
+\subsubsection{软件演化生命周期模型}
+
+软件经历初始开发、运行服务、持续演化、逐步淘汰和停止服务。它强调软件交付后仍会因需求、环境和技术变化而长期修改。
+
+\subsubsection{螺旋模型}
+
+螺旋模型以风险驱动为核心，每一轮包括目标设定、风险分析、开发验证和计划下一轮。它结合原型、迭代和风险控制，适合大型高风险系统。
+
+\subsection{二、应用描述代码重构}
+
+问题：
+
+\begin{itemize}
+\item \texttt{getDescriptionForiOS} 和 \texttt{getDescriptionForAndroid} 重复代码。
+\item 平台差异以方法重复表达，新增平台要修改 \texttt{Application}。
+\item 违反 DRY、SRP、OCP。
+\end{itemize}
+
+重构：使用 Strategy。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public interface DescriptionStrategy {
+    String platformLine(String 
+applicationName);
+    String rateSourceLine();
+}
+
+public class IosDescriptionStrategy 
+implements DescriptionStrategy {
+    public String platformLine(String 
+applicationName) {
+        return "This is " + applicationName 
++ " for iOS platform\n";
+    }
+
+    public String rateSourceLine() {
+        return "Average Rate from App 
+Store\n";
+    }
+}
+
+public class AndroidDescriptionStrategy 
+implements DescriptionStrategy {
+    public String platformLine(String 
+applicationName) {
+        return "This is " + applicationName 
++ " for Android platform\n";
+    }
+
+    public String rateSourceLine() {
+        return "Average Rate from Google 
+Play\n";
+    }
+}
+\end{verbatim}
+\end{quote}
+
+\texttt{Application}：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public String 
+getDescription(DescriptionStrategy strategy)
+ {
+    StringBuilder result = new 
+StringBuilder();
+    result.append(strategy.platformLine(appl
+icationName));
+    for (NewFeature feature : 
+newFeatureItems) {
+        
+result.append(feature.getDescription());
+    }
+    
+result.append(strategy.rateSourceLine());
+    result.append(averageRate);
+    return result.toString();
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{三、电影租赁积分}
+
+原设计问题：
+
+\begin{itemize}
+\item \texttt{Customer} 通过 \texttt{rental.getMovieRented().getPriceCode()} 访问深层对象，违反 Law of Demeter。
+\item 积分规则放在 \texttt{Customer} 中，信息专家不合适。
+\item 使用类型码判断电影类型，扩展性差。
+\end{itemize}
+
+改进：把积分计算放到 \texttt{Rental} 或 \texttt{Movie}。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public class Customer {
+    private Rental rental;
+
+    int getNewRentPoint() {
+        return rental.getPoint();
+    }
+}
+
+public class Rental {
+    private int daysRented;
+    private Movie movieRented;
+
+    int getPoint() {
+        return 
+movieRented.getPoint(daysRented);
+    }
+}
+
+public class Movie {
+    private int priceCode;
+
+    int getPoint(int daysRented) {
+        if (priceCode == NEW_RELEASE && 
+daysRented > 1) {
+            return 2;
+        }
+        return 1;
+    }
+}
+\end{verbatim}
+\end{quote}
+
+顺序图答案：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Customer -> Rental: getPoint()
+Rental -> Movie: getPoint(daysRented)
+Movie --> Rental: point
+Rental --> Customer: point
+\end{verbatim}
+\end{quote}
+
+\subsection{四、继承设计}
+
+\texttt{MyStack extends Vector} 不合理。Stack 只需要压栈、弹栈、大小和空判断，继承 \texttt{Vector} 会暴露大量不属于栈的操作，违反封装和 LSP。改用组合：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public class MyStack {
+    private final Vector elements = new 
+Vector();
+
+    public void push(Object element) {
+        elements.insertElementAt(element, 
+0);
+    }
+
+    public Object pop() {
+        Object result = 
+elements.firstElement();
+        elements.removeElementAt(0);
+        return result;
+    }
+}
+\end{verbatim}
+\end{quote}
+
+\texttt{Employee extends Person} 合理，员工是人，子类没有改变父类语义。若题目关注领域职责，也可让 \texttt{Employee} 扩展工号、职位等属性。
+
+\subsection{五、耦合类型}
+
+第一段 \texttt{validate\_request} 调用 \texttt{valid\_month(date d)}，传入日期对象并只使用月份字段，属于印记耦合。改进：只传 \texttt{month}。
+
+第二段 \texttt{valid(String s, int type)} 使用类型码控制内部逻辑，属于控制耦合。改进：拆成 \texttt{validString}、\texttt{validDate}，或使用 Validator 策略。
+
+\subsection{六、ATM 需求}
+
+业务需求：提供自助金融服务，减少柜台压力，提高存取款和查询效率。
+
+用户需求：
+
+\begin{itemize}
+\item 用户插卡并输入密码后进行取款。
+\item 用户查询账户余额。
+\item 用户完成转账。
+\end{itemize}
+
+系统级需求：
+
+\begin{itemize}
+\item 当用户输入正确 PIN 时，系统应显示可用业务菜单。
+\item 当用户提交取款金额且余额充足时，系统应出钞并更新余额。
+\end{itemize}
+
+功能需求：存款、取款、余额查询、转账、打印凭条、退卡。
+
+其他需求：安全性、性能、可靠性、可用性、对外接口、硬件接口、数据需求、约束。
+
+\subsection{七、栈测试}
+
+测试思路：
+
+\begin{itemize}
+\item 空栈判断。
+\item 单元素 push/pop。
+\item 多元素后进先出。
+\item 弹出后大小变化。
+\item 空栈 pop 异常。
+\end{itemize}
+
+示例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+MyStack stack = new MyStack();
+assertTrue(stack.isEmpty());
+stack.push("A");
+stack.push("B");
+assertEquals("B", stack.pop());
+assertEquals("A", stack.pop());
+assertTrue(stack.isEmpty());
+\end{verbatim}
+\end{quote}
+
+\subsection{八、Eclipse HCI 优点}
+
+\begin{itemize}
+\item 菜单和工具栏分类清楚，体现一致性和识别优于回忆。
+\item 编辑器、项目树、控制台布局稳定，体现空间记忆。
+\item 错误标记和自动提示反馈及时，体现系统状态可见。
+\item 快捷键和插件扩展支持专家用户，体现灵活性和效率。
+\end{itemize}
+
+\subsection{九、税率代码改进}
+
+使用表驱动：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+private static final double[] LIMITS = 
+{10000, 20000, 30000, 40000};
+private static final double[] RATES = {0.10,
+ 0.12, 0.15, 0.18, 0.20};
+
+public double tax(double income) {
+    if (income <= 0) {
+        return 0;
+    }
+    double tax = 0;
+    double previous = 0;
+    for (int i = 0; i < LIMITS.length; i++) 
+{
+        if (income > LIMITS[i]) {
+            tax += (LIMITS[i] - previous) * 
+RATES[i];
+            previous = LIMITS[i];
+        } else {
+            tax += (income - previous) * 
+RATES[i];
+            return tax;
+        }
+    }
+    tax += (income - previous) * 
+RATES[RATES.length - 1];
+    return tax;
+}
+\end{verbatim}
+\end{quote}
+
+\bigskip\hrule\bigskip
+
+\section{2013B 答案}
+
+\subsection{一、名词解释}
+
+软件工程：同 2012 第一题。
+
+软件验证与确认：
+
+\begin{itemize}
+\item 验证：检查软件是否正确实现规格说明，即“是否正确地构建产品”。
+\item 确认：检查软件是否满足用户真实需求，即“是否构建了正确的产品”。
+\end{itemize}
+
+增量开发模型和迭代开发模型：
+
+\begin{itemize}
+\item 增量强调分批交付功能。
+\item 迭代强调重复执行开发活动并逐步改进。
+\item 实际项目中常合并为迭代增量开发。
+\end{itemize}
+
+\subsection{二、借阅者设计}
+
+原代码问题：
+
+\begin{itemize}
+\item 用整数类型码区分本科生、研究生、教师。
+\item \texttt{Borrower} 同时包含三类借阅规则，违反 OCP 和 SRP。
+\item 新增借阅者类型要修改原类。
+\end{itemize}
+
+改进：使用继承或策略。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public abstract class Borrower {
+    protected int maxBorrowCount;
+
+    public abstract void borrowBook(Book 
+book);
+}
+
+public class UndergraduateBorrower extends 
+Borrower {
+    public UndergraduateBorrower() {
+        this.maxBorrowCount = 5;
+    }
+
+    public void borrowBook(Book book) {
+        // borrow normal book
+    }
+}
+
+public class GraduateBorrower extends 
+Borrower {
+    public GraduateBorrower() {
+        this.maxBorrowCount = 10;
+    }
+
+    public void borrowBook(Book book) {
+        // borrow book
+    }
+}
+
+public class TeacherBorrower extends 
+Borrower {
+    public TeacherBorrower() {
+        this.maxBorrowCount = 20;
+    }
+
+    public void borrowBook(Book book) {
+        // borrow book and notify return 
+when unavailable
+    }
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{三、\texttt{getSubtotal} 内聚}
+
+原方法在 \texttt{Sales} 中根据商品 ID 找商品价格、找销售明细数量、计算小计。问题：
+
+\begin{itemize}
+\item \texttt{Sales} 过度了解 \texttt{Commodity} 和 \texttt{SalesLineItem}。
+\item 方法包含查找和计算两类职责，内聚不足。
+\item 违反信息专家原则。
+\end{itemize}
+
+改进：把小计计算放到 \texttt{SalesLineItem}。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Sales -> SalesLineItem: getSubtotal()
+SalesLineItem -> Commodity: getPrice()
+Commodity --> SalesLineItem: price
+SalesLineItem --> Sales: subtotal
+\end{verbatim}
+\end{quote}
+
+\subsection{四、正方形继承长方形}
+
+不合理。长方形允许独立设置长和宽，正方形要求长宽相等。正方形继承长方形后会加强父类不变式，违反 LSP。
+
+改进：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public interface Shape {
+    int area();
+}
+
+public class Rectangle implements Shape {
+    private int length;
+    private int width;
+    public int area() { return length * 
+width; }
+}
+
+public class Square implements Shape {
+    private int side;
+    public int area() { return side * side; 
+}
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{五、Top50 平均成绩}
+
+\texttt{Grade} 直接依赖 \texttt{ArrayList<Student>} 并调用排序，属于内容耦合或过强的具体类型耦合。改进：
+
+\begin{itemize}
+\item 参数改为 \texttt{List<Student>}。
+\item 排序逻辑独立为 \texttt{StudentRanker}。
+\item \texttt{Grade} 只负责平均值计算。
+\end{itemize}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public float 
+averageGradeForTop50(List<Student> students)
+ {
+    List<Student> sorted = 
+ranker.rankByGrade(students);
+    return sorted.stream().limit(50)
+            .mapToInt(Student::getGrade)
+            .average()
+            .orElse(0);
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{六、ATM 用例图与系统顺序图}
+
+参与者：用户、银行主机、维护人员。
+
+用例：登录/验证 PIN、取款、存款、查询余额、转账、打印凭条、退卡、维护设备。
+
+取款系统顺序图：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+User -> ATMSystem: insertCard(card)
+User -> ATMSystem: inputPin(pin)
+ATMSystem -> BankHost: verify(card, pin)
+BankHost --> ATMSystem: verified
+User -> ATMSystem: withdraw(amount)
+ATMSystem -> BankHost: debit(account, 
+amount)
+BankHost --> ATMSystem: approved
+ATMSystem -> User: dispenseCash(amount)
+ATMSystem -> User: printReceipt()
+\end{verbatim}
+\end{quote}
+
+\subsection{七、有理数黑盒测试}
+
+等价类：
+
+\begin{itemize}
+\item 正数、负数、零。
+\item 分母为零。
+\item 可约分和不可约分。
+\item 除数为零。
+\end{itemize}
+
+测试：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1/2 + 1/3 = 5/6
+-1/2 + 1/2 = 0/1
+2/4 规范化为 1/2
+1/2 dividedBy 1/4 = 2/1
+1/2 dividedBy 0/1 -> exception
+1/0 -> exception
+\end{verbatim}
+\end{quote}
+
+\subsection{八、浏览器 HCI 优点}
+
+\begin{itemize}
+\item 地址栏和搜索合一，减少记忆负担。
+\item 标签页支持并行任务，体现用户控制。
+\item 前进、后退、刷新图标标准化，体现一致性。
+\item 加载进度和安全锁图标显示系统状态。
+\end{itemize}
+
+\subsection{九、月份天数表驱动}
+
+见 05 讲义表驱动示例。核心是使用数组替代长 \texttt{if-else}，并检查月份范围。
+
+\bigskip\hrule\bigskip
+
+\section{2014 答案}
+
+\subsection{一、名词解释}
+
+软件工程：同 2012 第一题。
+
+软件设计：在需求和实现之间建立解决方案结构的活动，决定系统如何分解为模块、组件、类、接口、数据结构和交互关系。
+
+\subsection{二、螺旋模型}
+
+螺旋模型每一轮围绕风险展开：
+
+\begin{enumerate}
+\item 确定目标、方案和约束。
+\item 识别和分析风险，构建原型或验证方案。
+\item 开发和验证当前版本。
+\item 计划下一轮迭代。
+\end{enumerate}
+
+优点：风险驱动，适合大型复杂系统；支持迭代和用户反馈；能在早期暴露关键风险。缺点：管理成本高，需要风险分析能力；不适合小型低风险项目。
+
+\subsection{三、质量保障活动}
+
+项目质量保障活动包括：
+
+\begin{itemize}
+\item 制定质量计划和质量标准。
+\item 需求评审、设计评审和代码审查。
+\item 单元测试、集成测试、系统测试和验收测试。
+\item 静态分析和度量。
+\item 配置管理和变更控制。
+\item 缺陷跟踪和回归测试。
+\item 过程审计和发布前检查。
+\end{itemize}
+
+\subsection{四、图书馆系统用例建模}
+
+参与者：
+
+\begin{itemize}
+\item 借书人。
+\item 管理员。
+\item 外部大学数据库。
+\item 时间或定时器。
+\end{itemize}
+
+用例：
+
+\begin{itemize}
+\item 查询图书。
+\item 借出图书。
+\item 预约图书。
+\item 归还图书。
+\item 登记新书到达。
+\item 分类打印图书标题表。
+\item 检查过期未还图书。
+\item 下载借书人信息。
+\end{itemize}
+
+关系：
+
+\begin{itemize}
+\item 借出图书 include 查询图书可借状态。
+\item 预约图书 extend 图书不可借。
+\item 归还图书 include 更新图书状态。
+\end{itemize}
+
+\subsection{五、代码内聚}
+
+\texttt{init()} 同时初始化 \texttt{FinancialReport}、\texttt{WeatherData} 和 \texttt{totalcount}，这些职责属于不同功能，属于偶然内聚或逻辑内聚，达不到功能内聚。
+
+改进：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+void init() {
+    initFinancialReport();
+    initWeatherData();
+    initMasterCount();
+}
+
+private void initFinancialReport() { }
+private void initWeatherData() { }
+private void initMasterCount() { }
+\end{verbatim}
+\end{quote}
+
+进一步改进是把财务报表和天气数据的创建放到各自工厂或服务中。
+
+\subsection{六、CD 推荐用例职责分配}
+
+题面给出顾客查询、系统返回推荐列表、顾客选定 CD、系统返回详情、顾客购买的流程。
+
+职责分配：
+
+\begin{itemize}
+\item \texttt{CustomerView} 负责展示输入和结果。
+\item \texttt{QueryController} 接收查询请求和购买请求。
+\item \texttt{RecommendationService} 生成推荐列表。
+\item \texttt{CDRepository} 查询 CD 基本信息和详细信息。
+\item \texttt{PurchaseService} 处理购买。
+\item \texttt{PurchaseRepository} 保存购买记录。
+\end{itemize}
+
+设计顺序图：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Customer -> CustomerView: submitQuery(query)
+CustomerView -> QueryController: 
+query(query)
+QueryController -> RecommendationService: 
+recommend(query)
+RecommendationService -> CDRepository: 
+findMatchedCDs(query)
+CDRepository --> RecommendationService: 
+cdList
+RecommendationService --> QueryController: 
+recommendationList
+QueryController --> CustomerView: 
+showList(list)
+Customer -> CustomerView: selectCD(cdId)
+CustomerView -> QueryController: 
+showDetail(cdId)
+QueryController -> CDRepository: 
+findDetail(cdId)
+CDRepository --> QueryController: detail
+QueryController --> CustomerView: 
+showDetail(detail)
+Customer -> CustomerView: buy(cdId)
+CustomerView -> QueryController: buy(cdId)
+QueryController -> PurchaseService: 
+purchase(customerId, cdId)
+PurchaseService -> PurchaseRepository: 
+save(purchase)
+\end{verbatim}
+\end{quote}
+
+\subsection{七、Observer 模式}
+
+结构：
+
+\begin{itemize}
+\item \texttt{Student} 是 Subject，保存 \texttt{id}、\texttt{name}、\texttt{birthday}。
+\item \texttt{Display1} 和 \texttt{Display2} 是 Observer。
+\item \texttt{Display3} 修改 \texttt{Student}。
+\item \texttt{Student} 数据变化后通知 \texttt{Display1} 和 \texttt{Display2} 更新。
+\end{itemize}
+
+示例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public interface Observer {
+    void update(Student student);
+}
+
+public class Student {
+    private String id;
+    private String name;
+    private String birthday;
+    private final List<Observer> observers =
+ new ArrayList<>();
+
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void modify(String id, String 
+name, String birthday) {
+        this.id = id;
+        this.name = name;
+        this.birthday = birthday;
+        notifyObservers();
+    }
+
+    private void notifyObservers() {
+        for (Observer observer : observers) 
+{
+            observer.update(this);
+        }
+    }
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{八、HCI 原则}
+
+打印界面：
+
+\begin{itemize}
+\item 信息密度高，用户需要理解多个选项，增加记忆负担。
+\item 按钮和选项分组不够清晰，影响效率。
+\item 打印机、页码、份数等字段体现了系统状态可见。
+\end{itemize}
+
+Office 2010 Ribbon：
+
+\begin{itemize}
+\item 常用命令图形化，体现识别优于回忆。
+\item 相近功能分组，体现一致性和任务组织。
+\item 图标加文字降低学习成本。
+\item 功能较多，初学者仍有认知负担。
+\end{itemize}
+
+\subsection{九、黑盒与白盒测试}
+
+黑盒测试根据需求规格设计测试，不关注内部代码结构。优点是贴近用户需求，适合功能、边界值和等价类测试；缺点是内部路径覆盖不可见。
+
+白盒测试根据代码结构设计测试。优点是能覆盖语句、分支、条件和路径；缺点是依赖代码实现，对需求遗漏不敏感。
+
+对正确性要求高且分支复杂的程序，使用路径覆盖或分支覆盖。随机选择不能保证覆盖关键分支；语句覆盖弱于分支覆盖；分支覆盖能覆盖每个判断结果；路径覆盖更强但成本高。
+
+\bigskip\hrule\bigskip
+
+\section{2016 答案}
+
+\subsection{一、简答}
+
+软件工程：同 2012 第一题。
+
+演化模型：同 01 讲义。优点是适合需求变化、用户反馈充分、逐步交付；缺点是范围和进度难控制，过程管理弱时会退化成随意修改。
+
+正向工程与逆向工程：
+
+\begin{itemize}
+\item 正向工程从需求和设计到代码和文档。
+\item 逆向工程从已有系统分析其部件、关系、需求和设计。
+\item 正向工程关注构造，逆向工程关注理解和抽象恢复。
+\end{itemize}
+
+\subsection{二、支付宝用例图}
+
+参与者：消费者、商家、支付平台、银行或第三方账户系统。
+
+用例：
+
+\begin{itemize}
+\item 扫描商家二维码付款。
+\item 出示付款码付款。
+\item 输入金额。
+\item 输入支付密码。
+\item 选择付款方式。
+\item 使用优惠券或红包抵扣。
+\item 生成支付记录。
+\end{itemize}
+
+关系：
+
+\begin{itemize}
+\item 扫码付款 include 输入金额、选择付款方式、输入支付密码。
+\item 出示付款码付款 include 选择付款方式、验证支付密码。
+\item 使用优惠券或红包 extend 付款。
+\end{itemize}
+
+\subsection{三、支付概念类图}
+
+概念类：
+
+\begin{itemize}
+\item \texttt{Consumer}
+\item \texttt{Merchant}
+\item \texttt{PaymentCode}
+\item \texttt{PaymentMethod}
+\item \texttt{HuabeiPayment}
+\item \texttt{BalancePayment}
+\item \texttt{YuEBaoPayment}
+\item \texttt{BankCardPayment}
+\item \texttt{Coupon}
+\item \texttt{RedPacket}
+\item \texttt{PaymentRecord}
+\item \texttt{AntPoint}
+\end{itemize}
+
+关系：
+
+\begin{itemize}
+\item \texttt{Consumer} 拥有多个 \texttt{PaymentMethod}、多个 \texttt{Coupon}、多个 \texttt{RedPacket}。
+\item \texttt{PaymentMethod} 是抽象概念，花呗、余额、余额宝、银行卡是具体方式。
+\item \texttt{Consumer} 产生 \texttt{PaymentCode}。
+\item \texttt{Consumer} 向 \texttt{Merchant} 发起支付。
+\item 一次支付生成一条 \texttt{PaymentRecord}。
+\item \texttt{PaymentRecord} 关联付款方式、商家、金额、时间。
+\item \texttt{AntPoint} 与消费者账户关联。
+\end{itemize}
+
+\subsection{四、付款模块物理包图与接口}
+
+物理包图：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Client
+  html
+  css
+  javascript
+  presentation.payment
+
+Client.presentation.payment --HTTP/REST 
+API--> Server.api
+
+Server
+  api.payment
+  service.payment
+  service.impl.payment
+  repository.account
+  repository.payment
+  repository.point
+  domain
+  database
+\end{verbatim}
+\end{quote}
+
+接口：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package alipay.payment.service;
+
+public interface PaymentService {
+    LoginResult login(LoginCommand command);
+    PaymentPreview 
+fillAmount(PaymentAmountCommand command);
+    PaymentResult pay(PaymentCommand 
+command);
+}
+\end{verbatim}
+\end{quote}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package alipay.payment.repository;
+
+public interface AccountRepository {
+    Account findByLoginId(String loginId);
+    void save(Account account);
+}
+\end{verbatim}
+\end{quote}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package alipay.payment.repository;
+
+public interface PaymentRecordRepository {
+    void save(PaymentRecord record);
+}
+\end{verbatim}
+\end{quote}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package alipay.payment.repository;
+
+public interface PointRepository {
+    void save(PointChange change);
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{五、支付详细设计关系}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+PaymentView -> PaymentController
+PaymentController -> PaymentService
+PaymentService -> HuabeiService
+PaymentService -> UserService
+PaymentService -> PaymentRepository
+HuabeiService -> HuabeiRepository
+UserService -> UserRepository
+PaymentService -> PointService
+PointService -> PointRepository
+\end{verbatim}
+\end{quote}
+
+顺序：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+PaymentView -> PaymentController: 
+pay(command)
+PaymentController -> PaymentService: 
+pay(command)
+PaymentService -> HuabeiService: 
+debit(userId, amount)
+PaymentService -> UserService: 
+updateBalanceOrState(userId)
+PaymentService -> PointService: 
+addPoint(userId, amount)
+PaymentService -> PaymentRepository: 
+save(record)
+PaymentService --> PaymentController: result
+PaymentController --> PaymentView: result
+\end{verbatim}
+\end{quote}
+
+\subsection{六、消除印记耦合}
+
+印记耦合是传入整个对象或数据结构，但被调用方只使用其中一部分。消除方式：
+
+\begin{itemize}
+\item 只传需要的字段。
+\item 提取专用参数对象。
+\item 把行为移动到拥有数据的对象中。
+\item 不暴露完整内部结构。
+\end{itemize}
+
+\subsection{七、会员等级积分策略}
+
+使用 Strategy。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public interface PointStrategy {
+    int calculate(int amount);
+}
+
+public class ALevelPointStrategy implements 
+PointStrategy {
+    public int calculate(int amount) { 
+return amount; }
+}
+
+public class BLevelPointStrategy implements 
+PointStrategy {
+    public int calculate(int amount) { 
+return amount / 2; }
+}
+
+public class SLevelPointStrategy implements 
+PointStrategy {
+    public int calculate(int amount) { 
+return amount * 2; }
+}
+\end{verbatim}
+\end{quote}
+
+会员类持有 \texttt{PointStrategy}，新增 S 级时新增策略类。
+
+\subsection{八、表驱动}
+
+把等级和积分规则放入表或 Map：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Map<MemberLevel, PointStrategy> strategies =
+ Map.of(
+        MemberLevel.A, new 
+ALevelPointStrategy(),
+        MemberLevel.B, new 
+BLevelPointStrategy(),
+        MemberLevel.S, new 
+SLevelPointStrategy()
+);
+\end{verbatim}
+\end{quote}
+
+\subsection{九、更改密码黑盒测试}
+
+测试维度：
+
+\begin{itemize}
+\item 用户存在/不存在。
+\item 旧密码正确/错误。
+\item 新密码合法/非法。
+\item 新密码与旧密码相同/不同。
+\item 连续错误导致锁定。
+\end{itemize}
+
+示例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+user, old=123456, new=abcdef1 -> 成功
+user, old=wrong, new=abcdef1 -> 失败
+unknown, old=123456, new=abcdef1 -> 失败
+user, old=123456, new=123456 -> 失败
+user, old=123456, new=abc -> 失败
+连续三次旧密码错误 -> 账户锁定
+\end{verbatim}
+\end{quote}
+
+\subsection{十、支付宝界面 HCI}
+
+语言切换界面：
+
+\begin{itemize}
+\item 使用语言自身显示选项，识别优于回忆。
+\item 列表结构清楚，一致性好。
+\item 当前选中项可见，反馈明确。
+\end{itemize}
+
+字体大小界面：
+
+\begin{itemize}
+\item 预览文本体现即时反馈。
+\item 滑块或分档控制降低记忆负担。
+\item 操作结果可逆，体现用户控制。
+\end{itemize}
+
+\bigskip\hrule\bigskip
+
+\section{2020 答案}
+
+\subsection{一、简答}
+
+软件工程：同 2012 第一题。
+
+持续集成：
+
+\begin{itemize}
+\item 好处：早发现集成问题、减少手工构建错误、保证主干可运行、缩短反馈周期。
+\item 工具链：Git、GitHub/GitLab、Maven/Gradle、JUnit、静态分析、CI 服务、制品库、部署脚本。
+\end{itemize}
+
+软件生命周期：
+
+软件从设想、需求、设计、构造、测试、部署、运行维护到退役的全过程。模型示例：瀑布模型、迭代增量模型、演化模型、螺旋模型。
+
+\subsection{二、采购补货用例与需求分类}
+
+用例 1：手工创建询价单。
+
+\begin{itemize}
+\item 参与者：采购人员。
+\item 流程：登录系统；进入询价单；新建询价单；输入供应商、产品、数量；保存。
+\end{itemize}
+
+用例 2：自动生成采购询价单。
+
+\begin{itemize}
+\item 参与者：库管员，仓库经理。
+\item 流程：仓库经理设置再订货规则；库管员运行排程；系统读取规则、销售订单和库存；系统生成采购询价单。
+\end{itemize}
+
+需求分类：
+
+\begin{itemize}
+\item “补货数含非数字字符时系统提示输入错误”是功能需求，因为它描述系统对非法输入的响应。
+\item “收入金额不能含非数字字符”是数据需求，因为它规定数据字段的格式约束。
+\end{itemize}
+
+\subsection{三、采购补货概念类图}
+
+概念类：
+
+\begin{itemize}
+\item \texttt{WarehouseManager}
+\item \texttt{StockKeeper}
+\item \texttt{ReorderRule}
+\item \texttt{Schedule}
+\item \texttt{Inventory}
+\item \texttt{SalesOrder}
+\item \texttt{PurchaseRequisition}
+\item \texttt{Product}
+\item \texttt{Supplier}
+\end{itemize}
+
+关系：
+
+\begin{itemize}
+\item 仓库经理设置多个再订货规则。
+\item 库管员运行排程。
+\item 排程读取库存、销售订单和再订货规则。
+\item 排程生成采购询价单。
+\item 采购询价单包含多个产品项。
+\item 产品关联供应商。
+\end{itemize}
+
+重要属性：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+ReorderRule: ruleId, threshold, productId
+Inventory: productId, quantity
+SalesOrder: orderId, status
+PurchaseRequisition: requisitionId, 
+createdAt, status
+Product: productId, name
+Supplier: supplierId, name
+\end{verbatim}
+\end{quote}
+
+\subsection{四、物理包图与接口}
+
+物理包图按“图 2：Web / 校园卡物理包图”的分层方式绘制，功能模块替换为销售、采购、仓库、会计、发票、付款、收款。
+
+接口：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package erp.purchase.service;
+
+public interface ReplenishmentService {
+    ScheduleResult 
+runSchedule(RunScheduleCommand command);
+}
+\end{verbatim}
+\end{quote}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package erp.purchase.repository;
+
+public interface ReorderRuleRepository {
+    List<ReorderRule> findActiveRules();
+}
+\end{verbatim}
+\end{quote}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package erp.purchase.repository;
+
+public interface InventoryRepository {
+    Inventory findByProductId(String 
+productId);
+}
+\end{verbatim}
+\end{quote}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package erp.purchase.repository;
+
+public interface 
+PurchaseRequisitionRepository {
+    void save(PurchaseRequisition 
+requisition);
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{五、订货规则详细设计}
+
+具体天数和销量变化属于业务规则参数变化。用配置表、规则对象或策略对象封装。
+
+新增活动计算方式属于算法变化。使用 Strategy：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public interface ReorderPolicy {
+    int calculate(ReorderContext context);
+}
+
+public class LeadTimeReorderPolicy 
+implements ReorderPolicy {
+    public int calculate(ReorderContext 
+context) {
+        return 0;
+    }
+}
+
+public class PromotionReorderPolicy 
+implements ReorderPolicy {
+    public int calculate(ReorderContext 
+context) {
+        return context.promotionStock() * 
+context.promotionScale()
+                + context.baseStock();
+    }
+}
+\end{verbatim}
+\end{quote}
+
+顺序图：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+ScheduleService -> ReorderPolicy: 
+calculate(context)
+ReorderPolicy -> Activity: getScale()
+ReorderPolicy -> SalesVolume: getBaseStock()
+ReorderPolicy --> ScheduleService: quantity
+ScheduleService -> PurchaseOrder: 
+create(product, quantity)
+ScheduleService -> PurchaseOrderRepository: 
+save(order)
+\end{verbatim}
+\end{quote}
+
+\subsection{六、耦合}
+
+第一段：\texttt{validate\_request} 传入 \texttt{date}，\texttt{valid\_month} 只用月份，属于印记耦合。改为传 \texttt{month}，或把 \texttt{isValidMonth()} 放到 \texttt{date} 对象中。
+
+第二段：\texttt{valid(String s, int type)} 使用类型码控制分支，属于控制耦合。改为多个验证器：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public interface Validator<T> {
+    boolean valid(T value);
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{七、DAO 模式}
+
+使用 Abstract Factory 或 Factory Method 组织 DAO 创建。业务层依赖 DAO 接口，MySQL DAO 和 SQL Server DAO 是具体实现。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+DaoFactory
+  createProductDao()
+  createOrderDao()
+
+MySqlDaoFactory
+SqlServerDaoFactory
+
+ProductDao
+MySqlProductDao
+SqlServerProductDao
+\end{verbatim}
+\end{quote}
+
+使用原则：DIP、OCP、面向接口编程、信息隐藏。
+
+\subsection{八、订货规则代码问题}
+
+问题：
+
+\begin{itemize}
+\item 方法名和参数名无意义。
+\item \texttt{7}、\texttt{15}、\texttt{20}、\texttt{30}、\texttt{40} 是 magic number。
+\item 分支重复且边界表达不清。
+\item 没有处理非法输入。
+\item 题面规则缺少 16 到 19 天的处理，需要补充业务规则。
+\end{itemize}
+
+改进示例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public int calculateStockDays(int 
+leadTimeDays) {
+    if (leadTimeDays < 0) {
+        throw new 
+IllegalArgumentException("leadTimeDays must 
+be non-negative");
+    }
+    if (leadTimeDays <= 3) return 7;
+    if (leadTimeDays <= 7) return 15;
+    if (leadTimeDays <= 10) return 20;
+    if (leadTimeDays <= 15) return 30;
+    if (leadTimeDays >= 20) return 40;
+    throw new 
+IllegalArgumentException("leadTimeDays rule 
+missing");
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{九、HCI 点评}
+
+按截图可从以下角度答：
+
+\begin{itemize}
+\item 菜单层次和按钮布局是否符合任务顺序。
+\item 关键状态是否可见。
+\item 常用操作是否靠近操作对象。
+\item 错误信息是否可恢复。
+\item 是否保持术语、颜色、位置一致。
+\end{itemize}
+
+\subsection{十、边界值测试}
+
+边界是 3、7、10、15、20。测试值：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+2, 3, 4
+6, 7, 8
+9, 10, 11
+14, 15, 16
+19, 20, 21
+\end{verbatim}
+\end{quote}
+
+这些用例能暴露边界闭开区间错误，也能暴露 16 到 19 天规则缺口。
+
+\bigskip\hrule\bigskip
+
+\section{2022 答案}
+
+\subsection{一、简答}
+
+软件工程：同 2012 第一题。
+
+配置管理变更控制：提交 CR；影响分析；风险评估；CCB 审查；批准后制定实施和回滚计划；执行变更；更新基线；配置审计；上线验证；状态报告。
+
+迭代增量模型和演化模型：见 01 讲义高频考点。
+
+\subsection{二、校园卡需求获取}
+
+用例：
+
+\begin{itemize}
+\item 登录。
+\item 查询余额。
+\item 校园卡充值。
+\item 查询充值记录。
+\item 绑定银行卡。
+\item 查询消费明细。
+\item 挂失校园卡。
+\item 解除挂失。
+\item 修改密码。
+\end{itemize}
+
+充值需求：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+业务需求：提高校园卡充值业务自助办理比例，减少人工窗口压力。
+用户需求：持卡人希望在线完成充值并查看充值结果。
+系统级需求：当支付平台返回成功结果时，系统应更新校园卡余额并生成充值记录。
+\end{verbatim}
+\end{quote}
+
+API 供其他管理系统调用属于对外接口需求。其他接口包括支付平台接口、统一认证接口、校园卡中心接口、短信或消息通知接口。
+
+\subsection{三、校园卡概念类图}
+
+概念类：
+
+\begin{itemize}
+\item \texttt{User}
+\item \texttt{CampusCard}
+\item \texttt{RechargeRecord}
+\item \texttt{BankCard}
+\item \texttt{TransactionDetail}
+\item \texttt{PaymentOrder}
+\end{itemize}
+
+关系：
+
+\begin{itemize}
+\item 一个用户拥有零张或多张校园卡。
+\item 一张校园卡对应零条或多条充值记录。
+\item 一个用户绑定零张或多张银行卡。
+\item 一条充值记录对应一个支付订单。
+\item 一张校园卡对应零条或多条消费明细。
+\end{itemize}
+
+\subsection{四、物理包图与充值接口}
+
+物理包图见“图 2：Web / 校园卡物理包图”，把功能模块填为登录、充值、充值记录、余额查询、挂失、交易记录。
+
+展示层和逻辑层接口：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package campus.card.service;
+
+public interface RechargeService {
+    RechargeResult recharge(RechargeCommand 
+command);
+    List<RechargeRecordView> 
+findRechargeRecords(String cardNo);
+}
+\end{verbatim}
+\end{quote}
+
+逻辑层和数据层接口：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package campus.card.repository;
+
+public interface CampusCardRepository {
+    Optional<CampusCard> findByCardNo(String
+ cardNo);
+    void save(CampusCard card);
+}
+\end{verbatim}
+\end{quote}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package campus.card.repository;
+
+public interface RechargeRecordRepository {
+    void save(RechargeRecord record);
+    List<RechargeRecord> findByCardNo(String
+ cardNo);
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{五、优惠券和支付方式设计}
+
+使用两个策略族：
+
+\begin{itemize}
+\item \texttt{CouponPolicy}：固定金额优惠、比例优惠。
+\item \texttt{PaymentStrategy}：支付宝支付、微信支付。
+\end{itemize}
+
+类图见“图 6：Strategy 策略模式类图”，结合本题业务可写成：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+User 1 ---- 0..* Coupon
+User 1 ---- 1 Card
+RechargeService --> CouponPolicy
+RechargeService --> PaymentStrategy
+RechargeService --> PaymentRecordRepository
+CouponPolicy <|.. FixedAmountCouponPolicy
+CouponPolicy <|.. PercentCouponPolicy
+PaymentStrategy <|.. AlipayPaymentStrategy
+PaymentStrategy <|.. WechatPaymentStrategy
+PaymentRecord --> ThirdPayment
+\end{verbatim}
+\end{quote}
+
+新增优惠券时新增 \texttt{CouponPolicy} 实现类，业务流程不改。
+
+充值顺序：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+User -> RechargeController: 
+recharge(command)
+RechargeController -> RechargeService: 
+recharge(command)
+RechargeService -> CouponPolicy: 
+discount(amount)
+RechargeService -> PaymentStrategy: 
+pay(payAmount)
+RechargeService -> Card: recharge(payAmount)
+RechargeService -> PaymentRecordRepository: 
+save(record)
+RechargeService --> RechargeController: 
+result
+\end{verbatim}
+\end{quote}
+
+\subsection{六、模块化与信息隐藏}
+
+用户包和优惠券包互相依赖，违反无循环依赖原则，也违反低耦合。改进：
+
+\begin{itemize}
+\item 定义 \texttt{CouponIssueService} 作为协调者。
+\item 用户包只暴露 \texttt{UserRepository} 或 \texttt{UserService} 接口。
+\item 优惠券包只暴露 \texttt{CouponPolicy} 和 \texttt{CouponRepository} 接口。
+\end{itemize}
+
+\texttt{issueCoupon} 和 \texttt{addCoupon} 问题：
+
+\begin{itemize}
+\item \texttt{issueCoupon} 传入 \texttt{User} 并调用 \texttt{getType()}，存在访问耦合。
+\item \texttt{addCoupon} 用 \texttt{type} 控制分支，属于控制耦合。
+\item 可接受度低，因为新增用户类型或优惠券类型要修改分支。
+\end{itemize}
+
+改进：使用策略或工厂。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public interface CouponIssuePolicy {
+    Coupon issue(User user);
+}
+\end{verbatim}
+\end{quote}
+
+\texttt{user.addCoupon(...)} 多次调用可优化为：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Coupon coupon = 
+couponIssuePolicy.issue(user);
+user.receiveCoupon(coupon);
+\end{verbatim}
+\end{quote}
+
+\subsection{七、设计模式}
+
+支付方式扩展使用 Strategy。
+
+好处：
+
+\begin{itemize}
+\item 新增支付方式时新增策略类。
+\item 消除 \texttt{if-else} 或 \texttt{switch}。
+\item 支付上下文依赖抽象。
+\end{itemize}
+
+原则：
+
+\begin{itemize}
+\item OCP。
+\item DIP。
+\item SRP。
+\item 低耦合和高内聚。
+\end{itemize}
+
+\subsection{八、\texttt{doPost} 构造分析}
+
+优点：
+
+\begin{itemize}
+\item 能读取请求参数并返回结果。
+\item 基本流程有成功和失败响应。
+\end{itemize}
+
+问题：
+
+\begin{itemize}
+\item 参数名 \texttt{new1}、\texttt{new2} 含义弱。
+\item \texttt{rsq} 是拼写错误风格，降低可读性。
+\item 使用 \texttt{indexOf} 判断密码一致性，逻辑错误；应使用 \texttt{equals}。
+\item 条件表达式过长，不可读，不可维护。
+\item \texttt{dao.rePassword(new1)} 未传入用户标识。
+\item Controller 中混入业务逻辑和数据访问。
+\item 没有异常处理和日志。
+\item 直接输出字符串 \texttt{"yes"}、\texttt{"no"}，接口语义弱。
+\item \texttt{PrintWriter} 手动关闭不适合由容器管理的响应流。
+\end{itemize}
+
+改进方向：
+
+\begin{itemize}
+\item Controller 调用 \texttt{PasswordService}。
+\item 服务中校验旧密码、新密码一致性、新旧密码不同、密码强度。
+\item DAO 只负责读取和保存。
+\item 返回结构化结果。
+\end{itemize}
+
+\subsection{九、HCI}
+
+好的地方：
+
+\begin{itemize}
+\item 自助系统降低窗口排队。
+\item 余额、充值记录等任务入口明确。
+\item 交易结果可即时反馈。
+\end{itemize}
+
+问题和建议：
+
+\begin{itemize}
+\item 充值按钮和金额输入要靠近，遵循 Fitts 定律。
+\item 失败原因要明确，并提供重试入口。
+\item 高风险操作如挂失要二次确认。
+\item 充值处理中要显示状态，避免重复提交。
+\item 记录列表要支持时间、金额和状态筛选。
+\end{itemize}
+
+\subsection{十、\texttt{doPost} 测试}
+
+圈复杂度：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+两个 if 判定，V(G)=2+1=3
+\end{verbatim}
+\end{quote}
+
+条件覆盖原子条件：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+C1: new1.indexOf(new2) != -1
+C2: old.indexOf(new1) == -1
+C3: new2.indexOf(new1) != -1
+C4: new1.indexOf(old) == -1
+\end{verbatim}
+\end{quote}
+
+考虑短路，最小测试集：
+
+{
+\footnotesize
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|}
+\hline
+\textbf{old} & \textbf{new1} & \textbf{new2} & \textbf{覆盖点} \\
+\hline
+\endfirsthead
+\hline
+\textbf{old} & \textbf{new1} & \textbf{new2} & \textbf{覆盖点} \\
+\hline
+\endhead
+\texttt{x} & \texttt{abc} & \texttt{abc} & C1、C2、C3、C4 全为真 \\
+\hline
+\texttt{x} & \texttt{abc} & \texttt{d} & C1 为假 \\
+\hline
+\texttt{abcd} & \texttt{abc} & \texttt{ab} & C1 为真，C2 为假 \\
+\hline
+\texttt{x} & \texttt{abc} & \texttt{ab} & C1、C2 为真，C3 为假 \\
+\hline
+\texttt{a} & \texttt{abc} & \texttt{abc} & C1、C2、C3 为真，C4 为假 \\
+\hline
+\end{longtable}
+}
+
+
+\bigskip\hrule\bigskip
+
+\section{2025 答案}
+
+\subsection{名词解释}
+
+软件工程：同 2012 第一题。
+
+再工程：对已有软件系统进行分析、理解、改造和重新实现，以改善结构、质量、可维护性或适配新平台。再工程通常包括逆向工程、重构、迁移和重新文档化。
+
+增量迭代模型和演化模型：见 01 讲义高频考点。
+
+\subsection{需求}
+
+判断需求级别：
+
+\begin{itemize}
+\item 组织目标和业务价值是业务需求。
+\item 用户任务和使用目标是用户需求。
+\item 系统输入、处理、输出和约束是系统级需求。
+\end{itemize}
+
+判断需求类型：
+
+\begin{itemize}
+\item 系统做什么：功能需求。
+\item 性能、安全、可用性等质量属性：非功能需求。
+\item 数据字段、取值范围、格式：数据需求。
+\item 和外部系统通信：对外接口需求。
+\item 技术栈、法规、平台限制：约束。
+\end{itemize}
+
+从用户级需求到系统需求：
+
+\begin{enumerate}
+\item 访谈利益相关者。
+\item 写用户故事和用例。
+\item 梳理基本流程和扩展流程。
+\item 提取系统输入、处理和输出。
+\item 补充数据、接口和非功能约束。
+\item 写成可验证的 SRS 条目。
+\end{enumerate}
+
+\subsection{需求图}
+
+概念类图：根据题面名词提取领域概念，删除纯属性和界面词，补属性、关联和多重性。
+
+顺序图：从一个用例基本流程开始，按参与者、界面、Controller、Service、Repository、外部系统排列消息。
+
+\subsection{Spring Boot 三层}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Controller: 接收 HTTP 请求，解析参数，调用 Service，返回响应。
+Service: 封装业务逻辑、事务和规则。
+Repository: 访问数据库，隐藏持久化细节。
+\end{verbatim}
+\end{quote}
+
+依赖注入示例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+@RestController
+public class ScheduleController {
+    private final ScheduleService 
+scheduleService;
+
+    public 
+ScheduleController(ScheduleService 
+scheduleService) {
+        this.scheduleService = 
+scheduleService;
+    }
+
+    public ScheduleResult 
+arrange(@RequestBody ScheduleCommand 
+command) {
+        return 
+scheduleService.arrange(command);
+    }
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{详细设计}
+
+Controller-Service-Repository 顺序图：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+User -> Controller: request
+Controller -> Service: method(command)
+Service -> Repository: query/save
+Repository --> Service: entity
+Service --> Controller: result
+Controller --> User: response
+\end{verbatim}
+\end{quote}
+
+控制策略：
+
+\begin{itemize}
+\item 集中式：流程集中，控制器臃肿。
+\item 分散式：流程分布广，追踪困难。
+\item 委托式：控制器保留主流程，把子任务交给专业对象。业务系统优先采用委托式。
+\end{itemize}
+
+\subsection{代码好坏}
+
+坏代码特征：
+
+\begin{itemize}
+\item 方法过长。
+\item 分支复杂。
+\item 命名无意义。
+\item 重复代码。
+\item 直接访问内部结构。
+\item 多个职责混在一个类或方法。
+\end{itemize}
+
+好代码特征：
+
+\begin{itemize}
+\item 命名清楚。
+\item 职责单一。
+\item 依赖接口。
+\item 分支被策略或多态替代。
+\item 测试覆盖边界和异常。
+\end{itemize}
+
+\subsection{策略模式：课程冲突检测}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public interface ConflictCheckStrategy {
+    ConflictResult check(ScheduleContext 
+context);
+}
+
+public class TeacherConflictCheckStrategy 
+implements ConflictCheckStrategy {
+    public ConflictResult 
+check(ScheduleContext context) {
+        return ConflictResult.pass();
+    }
+}
+
+public class ClassroomConflictCheckStrategy 
+implements ConflictCheckStrategy {
+    public ConflictResult 
+check(ScheduleContext context) {
+        return ConflictResult.pass();
+    }
+}
+
+public class 
+StudentCourseConflictCheckStrategy 
+implements ConflictCheckStrategy {
+    public ConflictResult 
+check(ScheduleContext context) {
+        return ConflictResult.pass();
+    }
+}
+
+public class ConflictCheckContext {
+    private final 
+List<ConflictCheckStrategy> strategies;
+
+    public ConflictCheckContext(List<Conflic
+tCheckStrategy> strategies) {
+        this.strategies = strategies;
+    }
+
+    public List<ConflictResult> 
+checkAll(ScheduleContext context) {
+        return strategies.stream()
+                .map(strategy -> 
+strategy.check(context))
+                .toList();
+    }
+}
+\end{verbatim}
+\end{quote}
+
+优点：新增冲突类型时新增策略类，符合 OCP；上下文依赖接口，符合 DIP；每个策略职责单一。缺点是类数量增加，策略选择和组合需要管理。
+
+\subsection{改坏代码}
+
+一堆 AND/OR 条件的布尔方法可按下面方式改：
+
+\begin{itemize}
+\item 提取有语义的方法。
+\item 拆分中间变量。
+\item 使用早返回。
+\item 把规则对象化。
+\end{itemize}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public boolean 
+canArrange(CourseArrangeRequest request) {
+    return teacherAvailable(request)
+            && classroomAvailable(request)
+            && studentsAvailable(request)
+            && timeSlotValid(request);
+}
+\end{verbatim}
+\end{quote}
+
+\subsection{测试}
+
+圈复杂度：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+V(G)=判定节点数+1
+\end{verbatim}
+\end{quote}
+
+分支覆盖：每个 \texttt{if} 的真分支和假分支至少执行一次。设计测试时列出每个判定条件，再为每个分支构造输入。
+
+\subsection{HCI}
+
+评价截图按四步：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+现象 -> 原则 -> 影响 -> 改进
+\end{verbatim}
+\end{quote}
+
+常用原则：系统状态可见、识别优于回忆、一致性、错误预防、用户控制、灵活性和效率、Fitts 定律。
+\end{document}
+
