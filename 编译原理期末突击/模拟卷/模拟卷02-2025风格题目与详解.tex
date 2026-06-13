@@ -1,0 +1,474 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=1.9cm]{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{verbatim}
+\usepackage{xcolor}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\emergencystretch=4em
+\sloppy
+\title{模拟卷02-2025风格题目与详解}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+\section{编译原理 2025 风格模拟卷02（题目与详解）}
+
+
+\subsection{卷面说明}
+
+
+本卷按 2025 年期末卷组织，主线题为词法分析、LL、指令调度、支配、符号执行、Andersen。最后设置旧卷加练题，覆盖 2022、2023 中仍有价值的传统题型。总分 100 分，加练题 10 分。
+
+
+\section{A 卷题目}
+
+
+\subsection{一、词法分析（15 分）}
+
+
+正则表达式：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+((epsilon|a)b*)*
+\end{verbatim}
+\end{quote}
+
+
+\begin{enumerate}
+\item 使用 Thompson 构造法构造等价 NFA。
+\item 使用子集构造法构造 DFA，写明 DFA 状态含义。
+\item 最小化 DFA。
+\end{enumerate}
+
+
+\subsection{二、LL 语法分析（15 分）}
+
+
+文法：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> D E
+D -> D q | s
+E -> m | n
+\end{verbatim}
+\end{quote}
+
+
+\begin{enumerate}
+\item 消除左递归。
+\item 写 FIRST 和 FOLLOW。
+\item 写预测分析表。
+\item 判断消除左递归后的文法是否为 LL(1)。
+\end{enumerate}
+
+
+\subsection{三、指令调度（15 分）}
+
+
+给定指令：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+I1: R1 = R2 + R3
+I2: R4 = R1 + R5
+I3: R2 = R6 + R7
+I4: R1 = R8 + R9
+I5: R10 = R4 + R1
+\end{verbatim}
+\end{quote}
+
+
+\begin{enumerate}
+\item 写出指令调度的目的。
+\item 写出 RAW、WAR、WAW 的定义。
+\item 构建依赖图，WAR/WAW 用虚线表示。
+\item 在允许寄存器重命名的条件下给出一个合法重排序列。
+\end{enumerate}
+
+
+\subsection{四、支配问题（15 分）}
+
+
+CFG：while 循环
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Entry->B1
+B1->B2
+B2->B3
+B3->B2
+B2->Exit
+\end{verbatim}
+\end{quote}
+
+
+\begin{enumerate}
+\item 写出 Dom、PostDom、Dom Frontier 的定义。
+\item 计算每个节点的 Dom 集和 idom。
+\item 写出支配边界。
+\item 证明支配关系图是森林。
+\end{enumerate}
+
+
+\subsection{五、符号执行与 SAT（20 分）}
+
+
+公式：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+F = ((a2 and b2) or c2)
+\end{verbatim}
+\end{quote}
+
+
+\begin{enumerate}
+\item 写出 Path-sensitive、Flow-sensitive、Context-sensitive 的定义。
+\item 写出 CNF 的定义。
+\item 使用 Tseitin 算法把 F 转成 CNF。
+\item 证明 2025 卷中的两组公式同时可满足。
+\end{enumerate}
+
+
+\subsection{六、Andersen 指针分析（20 分）}
+
+
+程序：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+x = &o1
+y = &o2
+z = x
+*z = y
+w = *x
+\end{verbatim}
+\end{quote}
+
+
+\begin{enumerate}
+\item 对每条语句写 Andersen 约束。
+\item 根据约束构建闭包。
+\item 写出最终 points-to 集合。
+\end{enumerate}
+
+
+\subsection{七、旧卷加练题（10 分）}
+
+
+类型：SDD
+
+
+文法 S -> L.L | L, L -> LB | B, B -> 0 | 1，设计属性计算二进制小数值。
+
+
+\section{B 详解}
+
+
+\subsection{一、词法分析详解}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+正则表达式：((epsilon|a)b*)*
+
+Thompson NFA：起点 q0，终点 q1。按下列转移表画图，q1 画双圈。
+q4 --epsilon--> q5
+q6 --a--> q7
+q2 --epsilon--> q4
+q2 --epsilon--> q6
+q5 --epsilon--> q3
+q7 --epsilon--> q3
+q10 --b--> q11
+q8 --epsilon--> q10
+q8 --epsilon--> q9
+q11 --epsilon--> q10
+q11 --epsilon--> q9
+q3 --epsilon--> q8
+q0 --epsilon--> q2
+q0 --epsilon--> q1
+q9 --epsilon--> q2
+q9 --epsilon--> q1
+
+子集构造 DFA：
+D0:
+  NFA集合 = {q0,q1,q2,q3,q4,q5,q6,q8,q9,q10}
+  on a -> D1
+  on b -> D2
+  终态 = 是
+D1:
+  NFA集合 = {q1,q2,q3,q4,q5,q6,q7,q8,q9,q10}
+  on a -> D1
+  on b -> D2
+  终态 = 是
+D2:
+  NFA集合 = {q1,q2,q3,q4,q5,q6,q8,q9,q10,q11}
+  on a -> D1
+  on b -> D2
+  终态 = 是
+
+最小化：
+初分组：
+  终态组 = {D0,D1,D2}
+  非终态组 = {}
+最终分组：
+  G1 = {D0,D2,D1}
+每个最终分组对应一个最小 DFA 状态。
+\end{verbatim}
+\end{quote}
+
+
+
+\subsection{二、LL 语法分析详解}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+原文法：
+S -> D E
+D -> D q | s
+E -> m | n
+
+消除左递归：
+S  -> D E
+D  -> s D'
+D' -> q D' | epsilon
+E  -> m | n
+
+FIRST：
+FIRST(S)={ s }
+FIRST(D)={ s }
+FIRST(D')={ q, epsilon }
+FIRST(E)={ m, n }
+
+FOLLOW：
+FOLLOW(S)={ $ }
+FOLLOW(D)={ m, n }
+FOLLOW(D')={ m, n }
+FOLLOW(E)={ $ }
+
+预测表：
+M[S,s] = S -> D E
+M[D,s] = D -> s D'
+M[D',q] = D' -> q D'
+M[D',m] = D' -> epsilon
+M[D',n] = D' -> epsilon
+M[E,m] = E -> m
+M[E,n] = E -> n
+
+结论：表中无多重入口，消除左递归后的文法是 LL(1)。
+\end{verbatim}
+\end{quote}
+
+
+
+\subsection{三、指令调度详解}
+
+
+定义：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+指令调度在不改变程序语义的前提下重排指令，减少流水线停顿，提高并行执行效率。
+RAW：先写后读，必须保持顺序。
+WAR：先读后写，写者不能提前。
+WAW：先写后写，顺序影响最终值。
+\end{verbatim}
+\end{quote}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+指令：
+I1: R1 = R2 + R3
+I2: R4 = R1 + R5
+I3: R2 = R6 + R7
+I4: R1 = R8 + R9
+I5: R10 = R4 + R1
+
+依赖：
+I1 -> I2 RAW on R1
+I1 -> I3 WAR on R2
+I1 -> I4 WAW on R1
+I2 -> I4 WAR on R1
+I2 -> I5 RAW on R4
+I4 -> I5 RAW on R1
+
+寄存器重命名：
+I3: R2_new = R6 + R7
+I4: R1_new = R8 + R9
+I5 使用 R1_new
+
+重命名后保留 RAW，WAR/WAW 被消除。一个合法调度序列：
+I1, I3, I4, I2, I5
+\end{verbatim}
+\end{quote}
+
+
+
+\subsection{四、支配问题详解}
+
+
+定义：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Dom(n)：入口到 n 的每条路径都经过的节点集合。
+PostDom(n)：n 到出口的每条路径都经过的节点集合。
+Dom Frontier(n)：n 支配某个前驱，但不严格支配该节点的位置。
+\end{verbatim}
+\end{quote}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+CFG 边：
+Entry->B1
+B1->B2
+B2->B3
+B3->B2
+B2->Exit
+
+Dom 集：
+Dom(Entry)={Entry}
+Dom(B1)={Entry,B1}
+Dom(B2)={Entry,B1,B2}
+Dom(B3)={Entry,B1,B2,B3}
+Dom(Exit)={Entry,B1,B2,Exit}
+
+直接支配者：
+idom(B1)=Entry
+idom(B2)=B1
+idom(B3)=B2
+idom(Exit)=B2
+
+支配边界：
+DF(B2)={B2}
+DF(B3)={B2}
+其余节点 DF 为空集
+
+森林证明：除入口外，每个可达节点有唯一直接支配者；直接支配关系严格支配且无环；所以每个节点至多一个父节点，整体构成树，多入口时构成森林。
+\end{verbatim}
+\end{quote}
+
+
+
+\subsection{五、符号执行与 SAT 详解}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+公式：F = ((a2 and b2) or c2)
+引入：x21 <-> (a2 and b2)，x22 <-> (x21 or c2)，根变量 x22 为真。
+
+CNF：
+(not x21 or a2)
+(not x21 or b2)
+(x21 or not a2 or not b2)
+(x22 or not x21)
+(x22 or not c2)
+(not x22 or x21 or c2)
+(x22)
+
+敏感性定义：
+Path-sensitive 区分不同路径。
+Flow-sensitive 区分程序点和语句顺序。
+Context-sensitive 区分函数调用上下文。
+
+同时可满足证明套用：
+F1=(a0 or ... or an or c) and (b0 or ... or bm or not c)，F2=(a0 or ... or an or b0 or ... or bm)。
+F1 为真时，c=false 推出某个 ai=true，c=true 推出某个 bj=true，所以 F2 为真。
+F2 为真时，若某个 ai=true 令 c=false；若某个 bj=true 令 c=true，所以 F1 为真。
+\end{verbatim}
+\end{quote}
+
+
+
+\subsection{六、Andersen 指针分析详解}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+程序：
+x = &o1
+y = &o2
+z = x
+*z = y
+w = *x
+
+约束：
+o1 in pts(x)
+o2 in pts(y)
+pts(x) subset pts(z)
+for v in pts(z), pts(y) subset pts(v)
+for v in pts(x), pts(v) subset pts(w)
+
+闭包：
+pts(x)={o1}
+pts(y)={o2}
+pts(z)={o1}
+由 *z=y 得 pts(o1)={o2}
+由 w=*x 得 pts(w)={o2}
+\end{verbatim}
+\end{quote}
+
+
+
+\subsection{七、旧卷加练题详解}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+属性：S.val, L.val, L.len, B.val。规则：S->L1.L2: S.val=L1.val+L2.val/2^(L2.len)；S->L: S.val=L.val；L->L1B: L.val=L1.val*2+B.val, L.len=L1.len+1；L->B: L.val=B.val, L.len=1；B->0: B.val=0；B->1: B.val=1。
+\end{verbatim}
+\end{quote}
+
+
+\section{C 复盘清单}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+词法：Thompson、epsilon-closure、move、终态集合、最小化分组。
+LL：左递归、FIRST、FOLLOW、预测表、多重入口。
+调度：RAW/WAR/WAW、重命名、拓扑序。
+支配：Dom、idom、DF、森林证明。
+SAT：敏感性、CNF、Tseitin 子句、同时可满足证明。
+Andersen：四类约束、闭包传播、最终 points-to 集。
+\end{verbatim}
+\end{quote}
+
+\end{document}
