@@ -1,0 +1,460 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=1.9cm]{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{verbatim}
+\usepackage{xcolor}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\emergencystretch=4em
+\sloppy
+\title{模拟卷04-图书馆借阅预约系统题目与详解}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+\section{软件工程与计算 II 期末模拟卷 04：图书馆借阅预约系统（题目与详解）}
+
+
+\subsection{卷面说明}
+
+
+本卷按 2020、2022 的完整十题结构设计，并纳入 2025 的 Spring Boot 三层代码、策略模式、代码改造、测试与 HCI 题型。总分 100 分，每题 10 分。
+
+
+场景：图书馆借阅预约系统 提供 借书、还书与预约。主要参与者包括 借书人、管理员、图书馆经理、外校数据库、通知服务。系统采用 Web 架构，客户端为浏览器，服务器端采用 Spring Boot，数据持久化由 Repository 完成。
+
+
+\section{A 卷题目}
+
+
+\subsection{一、简答题（10 分）}
+
+
+\begin{enumerate}
+\item 软件工程。
+\item 需求规格说明的必要性。
+\item 逆向工程与正向工程区别。
+\end{enumerate}
+
+
+\subsection{二、需求题（10 分）}
+
+
+围绕 \texttt{借书、还书与预约}：
+
+
+\begin{enumerate}
+\item 写出 2 个用例，说明参与者和主成功场景。
+\item 写出一个业务需求、一个用户需求和一个系统级需求。
+\item 判断“系统需要向外部系统提供 API 供调用”属于哪类需求，并说明原因。
+\end{enumerate}
+
+
+\subsection{三、需求分析题（10 分）}
+
+
+根据场景，完成 \texttt{借书、还书与预约} 的概念类图：
+
+
+\begin{enumerate}
+\item 识别问题域概念类。
+\item 写出概念类之间的关联、聚合、组合或继承。
+\item 写出关键属性并给出文字版类图。
+\end{enumerate}
+
+
+\subsection{四、体系结构设计题（10 分）}
+
+
+系统采用 Web 分层架构：
+
+
+\begin{enumerate}
+\item 画出物理包图，要求体现客户端 \texttt{html/css/javascript/presentation}，服务器端 Controller、Service、Repository、Domain、Database，并标注 HTTP、REST API、JSON。
+\item 针对 \texttt{借书、还书与预约} 写出 Service 接口、Repository 方法声明、Controller 调用 Service 的依赖注入代码片段，写出包名。
+\end{enumerate}
+
+
+\subsection{五、详细设计题（10 分）}
+
+
+针对 \texttt{借书、还书与预约}：
+
+
+\begin{enumerate}
+\item 画出 Controller、Service、Repository、外部接口之间的顺序图。
+\item 简述集中式、分散式、委托式控制策略。
+\item 判断本场景适合的控制策略并说明理由。
+\end{enumerate}
+
+
+\subsection{六、模块化与信息隐藏题（10 分）}
+
+
+系统中 \texttt{catalog、loan、reservation、notice、borrower} 包之间存在直接互相访问数据对象和调用内部方法的现象。
+
+
+\begin{enumerate}
+\item 从耦合和内聚角度分析问题。
+\item 指出违反的设计原则。
+\item 给出包结构和接口层面的改进方案。
+\end{enumerate}
+
+
+\subsection{七、设计模式题（10 分）}
+
+
+业务中存在变化点：新增通知渠道。请说明使用 \texttt{Observer} 如何设计。
+
+
+要求：
+
+
+\begin{enumerate}
+\item 写出模式适用原因。
+\item 画出文字版类图。
+\item 说明使用到的设计原则。
+\item 说明优缺点。
+\end{enumerate}
+
+
+\subsection{八、软件构造题（10 分）}
+
+
+某同学把 \texttt{borrow validation mixed with notice sending and persistence} 写在一个方法中，方法包含大量条件分支、魔法数字和对数据访问对象的直接调用。
+
+
+\begin{enumerate}
+\item 从软件构造角度列出问题。
+\item 给出重构方向。
+\item 写出一段改进后的代码骨架。
+\end{enumerate}
+
+
+\subsection{九、测试题（10 分）}
+
+
+针对 \texttt{借书、还书与预约} 的核心方法：
+
+
+\begin{enumerate}
+\item 说明如何计算圈复杂度。
+\item 设计满足 \texttt{等价类与边界值测试} 的测试用例集。
+\item 补充一个异常路径测试用例。
+\end{enumerate}
+
+
+\subsection{十、人机交互题（10 分）}
+
+
+针对 \texttt{检索书名、预约按钮、可借状态提示、借阅清单}，从 HCI 原则角度分析优点、不足和改进建议。至少写 5 点。
+
+
+\section{B 详解}
+
+
+\subsection{一、简答题详解}
+
+
+\begin{itemize}
+\item 软件工程：把系统化、规范化、可量化的方法应用于软件开发、运行和维护，并研究这些方法的学科。展开时补充需求、设计、构造、测试、维护、配置管理、质量保障和项目管理。
+\item 生命周期：软件从提出、开发、运行、维护到退役的全过程。模型可写瀑布、增量迭代、演化、螺旋。
+\item SCM：配置项识别、版本管理、变更控制、配置审计、状态报告、发布管理。变更控制为提交请求、评估影响、批准或拒绝、实施、验证、更新状态。
+\item CI：频繁集成主干，自动构建、测试和质量检查，降低集成风险，缩短反馈周期。
+\item 再工程：理解旧系统后进行重构、迁移或改造，使系统更易维护或适配新环境。
+\item 增量迭代与演化：前者按功能批次交付，后者根据反馈持续改变系统形态。
+\end{itemize}
+
+
+
+\subsection{二、需求题详解}
+
+
+用例示例：
+
+
+\begin{itemize}
+\item 借书人检索图书并提交借阅请求，系统检查可借副本，登记借出记录。
+\item 借书人预约已借出图书，系统记录预约优先级并在可借时通知。
+\end{itemize}
+
+
+需求层次：
+
+
+\begin{itemize}
+\item 业务需求：建设 图书馆借阅预约系统，提升 借书、还书与预约 的处理效率，降低人工处理成本。
+\item 用户需求：借书人 希望通过系统自助完成 借书、还书与预约 并查看处理结果。
+\item 系统级需求：系统接收请求后应校验用户权限、业务对象状态和输入数据，处理成功后保存记录并返回结果。
+\item 对外 API 属于对外接口需求，因为它规定本系统与外部系统之间的调用方式、输入输出、数据格式和异常处理。
+\end{itemize}
+
+
+
+\subsection{三、需求分析题详解}
+
+
+概念类图文字答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+类：
+Borrower
+BookTitle
+BookCopy
+Loan
+Reservation
+Librarian
+OverdueNotice
+
+关系：
+Borrower 1 -- 0..* Loan
+Loan 1 -- 1..* BookCopy
+BookCopy * -- 1 BookTitle
+Borrower 1 -- 0..* Reservation
+Reservation * -- 1 BookTitle
+OverdueNotice * -- 1 Loan
+
+关键属性：
+Borrower(borrowerId, name, type)
+BookTitle(isbn, title, author)
+BookCopy(copyId, status)
+Loan(loanId, borrowDate, dueDate, status)
+Reservation(reservationId, priority, createdAt)
+\end{verbatim}
+\end{quote}
+
+
+
+评分点：概念类来自问题域，不写 Controller、Service、Repository；关系写多重性；属性只写业务状态和关键标识。
+
+
+\subsection{四、体系结构设计题详解}
+
+
+物理包图：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+客户端 / 浏览器
+  html
+  css
+  javascript
+  presentation
+        |
+        | HTTP + REST API + JSON
+        v
+服务器端
+  controller/api
+  service 逻辑层
+  repository 数据层接口
+  domain/entity
+  modules
+  catalog loan reservation notice borrower
+  database
+\end{verbatim}
+\end{quote}
+
+
+
+接口代码：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+package edu.nju.library.service;
+
+public interface LoanService {
+    BorrowResult borrowBooks(BorrowCommand command);
+}
+
+package edu.nju.library.repository;
+
+public interface BookCopyRepository {
+    List<BookCopy> findAvailableCopies(String isbn);
+    void save(BookCopy copy);
+}
+
+package edu.nju.library.repository;
+
+public interface ReservationRepository {
+    void save(Reservation reservation);
+    List<Reservation> findByBorrowerId(Long borrowerId);
+}
+
+package edu.nju.library.controller;
+
+@RestController
+@RequestMapping("/api/borrowBooks")
+public class LoanController {
+    private final LoanService service;
+
+    public LoanController(LoanService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public BorrowResult submit(@RequestBody BorrowCommand command) {
+        return service.borrowBooks(command);
+    }
+}
+\end{verbatim}
+\end{quote}
+
+
+
+评分点：Controller 通过构造器注入 Service；Service 和 Repository 都是接口；Controller 不直接访问 Repository。
+
+
+\subsection{五、详细设计题详解}
+
+
+顺序图：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+User -> Controller: submit 借书、还书与预约 request
+Controller -> LoanService: borrowBooks(command)
+LoanService -> BookCopyRepository: query domain object
+LoanService -> Strategy/Domain: check rules and calculate result
+LoanService -> ExternalService: call external interface if needed
+LoanService -> BookCopyRepository: save updated entity
+LoanService -> ReservationRepository: query or update related data
+LoanService --> Controller: result DTO
+Controller --> User: HTTP response
+\end{verbatim}
+\end{quote}
+
+
+
+控制风格：
+
+
+\begin{itemize}
+\item 集中式控制：少数控制对象掌握流程，流程集中但容易形成大控制器。
+\item 分散式控制：多个对象共同推进流程，单对象职责轻，但控制流难追踪。
+\item 委托式控制：入口对象保留主流程，把专业子任务委托给 Service、领域对象、策略对象和 Repository。
+\item 借书、还书与预约 适合委托式控制，因为它包含校验、规则计算、外部接口、持久化和结果返回。
+\end{itemize}
+
+
+
+\subsection{六、模块化与信息隐藏题详解}
+
+
+\begin{itemize}
+\item 直接互相访问内部对象会形成高访问耦合，修改一个包的数据结构会影响另一个包。
+\item 业务包之间循环依赖违反低耦合、信息隐藏和 DIP。
+\item 把跨包交互改成接口调用：上层依赖 Service 接口，Service 依赖 Repository 接口，包内隐藏实现类。
+\item 把共享数据对象转成 DTO 或领域对象，不暴露内部集合和可变字段。
+\item 把变化规则封装到策略对象或领域服务中，提高内聚。
+\end{itemize}
+
+
+
+\subsection{七、设计模式题详解}
+
+
+Observer 设计：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Subject: NoticeSubject
+Observer: NoticeObserver
+ConcreteObserver:
+EmailNoticeDisplay
+SmsNoticeDisplay
+AppNoticeDisplay
+
+流程：借阅、预约或逾期状态变化后，Subject 调用 notifyObservers，多个通知端同步更新。
+原则：OCP、低耦合。
+\end{verbatim}
+\end{quote}
+
+
+
+\subsection{八、软件构造题详解}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+问题：
+1. 命名不能表达业务含义。
+2. 多个业务规则写在一个长条件或 switch 中。
+3. 魔法数字散落在代码中。
+4. 缺少非法输入处理。
+5. 方法同时承担校验、计算、持久化或输出职责。
+
+改进：
+1. 使用有意义命名。
+2. 提取小方法。
+3. 用 Strategy 或表驱动隔离变化规则。
+4. 用 guard clause 处理非法输入。
+5. 为核心规则补充单元测试。
+
+public boolean check(Request request) {
+    validate(request);
+    return rules.stream().allMatch(rule -> rule.pass(request));
+}
+\end{verbatim}
+\end{quote}
+
+
+
+\subsection{九、测试题详解}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+T1 正常输入：覆盖成功路径，预期成功。
+T2 关键字段为空：覆盖输入校验失败，预期拒绝并提示。
+T3 对象状态非法：覆盖业务状态失败，预期拒绝。
+T4 外部接口失败：覆盖异常路径，预期回滚或返回失败。
+T5 边界输入：覆盖金额、数量、时间段或容量边界，预期与规则一致。
+
+圈复杂度：V(G) = 判定节点数 + 1。
+若题目给出 4 个 if 或 while 判定，则 V(G)=5。
+等价类与边界值测试 作答时写明每个判定的真值和假值如何被覆盖。
+\end{verbatim}
+\end{quote}
+
+
+
+\subsection{十、人机交互题详解}
+
+
+\begin{itemize}
+\item 系统状态可见：检索书名、预约按钮、可借状态提示、借阅清单 中的提交、处理中、成功、失败状态都要明确显示。
+\item 一致性和标准：按钮位置、颜色、图标、术语在同类页面中保持一致。
+\item 错误预防：危险操作要二次确认，非法输入在提交前提示。
+\item 识别优于回忆：常用选项、历史记录、默认值和示例能降低记忆负担。
+\item 用户控制和自由：提供返回、取消、撤销或重新提交路径。
+\item 美学和极简：高频任务放在主路径，次要信息折叠，避免过密表单。
+\end{itemize}
+
+
+
+\section{C 复盘清单}
+
+
+做完本卷后回看：需求三层次、Web 物理包图、接口代码、委托式控制、设计原则、Observer、构造重构、等价类与边界值测试、HCI 十项启发式。
+
+\end{document}
+
