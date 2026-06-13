@@ -19,7 +19,9 @@
 \newpage
 \section{03 语义分析与中间代码复习讲义}
 
+
 对应资料：
+
 
 \begin{itemize}
 \item \texttt{Slides/Slides/Ch6-1-Intermediate Code Generation.pdf}
@@ -29,78 +31,129 @@
 \item \texttt{Slides/Slides/Slides-Ant/9-semantics-ag-handout.pdf}
 \item \texttt{Slides/Slides/Slides-Ant/10-llvm-handout.pdf}
 \item \texttt{Slides/Slides/Slides-Ant/11-ir-expr-control-handout.pdf}
+\item \texttt{Slides/Slides/handout/3 IR SSA.pdf}
 \item \texttt{Review/compile.pdf}
-\item \texttt{Exam/2025.pdf} 支配问题
+\item \texttt{Exam/2025.pdf} 支配与 SSA 相关题
 \item \texttt{Exam/过时/2022-exam-A.pdf} 题目 5、6
-\item \texttt{Exam/过时/2023-exam-A.pdf} 题目 4、5
+\item \texttt{Exam/过时/2023-exam-A.pdf} 题目 5
+\item \texttt{Exam/过时/2021-exam-A.pdf} 题目 4、5
 \end{itemize}
 
-\subsection{一、语义分析}
 
-语义分析在语法结构上检查程序含义，常见任务：
+\subsection{一、考试目标}
 
-\begin{itemize}
-\item 类型检查。
-\item 作用域和符号表维护。
-\item 声明与使用匹配。
-\item 函数调用参数个数和类型检查。
-\item 语义错误报告。
-\end{itemize}
 
-典型数据结构：
+本章高频题：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-SymbolTable
-  enterScope()
-  exitScope()
-  define(name, type, attributes)
-  lookup(name)
+语法制导定义：设计属性和语义规则
+中间代码：写三地址码
+回填：truelist、falselist、nextlist
+SSA：支配、支配边界、phi
 \end{verbatim}
 \end{quote}
 
-\subsection{二、语法制导定义}
 
-语法制导定义把属性和语义规则附加在产生式上。
+零基础顺序：
 
-两类属性：
-
-\begin{itemize}
-\item 综合属性：由子节点向父节点传递。
-\item 继承属性：由父节点或兄弟节点向当前节点传递。
-\end{itemize}
-
-答题格式：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
+先会写属性表，再会写回填模板，最后背 SSA 定义。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{二、语义分析}
+
+
+语义分析检查语法树中的“含义”：
+
+
+\begin{itemize}
+\item 类型检查。
+\item 作用域检查。
+\item 声明与使用匹配。
+\item 函数调用参数个数和类型检查。
+\end{itemize}
+
+
+符号表常用操作：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+enterScope()
+exitScope()
+define(name, type, attributes)
+lookup(name)
+\end{verbatim}
+\end{quote}
+
+
+\subsection{三、语法制导定义 SDD}
+
+
+SDD 把属性和语义规则挂在产生式上。
+
+
+两类属性：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+综合属性：由子节点算父节点。
+继承属性：由父节点或左侧兄弟节点传给当前节点。
+\end{verbatim}
+\end{quote}
+
+
+答题格式：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+属性定义：
+  X.val : 综合属性，表示数值
+  X.len : 综合属性，表示长度
+
 产生式              语义规则
-S -> L . L          S.val = L1.val + L2.val * pow(2, -L2.len)
+S -> L . L          S.val = L1.val + L2.val / 2^(L2.len)
 L -> L B            L.val = L1.val * 2 + B.val; L.len = L1.len + 1
 B -> 0              B.val = 0
 B -> 1              B.val = 1
 \end{verbatim}
 \end{quote}
 
-\subsection{三、语法制导翻译常见题}
 
-\subsubsection{统计声明个数}
+\subsection{四、SDD 真题模板}
 
-例：\texttt{P -> D}，\texttt{D -> D ; D | T id | func id \{D\}}。
 
-可定义综合属性：
+二进制小数转十进制：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-D.count : D 内声明的 id 总数
-P.count : 程序总声明数
+S -> L1 . L2   S.val = L1.val + L2.val / 2^(L2.len)
+S -> L         S.val = L.val
+L -> L1 B      L.val = L1.val * 2 + B.val; L.len = L1.len + 1
+L -> B         L.val = B.val; L.len = 1
+B -> 0         B.val = 0
+B -> 1         B.val = 1
 \end{verbatim}
 \end{quote}
 
-语义规则：
+
+统计声明个数：
+
 
 \begin{quote}
 \footnotesize
@@ -109,21 +162,13 @@ P -> D              P.count = D.count
 D -> D1 ; D2        D.count = D1.count + D2.count
 D -> T id           D.count = 1
 D -> func id {D1}   D.count = 1 + D1.count
+T -> int            不改变 count
 \end{verbatim}
 \end{quote}
 
-\subsubsection{嵌套深度}
 
-可定义继承属性：
+打印变量嵌套深度：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-D.depth : 当前作用域深度
-\end{verbatim}
-\end{quote}
-
-语义规则：
 
 \begin{quote}
 \footnotesize
@@ -132,14 +177,35 @@ P -> D              D.depth = 0
 D -> D1 ; D2        D1.depth = D.depth; D2.depth = D.depth
 D -> T id           print(id, D.depth)
 D -> func id {D1}   D1.depth = D.depth + 1
+T -> int            不改变 depth
 \end{verbatim}
 \end{quote}
 
-\subsection{四、三地址码}
+
+C 声明英文说明模板：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+D -> id       D.name = id.lexeme; D.desc = ""
+D -> D1 ()    D.name = D1.name; D.desc = D1.desc + " function returning"
+D -> D1 []    D.name = D1.name; D.desc = D1.desc + " array"
+D -> * D1     D.name = D1.name; D.desc = D1.desc + " pointer to"
+D -> ( D1 )   D.name = D1.name; D.desc = D1.desc
+输出：declare D.name as D.desc
+\end{verbatim}
+\end{quote}
+
+
+\subsection{五、三地址码 TAC}
+
 
 三地址码每条指令最多包含三个地址。
 
+
 常见形式：
+
 
 \begin{quote}
 \footnotesize
@@ -156,34 +222,53 @@ return x
 \end{verbatim}
 \end{quote}
 
-\subsection{五、回填}
 
-回填用于布尔表达式和控制流翻译。核心是先留下跳转目标空位，之后再填标签。
+数组访问在考试中可简化为表达式：
 
-常用属性：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-B.truelist
-B.falselist
-S.nextlist
+if dict[mid] < key goto L
 \end{verbatim}
 \end{quote}
 
-常用函数：
+
+\subsection{六、回填}
+
+
+回填用于控制流翻译。先把跳转目标留空，之后统一填标签。
+
+
+核心属性：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-makelist(i)   : 创建只含第 i 条指令的链表
-merge(p1,p2)  : 合并两个链表
-backpatch(p,L): 把链表 p 中的跳转目标填为 L
-nextquad      : 下一条中间代码编号
+B.truelist  : B 为真时要跳转的指令编号集合
+B.falselist : B 为假时要跳转的指令编号集合
+S.nextlist  : S 执行完后要跳转的指令编号集合
 \end{verbatim}
 \end{quote}
+
+
+核心函数：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+makelist(i)    创建只含 i 的链表
+merge(p, q)    合并链表
+backpatch(p,L) 把 p 中所有空目标填成 L
+nextquad       下一条指令编号
+\end{verbatim}
+\end{quote}
+
 
 布尔表达式：
+
 
 \begin{quote}
 \footnotesize
@@ -196,120 +281,259 @@ B -> E1 relop E2
 \end{verbatim}
 \end{quote}
 
-while 语句：
+
+\subsection{七、while 回填模板}
+
+
+语句：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-S -> while M1 B do M2 S1
-  backpatch(B.truelist, M2.quad)
-  backpatch(S1.nextlist, M1.quad)
-  emit("goto M1.quad")
-  S.nextlist = B.falselist
+while B do S1
 \end{verbatim}
 \end{quote}
 
-\subsection{六、SSA}
 
-SSA：Static Single Assignment。每个变量只有一个定义。
+模板：
 
-例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M1.quad = nextquad          循环条件入口
+翻译 B
+M2.quad = nextquad          循环体入口
+backpatch(B.truelist, M2.quad)
+翻译 S1
+emit("goto M1.quad")
+backpatch(S1.nextlist, M1.quad)
+S.nextlist = B.falselist
+\end{verbatim}
+\end{quote}
+
+
+二分查找与 GCD 都按这个模板：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+循环条件为真 -> 进入循环体
+循环体内部 if/else 继续回填
+循环体结束 -> goto 条件入口
+循环条件为假 -> 跳出 while
+\end{verbatim}
+\end{quote}
+
+
+\subsection{八、回填最小例子：GCD}
+
+
+源程序：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+while a != b do
+  if a > b then
+    a = a - b
+  else
+    b = b - a
+\end{verbatim}
+\end{quote}
+
+
+一种编号写法：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+100: if a != b goto 102
+101: goto 108
+102: if a > b goto 104
+103: goto 106
+104: a = a - b
+105: goto 100
+106: b = b - a
+107: goto 100
+108: ...
+\end{verbatim}
+\end{quote}
+
+
+说明：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+B.truelist 回填到 102。
+B.falselist 成为 while 的 nextlist，回填到 108。
+if 的真分支到 104，假分支到 106。
+两个分支结束都回到 100。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{九、SSA}
+
+
+SSA：Static Single Assignment，每个变量只被定义一次。
+
+
+普通代码：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+x = 1
+x = x + 1
+\end{verbatim}
+\end{quote}
+
+
+SSA：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
 x1 = 1
-if c goto L1 else L2
-L1: x2 = 2
-L2: x3 = phi(x1, x2)
+x2 = x1 + 1
 \end{verbatim}
 \end{quote}
 
-优点：
 
-\begin{itemize}
-\item def-use 链清楚。
-\item 便于常量传播、死代码删除、数据流分析。
-\item 每个使用点能定位定义来源。
-\end{itemize}
+控制流汇合处使用 phi：
 
-\subsection{七、支配关系}
-
-支配：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-B dominates A
+if ...
+  x1 = 1
+else
+  x2 = 2
+x3 = phi(x1, x2)
 \end{verbatim}
 \end{quote}
 
-含义：从入口到 A 的每条路径都经过 B。
 
-后支配：
+phi 含义：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-B post-dominates A
+根据控制流来自哪个前驱块，选择对应版本。
 \end{verbatim}
 \end{quote}
 
-含义：从 A 到出口的每条路径都经过 B。
 
-直接支配：
+\subsection{十、支配关系}
+
+
+定义：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-idom(A)
+Dom(n)：从入口到 n 的每条路径都经过的节点集合。
+idom(n)：n 的最近严格支配者。
+Dom Frontier(n)：n 支配某个前驱，但不严格支配该节点的位置。
+PostDom(n)：从 n 到出口的每条路径都经过的节点集合。
 \end{verbatim}
 \end{quote}
 
-含义：严格支配 A 且离 A 最近的支配者。
 
-性质：
+SSA 中 phi 放置：
 
-\begin{itemize}
-\item 基本块的直接支配关系构成一棵以入口为根的树。
-\item 每个非入口节点有且只有一个直接支配者。
-\item 支配树从根到某节点的路径就是该节点全部支配者。
-\end{itemize}
-
-\subsection{八、支配边界与 phi 插入}
-
-支配边界：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-DF(B) = {A | B 支配 A 的某个前驱，且 B 不严格支配 A}
+变量 x 在多个基本块中被定义。
+在这些定义块的支配边界处放置 x 的 phi。
 \end{verbatim}
 \end{quote}
 
-直观理解：刚离开 B 支配范围的位置。
 
-phi 插入：
+支配树：
 
-\begin{enumerate}
-\item 找出变量 x 的所有定义块集合 \texttt{Def(x)}。
-\item 计算 \texttt{Def(x)} 的迭代支配边界。
-\item 在这些块插入 \texttt{x = phi(...)}。
-\item 对变量重新命名，形成 SSA。
-\end{enumerate}
 
-\subsection{九、自测题与答案}
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+除入口外，每个节点有唯一 idom。
+idom 关系无环。
+因此支配关系图是以入口为根的树；多入口时是森林。
+\end{verbatim}
+\end{quote}
 
-\subsubsection{题 1：综合属性和继承属性区别。}
 
-答案：综合属性从子节点向父节点计算；继承属性从父节点或兄弟节点向当前节点传递。
+\subsection{十一、自测题}
 
-\subsubsection{题 2：回填解决什么问题？}
 
-答案：生成布尔表达式和控制流代码时，跳转目标尚未确定。回填先记录待填跳转指令，等目标标签确定后统一填入。
+题 1：综合属性和继承属性区别？
 
-\subsubsection{题 3：什么位置要插入 phi 函数？}
 
-答案：变量多个定义流向汇合处要插入 phi；算法上在变量定义块集合的迭代支配边界插入。
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+综合属性由子节点向父节点传递。
+继承属性由父节点或左侧兄弟节点向当前节点传递。
+\end{verbatim}
+\end{quote}
+
+
+题 2：回填三件套是什么？
+
+
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+makelist、merge、backpatch。
+\end{verbatim}
+\end{quote}
+
+
+题 3：while 的假出口是什么？
+
+
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+条件 B 的 falselist。
+\end{verbatim}
+\end{quote}
+
+
+题 4：SSA 中 phi 放在哪里？
+
+
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+放在变量定义块的支配边界处。
+\end{verbatim}
+\end{quote}
 
 \end{document}

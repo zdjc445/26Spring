@@ -19,7 +19,9 @@
 \newpage
 \section{02 语法分析复习讲义}
 
+
 对应资料：
+
 
 \begin{itemize}
 \item \texttt{Slides/Slides/Ch4-1-Context-Free Language and Push-down Automata.pdf}
@@ -28,40 +30,62 @@
 \item \texttt{Slides/Slides/Slides-Ant/5-parser-ll-handout.pdf}
 \item \texttt{Slides/Slides/Slides-Ant/6-parser-allstar-handout.pdf}
 \item \texttt{Slides/Slides/Slides-Ant/12-parser-lr0.pdf}
+\item \texttt{Slides/Slides/handout/2 CFL LL1.pdf}
 \item \texttt{Review/compile.pdf}
 \item \texttt{Exam/2025.pdf} 语法分析题
 \item \texttt{Exam/过时/2022-exam-A.pdf} 题目 2、3、4
-\item \texttt{Exam/过时/2023-exam-A.pdf} 题目 2、3
+\item \texttt{Exam/过时/2023-exam-A.pdf} 题目 2、3、4
+\item \texttt{Exam/过时/2021-exam-A.pdf} 题目 2、3
 \end{itemize}
 
-\subsection{一、CFG}
+
+\subsection{一、考试目标}
+
+
+语法分析题分三类：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+LL(1)：消除左递归 -> FIRST -> FOLLOW -> 预测分析表 -> 判断
+LR：项目 -> closure -> goto -> 分析表 -> 冲突
+ANTLR：看优先级、结合性、语法树
+\end{verbatim}
+\end{quote}
+
+
+零基础优先级：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+先把 LL(1) 做熟，再背 LR 模板，最后看 ANTLR 优先级。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{二、CFG 基本概念}
+
 
 上下文无关文法：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
 G = (N, T, S, P)
-N : 非终结符集合
-T : 终结符集合，N cap T = emptyset
-S : 起始符号，S in N
+N : 非终结符
+T : 终结符
+S : 开始符号
 P : 产生式集合
 \end{verbatim}
 \end{quote}
 
-派生：
-
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-xAy => x alpha y       使用 A -> alpha 展开
-=>*                    多步派生
-=>lm                   最左派生
-=>rm                   最右派生
-\end{verbatim}
-\end{quote}
 
 语言：
+
 
 \begin{quote}
 \footnotesize
@@ -70,75 +94,59 @@ L(G) = {w in T* | S =>* w}
 \end{verbatim}
 \end{quote}
 
-\subsection{二、推导树与二义性}
 
-推导树记录产生式展开结构。同一个终结符串有两棵不同推导树时，文法有二义性。
+派生：
 
-典型二义性：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-E -> E + E | E * E | a
+最左派生：每次展开最左非终结符
+最右派生：每次展开最右非终结符
 \end{verbatim}
 \end{quote}
 
-消除优先级和结合性后的写法：
+
+二义性：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+同一个终结符串有两棵不同语法树，则文法有二义性。
+\end{verbatim}
+\end{quote}
+
+
+典型例子：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E -> E + E | E * E | id
+\end{verbatim}
+\end{quote}
+
+
+消除优先级和结合性后：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
 E -> E + T | T
 T -> T * F | F
-F -> a | (E)
+F -> id | (E)
 \end{verbatim}
 \end{quote}
 
-\subsection{三、CFL 与 NPDA}
 
-NPDA 定义：
+\subsection{三、左递归消除}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-P = (Q, Sigma, Gamma, delta, q0, z0, F)
-Q      : 状态集合
-Sigma  : 输入字母表
-Gamma  : 栈字母表
-q0     : 起始状态
-z0     : 起始栈符号
-F      : 终止状态集合
-\end{verbatim}
-\end{quote}
-
-结论：
-
-\begin{itemize}
-\item CFG 与 NPDA 定义同一类语言，即上下文无关语言。
-\item CFL 对并、连接、反转、Kleene star 封闭。
-\item CFL 对交、补、差不封闭。
-\item NPDA 比 DPDA 表达能力更强。
-\end{itemize}
-
-\subsection{四、CFL 泵引理}
-
-形式：
-
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-若 L 是 CFL，则存在 C，
-对任意 s in L 且 |s| >= C，
-存在 s = uvwxy，满足 vx != epsilon，|vwx| <= C，
-对任意 i >= 0，u v^i w x^i y in L。
-\end{verbatim}
-\end{quote}
-
-用途：证明语言不是 CFL。
-
-\subsection{五、左递归消除}
 
 直接左递归：
+
 
 \begin{quote}
 \footnotesize
@@ -147,7 +155,9 @@ A -> A alpha1 | A alpha2 | beta1 | beta2
 \end{verbatim}
 \end{quote}
 
-改写为：
+
+改写：
+
 
 \begin{quote}
 \footnotesize
@@ -157,107 +167,209 @@ A' -> alpha1 A' | alpha2 A' | epsilon
 \end{verbatim}
 \end{quote}
 
+
 例：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-E -> E a | b
+L -> L , id | id
 \end{verbatim}
 \end{quote}
+
 
 消除后：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-E  -> b E'
-E' -> a E' | epsilon
-\end{verbatim}
-\end{quote}
-
-考试要点：
-
-\begin{itemize}
-\item LL 分析前先消除左递归。
-\item 左递归消除后，FIRST/FOLLOW 和预测表要基于新文法计算。
-\end{itemize}
-
-\subsection{六、FIRST 与 FOLLOW}
-
-FIRST：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-FIRST(alpha) = alpha 能推出的串的第一个终结符集合；
-若 alpha =>* epsilon，则 epsilon in FIRST(alpha)。
+L  -> id L'
+L' -> , id L' | epsilon
 \end{verbatim}
 \end{quote}
 
-FOLLOW：
+
+\subsection{四、FIRST 集}
+
+
+含义：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-FOLLOW(A) = 在某个句型中紧跟 A 后面能出现的终结符集合；
-起始符号 S 的 FOLLOW(S) 包含 $。
+FIRST(alpha) = alpha 能推导出的串的第一个终结符集合。
+若 alpha 能推出空串，则 epsilon in FIRST(alpha)。
 \end{verbatim}
 \end{quote}
+
 
 计算规则：
 
-\begin{itemize}
-\item 若 \texttt{A -> alpha B beta}，则 \texttt{FIRST(beta) - \{epsilon\}} 加入 \texttt{FOLLOW(B)}。
-\item 若 \texttt{A -> alpha B}，或 \texttt{A -> alpha B beta} 且 \texttt{epsilon in FIRST(beta)}，则 \texttt{FOLLOW(A)} 加入 \texttt{FOLLOW(B)}。
-\item 反复迭代直到集合不再变化。
-\end{itemize}
 
-\subsection{七、LL(1) 预测分析表}
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FIRST(终结符 a) = {a}
+FIRST(epsilon) = {epsilon}
+FIRST(A) 看 A 的各个产生式右部
+FIRST(XY) 先看 FIRST(X)，若 X 能推出 epsilon，再看 FIRST(Y)
+\end{verbatim}
+\end{quote}
+
+
+\subsection{五、FOLLOW 集}
+
+
+含义：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW(A) = 在某个句型中能紧跟在 A 后面的终结符集合。
+开始符号的 FOLLOW 集含 $。
+\end{verbatim}
+\end{quote}
+
+
+计算规则：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+若 S 是开始符号，$ in FOLLOW(S)。
+若有 A -> alpha B beta，则 FIRST(beta)-{epsilon} 加入 FOLLOW(B)。
+若有 A -> alpha B，或 beta 能推出 epsilon，则 FOLLOW(A) 加入 FOLLOW(B)。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{六、预测分析表}
+
 
 对每条产生式 \texttt{A -> alpha}：
 
-\begin{enumerate}
-\item 对每个 \texttt{a in FIRST(alpha) - \{epsilon\}}，填：
-\end{enumerate}
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-M[A, a] = A -> alpha
+1. 对 FIRST(alpha)-{epsilon} 中每个终结符 a：
+   M[A,a] = A -> alpha
+
+2. 若 epsilon in FIRST(alpha)：
+   对 FOLLOW(A) 中每个终结符 b：
+   M[A,b] = A -> alpha
 \end{verbatim}
 \end{quote}
 
-\begin{enumerate}
-\item 若 \texttt{epsilon in FIRST(alpha)}，对每个 \texttt{b in FOLLOW(A)}，填：
-\end{enumerate}
+
+判断：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-M[A, b] = A -> alpha
+每个表格最多一条产生式，则是 LL(1)。
+某个表格出现两条产生式，则不是 LL(1)。
 \end{verbatim}
 \end{quote}
 
-LL(1) 判断：
 
-\begin{itemize}
-\item 表中每个格子最多一条产生式，就是 LL(1)。
-\item 若某格多条产生式，存在冲突，不是 LL(1)。
-\end{itemize}
+\subsection{七、LL 真题最小例子}
 
-\subsection{八、LR 分析核心}
 
-自底向上分析基于栈：
+题面：
 
-\begin{itemize}
-\item shift：移入输入符号。
-\item reduce：把栈顶一段右部归约为左部。
-\item accept：归约到起始符号并读到 \texttt{\$}。
-\item error：无合法动作。
-\end{itemize}
 
-LR(0) 项：
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+D -> T L
+T -> int | real
+L -> L , id | id
+\end{verbatim}
+\end{quote}
+
+
+消除左递归：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+D  -> T L
+T  -> int | real
+L  -> id L'
+L' -> , id L' | epsilon
+\end{verbatim}
+\end{quote}
+
+
+FIRST：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FIRST(D)  = {int, real}
+FIRST(T)  = {int, real}
+FIRST(L)  = {id}
+FIRST(L') = {comma, epsilon}
+\end{verbatim}
+\end{quote}
+
+
+FOLLOW：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW(D)  = {$}
+FOLLOW(T)  = {id}
+FOLLOW(L)  = {$}
+FOLLOW(L') = {$}
+\end{verbatim}
+\end{quote}
+
+
+预测表：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M[D,int]  = D -> T L
+M[D,real] = D -> T L
+M[T,int]  = T -> int
+M[T,real] = T -> real
+M[L,id]   = L -> id L'
+M[L',comma] = L' -> , id L'
+M[L',$]   = L' -> epsilon
+\end{verbatim}
+\end{quote}
+
+
+结论：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+表中无多重入口，是 LL(1)。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{八、LR 项目与 closure}
+
+
+LR 项目是在产生式右部加一个点：
+
 
 \begin{quote}
 \footnotesize
@@ -266,37 +378,20 @@ A -> alpha . beta
 \end{verbatim}
 \end{quote}
 
-closure：
+
+含义：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-若 A -> alpha . B beta 在 I 中，
-对 B -> gamma，把 B -> . gamma 加入 I。
+点左边已经识别，点右边还未识别。
 \end{verbatim}
 \end{quote}
 
-goto：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-goto(I, X) = closure({A -> alpha X . beta | A -> alpha . X beta in I})
-\end{verbatim}
-\end{quote}
+LR(1) 项目带向前看符号：
 
-\subsection{九、SLR 与 LR(1)}
-
-SLR 表：
-
-\begin{itemize}
-\item 对 \texttt{goto(I, a)=J}，终结符 \texttt{a} 填 shift \texttt{sJ}。
-\item 对 \texttt{A -> alpha .}，在 \texttt{FOLLOW(A)} 的每个终结符上填 reduce \texttt{A -> alpha}。
-\item 对 \texttt{S' -> S .}，在 \texttt{\$} 上填 accept。
-\item 若同一格有多个动作，出现冲突。
-\end{itemize}
-
-LR(1) 项：
 
 \begin{quote}
 \footnotesize
@@ -305,39 +400,196 @@ LR(1) 项：
 \end{verbatim}
 \end{quote}
 
-其中 \texttt{a} 是展望符。LR(1) 归约只在展望符对应列填 reduce，精度高于 SLR。
 
-\subsection{十、ANTLR4 与优先级上升}
+closure 模板：
 
-ANTLR4 可以直接写左递归表达式规则，然后改写成带优先级参数的规则。
-
-常见模式：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-expr
-  : expr postfix
-  | expr '^' expr
-  | expr '+' expr
-  | INT
+若 [A -> alpha . B beta, a] 在 I 中，
+对每条 B -> gamma，
+对每个 b in FIRST(beta a)，
+加入 [B -> . gamma, b]。
 \end{verbatim}
 \end{quote}
 
-答题要点：
 
-\begin{itemize}
-\item 后缀运算符优先级最高。
-\item 右结合运算符在递归调用中使用同级或更低约束。
-\item 左结合运算符右侧递归调用使用更高优先级约束。
-\item 画树时先按优先级分组，再按结合性确定嵌套方向。
-\end{itemize}
+goto 模板：
 
-\subsection{十一、自测题与答案}
 
-\subsubsection{题 1：\texttt{A -> A a | b} 消除左递归。}
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+goto(I, X) =
+closure({[A -> alpha X . beta, a] | [A -> alpha . X beta, a] in I})
+\end{verbatim}
+\end{quote}
+
+
+\subsection{九、LR 分析表}
+
+
+写表规则：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+若 goto(Ii, a) = Ij，a 是终结符：
+  action[i,a] = shift j
+
+若 [A -> alpha ., a] 在 Ii：
+  action[i,a] = reduce A -> alpha
+
+若 [S' -> S ., $] 在 Ii：
+  action[i,$] = accept
+
+若 goto(Ii, A) = Ij，A 是非终结符：
+  goto[i,A] = j
+\end{verbatim}
+\end{quote}
+
+
+冲突：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+shift/reduce：同一格既要移入又要归约。
+reduce/reduce：同一格有两个归约。
+\end{verbatim}
+\end{quote}
+
+
+SLR 与 LR(1) 区别：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+SLR 归约看 FOLLOW(A)。
+LR(1) 归约只看项目里的向前看符号 a。
+LR(1) 更精细，冲突更少。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{十、ANTLR4 优先级上升}
+
+
+ANTLR4 对直接左递归表达式按优先级改写。记题时抓三点：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1. 写出运算符优先级。
+2. 写出结合性。
+3. 按优先级和结合性给语法树。
+\end{verbatim}
+\end{quote}
+
+
+例：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E -> E ! | E ^ E | E + E | INT
+\end{verbatim}
+\end{quote}
+
+
+题面说明：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+! 最高，后缀
+^ 右结合
++ 最低，左结合
+\end{verbatim}
+\end{quote}
+
+
+输入：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1 + 2 ^ 3 ^ 4 + 5 ! !
+\end{verbatim}
+\end{quote}
+
+
+答案结构：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+(1 + (2 ^ (3 ^ 4))) + ((5!)!)
+\end{verbatim}
+\end{quote}
+
+
+\subsection{十一、CFL 与 NPDA}
+
+
+要背：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+CFG 与 NPDA 定义同一类语言：上下文无关语言。
+CFL 对并、连接、Kleene star、反转封闭。
+CFL 对交、补、差不封闭。
+\end{verbatim}
+\end{quote}
+
+
+CFL 泵引理用于证明语言不是 CFL：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+s = uvwxy
+vx != epsilon
+|vwx| <= C
+对任意 i >= 0，u v^i w x^i y in L
+\end{verbatim}
+\end{quote}
+
+
+\subsection{十二、自测题}
+
+
+题 1：为什么左递归会影响递归下降分析？
+
 
 答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+递归下降中 A 调用 A，会无限递归。
+\end{verbatim}
+\end{quote}
+
+
+题 2：\texttt{A -> A a | b} 消除左递归。
+
+
+答案：
+
 
 \begin{quote}
 \footnotesize
@@ -347,12 +599,32 @@ A' -> a A' | epsilon
 \end{verbatim}
 \end{quote}
 
-\subsubsection{题 2：LL(1) 表冲突意味着什么？}
 
-答案：同一个非终结符和同一个展望符下有多条可用产生式，分析器无法只看 1 个 token 决定展开规则。
+题 3：LL(1) 判断看什么？
 
-\subsubsection{题 3：SLR 与 LR(1) 的主要区别是什么？}
 
-答案：SLR 用 FOLLOW 集合设置归约项；LR(1) 在每个项目中携带展望符，只在项目展望符上设置归约，冲突更少。
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+看预测分析表是否有多重入口。
+\end{verbatim}
+\end{quote}
+
+
+题 4：LR(1) 归约条件怎么写？
+
+
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+若状态 Ii 中有 [A -> alpha ., a]，则只在 action[i,a] 填 reduce A -> alpha。
+\end{verbatim}
+\end{quote}
 
 \end{document}

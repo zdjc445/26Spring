@@ -19,103 +19,231 @@
 \newpage
 \section{04 代码生成与优化复习讲义}
 
+
 对应资料：
+
 
 \begin{itemize}
 \item \texttt{Slides/Slides/Ch8-1-Target Code Generation.pdf}
 \item \texttt{Slides/Slides/Ch8-2-Translation out of SSA.pdf}
 \item \texttt{Slides/Slides/Ch8-3-Register Allocation.pdf}
 \item \texttt{Slides/Slides/Ch10-Instruction Scheduling.pdf}
+\item \texttt{Slides/Slides/handout/4 Backend.pdf}
 \item \texttt{Review/compile.pdf}
 \item \texttt{Exam/2025.pdf} 指令调度题
-\item \texttt{Exam/过时/2020-final-exam.pdf} 目标代码生成题型
-\item \texttt{Exam/过时/2023-exam-A.pdf} 目标代码生成题型
+\item \texttt{Exam/过时/2023-exam-A.pdf} 题目 6
 \end{itemize}
 
-\subsection{一、目标代码生成}
 
-目标代码生成把 IR 转换为目标机器指令。核心任务：
+\subsection{一、考试目标}
+
+
+后端题重点：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+目标代码生成：知道任务
+SSA 转出：知道 phi 怎么拆
+寄存器分配：知道冲突图和 spill
+指令调度：会写三类依赖、画依赖图、给调度序列
+\end{verbatim}
+\end{quote}
+
+
+2025 真题重点在指令调度。
+
+
+\subsection{二、目标代码生成}
+
+
+目标代码生成把 IR 变成机器代码。核心任务：
+
 
 \begin{itemize}
 \item 指令选择。
 \item 寄存器分配。
 \item 指令调度。
-\item 调用约定和栈帧处理。
-\item 地址计算和内存访问。
+\item 栈帧和调用约定。
+\item 地址计算。
 \end{itemize}
 
-\subsection{二、寻址模式}
 
-常见模式：
+答定义题写法：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-LD R1, a(R2)     : 取地址 (*R2)+a 处数据放入 R1
-LD R1, 100(R2)   : 取地址 (*R2)+100 处数据放入 R1
-LD R1, *R2       : 取地址 *R2 处数据放入 R1
-LD R1, *100(R2)  : 先取 (*R2)+100 处数据作为新地址，再取该地址数据
-LD R1, #100      : 将立即数 100 放入 R1
+Target code generation translates IR into target-machine instructions.
+It must choose instructions, allocate registers, schedule instructions,
+and preserve the program semantics.
 \end{verbatim}
 \end{quote}
 
-\subsection{三、块内优化}
 
-常见优化：
+\subsection{三、寻址模式}
+
+
+常见写法：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+LD R1, a(R2)      读内存地址 R2+a
+LD R1, #100       立即数 100 放入 R1
+LD R1, *R2        读 R2 指向地址的内容
+ST a(R2), R1      把 R1 写到内存地址 R2+a
+\end{verbatim}
+\end{quote}
+
+
+看到地址表达式：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+base + offset
+\end{verbatim}
+\end{quote}
+
+
+就写成：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+offset(base)
+\end{verbatim}
+\end{quote}
+
+
+\subsection{四、局部优化}
+
+
+基本块内常见优化：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+t1 = a + b
+t2 = a + b
+\end{verbatim}
+\end{quote}
+
+
+改成：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+t1 = a + b
+t2 = t1
+\end{verbatim}
+\end{quote}
+
+
+常见名称：
+
 
 \begin{itemize}
-\item 局部公共子表达式消除。
+\item 公共子表达式消除。
+\item 常量折叠。
 \item 强度削弱。
-\item 使用机器习语。
-\item 去除冗余 LOAD/STORE。
+\item 冗余 load/store 删除。
 \item 窥孔优化。
 \end{itemize}
 
+
 例：
 
+
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-x * 2      -> x + x
-x = x + 1  -> INC x
-t1 = a+b; t2 = a+b -> t2 = t1
+x * 2       -> x + x
+x = x + 1   -> INC x
 \end{verbatim}
 \end{quote}
 
-\subsection{四、从 SSA 转出}
 
-phi 消除思路：
+\subsection{五、SSA 转出}
+
+
+phi：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-a = phi(a1 from P1, a2 from P2)
+x3 = phi(x1 from B1, x2 from B2)
 \end{verbatim}
 \end{quote}
 
-改写：
+
+转出方式：
+
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-P1 末尾插入 a = a1
-P2 末尾插入 a = a2
+B1 末尾插入 x3 = x1
+B2 末尾插入 x3 = x2
 删除 phi
 \end{verbatim}
 \end{quote}
 
-完整流程要处理并行复制：
 
-\begin{enumerate}
-\item 把 phi 的输入复制放到对应前驱块末尾。
-\item 多个复制要按并行赋值语义处理。
-\item 存在环形复制时引入临时变量。
-\item 删除多余复制。
-\end{enumerate}
+多条 phi 要按并行复制处理：
 
-\subsection{五、寄存器分配}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+x = y
+y = x
+\end{verbatim}
+\end{quote}
+
+
+不能顺序直接写。用临时变量：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+t = x
+x = y
+y = t
+\end{verbatim}
+\end{quote}
+
+
+答题模板：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1. 对每个 phi 输入，在对应前驱块末尾插入复制。
+2. 同一前驱块的多条复制按并行赋值处理。
+3. 有循环复制时引入临时变量。
+4. 删除 phi 指令。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{六、寄存器分配}
+
 
 目标：
+
 
 \begin{quote}
 \footnotesize
@@ -124,123 +252,268 @@ P2 末尾插入 a = a2
 \end{verbatim}
 \end{quote}
 
-约束：
 
-\begin{itemize}
-\item 生成正确代码。
-\item 使用不超过 k 个物理寄存器。
-\item 减少 spill 的 load/store。
-\item 控制栈空间。
-\end{itemize}
+核心问题：
 
-\subsection{六、局部寄存器分配}
-
-基本块内没有控制流分叉，可计算变量活跃区间。
-
-\texttt{MAXLIVE}：某个程序点之后仍活跃的变量数。
-
-若 \texttt{MAXLIVE > k}，要 spill。选择 spill 的经验规则：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-选择下一次使用距离最远的变量 spill。
+同一时刻都活跃的两个变量不能放在同一个物理寄存器。
 \end{verbatim}
 \end{quote}
 
-\subsection{七、全局寄存器分配与图染色}
 
 冲突图：
 
-\begin{itemize}
-\item 顶点：变量或虚拟寄存器。
-\item 边：两个变量活跃区间相交，不能分配同一物理寄存器。
-\end{itemize}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+顶点：变量或虚拟寄存器
+边：两个变量活跃区间相交
+\end{verbatim}
+\end{quote}
+
 
 k-染色：
 
-\begin{itemize}
-\item 若冲突图可 k-染色，则可用 k 个寄存器完成分配。
-\item 若不可染色，要 spill。
-\end{itemize}
 
-Chaitin 算法：
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+能用 k 种颜色给冲突图染色，就能用 k 个物理寄存器分配。
+染不了就 spill，把变量放到内存。
+\end{verbatim}
+\end{quote}
 
-\begin{enumerate}
-\item 找度数小于 k 的点，删除并压栈。
-\item 重复直到图空。
-\item 若找不到度数小于 k 的点，选一个点 spill。
-\item 出栈时分配颜色。
-\end{enumerate}
 
-Chaitin-Briggs：
+Chaitin 简化流程：
 
-\begin{itemize}
-\item 度数大于等于 k 的点先不直接 spill，也压栈。
-\item 出栈染色失败时再 spill。
-\end{itemize}
 
-\subsection{八、指令调度}
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1. 找度数小于 k 的点，删掉并压栈。
+2. 重复直到图空。
+3. 找不到度数小于 k 的点时，选点 spill。
+4. 出栈时给颜色。
+\end{verbatim}
+\end{quote}
+
+
+局部寄存器分配经验：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+寄存器不够时，spill 下一次使用距离最远的变量。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{七、指令调度}
+
 
 目的：
 
-\begin{itemize}
-\item 把相互独立的指令放近，让硬件流水线和乱序执行利用并行性。
-\item 减少停顿。
-\item 提高硬件利用率。
-\end{itemize}
-
-依赖类型：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-True dependence / RAW  : 写后读。i 写 x，j 读 x，i 必须在 j 前。
-Anti dependence / WAR  : 读后写。i 读 x，j 写 x，j 不能提前破坏 i 读到的值。
-Output dependence / WAW: 写后写。i 写 x，j 写 x，二者顺序影响最终值。
+重排不改变语义的指令，减少流水线停顿，提高并行执行效率。
 \end{verbatim}
 \end{quote}
+
+
+三类依赖必须会写：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+True dependence / RAW:
+i 写 x，j 读 x，i 必须在 j 前。
+
+Anti dependence / WAR:
+i 读 x，j 写 x，j 不能提前破坏 i 读到的旧值。
+
+Output dependence / WAW:
+i 写 x，j 写 x，二者顺序影响最终写入值。
+\end{verbatim}
+\end{quote}
+
 
 寄存器重命名：
 
-\begin{itemize}
-\item 可消除 Anti dependence 和 Output dependence。
-\item 不能消除 True dependence。
-\end{itemize}
-
-\subsection{九、列表调度}
-
-步骤：
-
-\begin{enumerate}
-\item 建依赖图，节点是指令，边是依赖。
-\item 计算每个节点的就绪条件。
-\item 每个周期从 ready list 中选可发射指令。
-\item 使用优先级打破并列，例如关键路径长度更大者优先。
-\item 得到满足依赖的拓扑序。
-\end{enumerate}
-
-考场写法：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-依赖图 -> ready list -> 每周期选择 -> 新指令序列
+能消除 WAR 和 WAW。
+不能消除 RAW。
 \end{verbatim}
 \end{quote}
 
-\subsection{十、自测题与答案}
 
-\subsubsection{题 1：寄存器重命名能消除哪类依赖？}
+\subsection{八、依赖图}
 
-答案：能消除 Anti dependence 和 Output dependence，不能消除 True dependence。
 
-\subsubsection{题 2：冲突图中一条边表示什么？}
+构图规则：
 
-答案：两个变量活跃区间重叠，不能放入同一个物理寄存器。
 
-\subsubsection{题 3：局部寄存器分配中何时 spill？}
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+每条指令一个节点。
+RAW 画实线边。
+WAR 和 WAW 画虚线边。
+边方向从先执行的指令指向后执行的指令。
+\end{verbatim}
+\end{quote}
 
-答案：某程序点活跃变量数超过可用寄存器数时要 spill。
+
+例：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+I1: R1 = R2 + R3
+I2: R4 = R1 + R5
+I3: R2 = R6 + R7
+I4: R1 = R8 + R9
+\end{verbatim}
+\end{quote}
+
+
+依赖：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+I1 -> I2 : RAW on R1
+I1 -> I3 : WAR on R2
+I1 -> I4 : WAW on R1
+I2 -> I4 : WAR on R1
+\end{verbatim}
+\end{quote}
+
+
+重命名后：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+把 I3 写 R2 改成写新寄存器 R10。
+把 I4 写 R1 改成写新寄存器 R11。
+WAR/WAW 依赖被消除，RAW 依赖保留。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{九、列表调度}
+
+
+算法：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1. 建依赖图。
+2. 初始 ready list = 入度为 0 的节点。
+3. 每个周期选择 ready 中的指令发射。
+4. 删除该节点和出边。
+5. 新入度为 0 的节点加入 ready。
+6. 直到所有节点完成。
+\end{verbatim}
+\end{quote}
+
+
+优先级：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+关键路径更长者优先。
+或延迟更大者优先。
+\end{verbatim}
+\end{quote}
+
+
+考试写法：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+给出一个满足依赖图拓扑序的序列即可。
+若题目允许寄存器重命名，先删 WAR/WAW，再调度。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{十、自测题}
+
+
+题 1：指令调度能改变程序结果吗？
+
+
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+不能。调度只能重排不破坏依赖的指令。
+\end{verbatim}
+\end{quote}
+
+
+题 2：哪类依赖不能靠寄存器重命名消除？
+
+
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+True dependence / RAW。
+\end{verbatim}
+\end{quote}
+
+
+题 3：冲突图的边表示什么？
+
+
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+两个变量活跃区间相交，不能分配同一个寄存器。
+\end{verbatim}
+\end{quote}
+
+
+题 4：phi 转出时复制插在哪里？
+
+
+答案：
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+插在对应前驱基本块的末尾。
+\end{verbatim}
+\end{quote}
 
 \end{document}
