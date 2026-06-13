@@ -1,0 +1,63 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.1cm]{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{verbatim}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\emergencystretch=4em
+\sloppy
+\title{课程框架与整理方法}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+\section{编译原理复习讲义整理方法与课程框架}
+
+\subsection{本分支沿用的整理方法}
+
+\begin{enumerate}
+\item 先读资料结构：\texttt{Slides/Slides} 提供课堂主线，\texttt{Review/compile.pdf} 提供压缩知识点，\texttt{Exam} 提供真题题型。
+\item 按考试链路分卷：词法分析、语法分析、语义与 IR、代码生成与优化、程序分析。
+\item 每卷同时包含三类内容：知识点、答题步骤、自测题答案。
+\item Exam 单独整理：同类题归并，题目旁标注重复题型，答案写成可直接套用的步骤。
+\item Markdown 作为内容源，LaTeX 生成 PDF，保留 \texttt{.md/.tex/.pdf} 三类文件。
+\item 编译后只保留源文件和 PDF，清理 \texttt{.aux/.log/.out/.toc} 等中间文件。
+\end{enumerate}
+
+\subsection{文件导航}
+
+\begin{itemize}
+\item \texttt{01-编译器概览与词法分析复习讲义.md/.tex/.pdf}：编译器结构、正则表达式、DFA、NFA、子集构造、DFA 最小化。
+\item \texttt{02-语法分析复习讲义.md/.tex/.pdf}：CFG、FIRST/FOLLOW、LL(1)、LR(0)/SLR/LR(1)、ANTLR 优先级上升。
+\item \texttt{03-语义分析与中间代码复习讲义.md/.tex/.pdf}：语法制导定义、属性文法、回填、三地址码、SSA、支配关系。
+\item \texttt{04-代码生成与优化复习讲义.md/.tex/.pdf}：目标代码生成、寻址模式、局部优化、寄存器分配、指令调度。
+\item \texttt{05-程序分析与符号执行复习讲义.md/.tex/.pdf}：数据流分析、符号执行、SAT/CNF/Tseitin、指针分析、Datalog。
+\item \texttt{Exam/答案整理/期末试题答案汇总.md/.tex/.pdf}：2020、2021、2022、2023、2025 题型与答案模板。
+\end{itemize}
+
+\subsection{考前使用顺序}
+
+\begin{enumerate}
+\item 先读 \texttt{课程框架与整理方法.pdf}，明确课程分层和考试题型。
+\item 再读 \texttt{01} 和 \texttt{02}，这些是选择题、构造题、自动机和语法分析的基础。
+\item 接着读 \texttt{03}，重点掌握语法制导翻译、回填、SSA 和支配关系。
+\item 再读 \texttt{04} 和 \texttt{05}，对应 2025 的指令调度、符号执行和指针别名。
+\item 最后做 \texttt{Exam/答案整理/期末试题答案汇总.pdf}，用题型模板检查遗漏。
+\end{enumerate}
+
+\subsection{章节与资料对应}
+
+\begin{itemize}
+\item 01：Ch1 Introduction；Ch3-1 Finite Automata；Ch3-2 Lexical Analysis；\texttt{Review/compile.pdf} 第一部分。
+\item 02：Ch4-1 CFL/PDA；Ch4-2 Syntax Analysis；ANTLR parser 讲义；\texttt{Review/compile.pdf} 第二部分。
+\item 03：Ch6-1 IR Generation；Ch6-2 Translation into SSA；ANTLR semantics/type/IR 讲义。
+\item 04：Ch8 Target Code/SSA out/Register Allocation；Ch10 Instruction Scheduling。
+\item 05：Ch9 Dataflow/Symbolic Execution；Ch12 Interprocedure/Pointer Analysis。
+\end{itemize}
+\end{document}

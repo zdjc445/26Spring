@@ -1,0 +1,676 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.1cm]{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{verbatim}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\emergencystretch=4em
+\sloppy
+\title{期末试题答案汇总}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+\section{编译原理期末试题答案汇总}
+
+\subsection{使用结构}
+
+\begin{enumerate}
+\item 先看“题型速查”，按同类题合并复习。
+\item 再看“通用答题模板”，掌握自动机、LL、LR、回填、SSA、调度、符号执行、指针分析。
+\item 最后按年份看题目对应答案。
+\end{enumerate}
+
+\subsection{题型速查}
+
+\begin{itemize}
+\item 正则表达式、Thompson NFA、子集构造 DFA、DFA 最小化：2021、2022、2023、2025。复习重点是逐层画 NFA，DFA 状态写成 NFA 状态集合，最小化按分组细化。
+\item LL(1)：2021、2022、2023、2025。复习重点是消除左递归、FIRST、FOLLOW、预测分析表、冲突判断。
+\item LR/SLR/LR(1)：2021、2022、2023。复习重点是 closure、goto、项目集、归约条件、冲突说明。
+\item ANTLR4 优先级上升：2022、2023。复习重点是运算符优先级、结合性、改写文法、分析树。
+\item 语法制导定义与翻译：2022、2023。复习重点是属性定义、综合/继承属性、语义规则。
+\item 中间代码与回填：2022、2023。复习重点是 truelist、falselist、nextlist、while/if 回填。
+\item SSA 与支配关系：2025。复习重点是 Dom、Post-Dom、Dom Frontier、支配树。
+\item 指令调度：2025。复习重点是 True/Anti/Output 依赖、依赖图、重命名、拓扑调度。
+\item 符号执行与 SAT：2025。复习重点是敏感性、CNF、Tseitin、同时可满足。
+\item 指针别名：2025。复习重点是 Andersen 约束、图闭包、points-to 集合。
+\end{itemize}
+
+\subsection{通用答题模板}
+
+\subsubsection{模板 1：Thompson 构造}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+epsilon:  start --epsilon--> end
+a      :  start --a--> end
+A|B    :  新 start epsilon 到 A.start/B.start，A.end/B.end epsilon 到新 end
+AB     :  A.end epsilon 到 B.start
+A*     :  新 start epsilon 到 A.start 和新 end；A.end epsilon 到 A.start 和新 end
+\end{verbatim}
+\end{quote}
+
+\subsubsection{模板 2：子集构造}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Start = epsilon-closure({NFA start})
+对每个 DFA 状态 S 和字符 a:
+  T = epsilon-closure(move(S, a))
+  若 T 新出现，加入状态集合
+终止状态：S cap F_NFA != emptyset
+\end{verbatim}
+\end{quote}
+
+\subsubsection{模板 3：DFA 最小化}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+P0 = {F, Q-F}
+按每个输入字符的转移目标所在组拆分
+重复直到分组不再变化
+每个分组合并成一个状态
+\end{verbatim}
+\end{quote}
+
+\subsubsection{模板 4：LL(1)}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1. 消除左递归
+2. 计算 FIRST
+3. 计算 FOLLOW
+4. 对 A -> alpha:
+   FIRST(alpha)-{epsilon} 中每个 a 填 M[A,a]
+   若 epsilon in FIRST(alpha)，FOLLOW(A) 中每个 b 填 M[A,b]
+5. 表中无多重入口，则是 LL(1)
+\end{verbatim}
+\end{quote}
+
+\subsubsection{模板 5：LR(1)}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+项目: [A -> alpha . beta, a]
+closure:
+  若 [A -> alpha . B beta, a] 在 I 中，
+  对 B -> gamma 和 b in FIRST(beta a)，加入 [B -> . gamma, b]
+goto(I,X):
+  closure({[A -> alpha X . beta, a]})
+归约:
+  [A -> alpha ., a] 只在 a 列填 reduce
+\end{verbatim}
+\end{quote}
+
+\subsubsection{模板 6：回填}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+B.truelist, B.falselist, S.nextlist
+makelist(i), merge(p,q), backpatch(p,L)
+while:
+  记录循环入口 M1
+  计算 B
+  回填 B.truelist 到循环体入口
+  回填循环体 nextlist 到 M1
+  发出 goto M1
+  S.nextlist = B.falselist
+\end{verbatim}
+\end{quote}
+
+\subsubsection{模板 7：支配与支配边界}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Dom(A): 从入口到 A 的所有路径都经过的块
+PostDom(A): 从 A 到出口的所有路径都经过的块
+idom(A): A 最近的严格支配者
+DF(B): B 支配某个前驱，但不严格支配该节点的位置
+\end{verbatim}
+\end{quote}
+
+\subsubsection{模板 8：Andersen 约束}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+y = &x : x in pts(y)
+y = x  : pts(x) subset pts(y)
+*y = x : for v in pts(y), pts(x) subset pts(v)
+y = *x : for v in pts(x), pts(v) subset pts(y)
+\end{verbatim}
+\end{quote}
+
+\subsection{2025 答案}
+
+\subsubsection{一、词法分析：正则表达式到 NFA、DFA、最小化}
+
+题型：把题面正则表达式按 Thompson 构造为 NFA，再做子集构造和 DFA 最小化。
+
+答案步骤：
+
+\begin{enumerate}
+\item 按括号最内层到最外层拆正则表达式。
+\item 对 \texttt{epsilon}、字符、连接、选择、闭包分别套 Thompson 模板。
+\item 标号 NFA 状态，写出 epsilon-closure。
+\item 从起始集合开始列 DFA 转移表。
+\item 含 NFA 终止状态的集合标为 DFA 终止状态。
+\item 按终止/非终止初分组，迭代拆分，得到最小 DFA。
+\end{enumerate}
+
+\subsubsection{二、语法分析：消除左递归、FIRST/FOLLOW、预测表}
+
+题面文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+A -> B C
+B -> B P | r
+C -> t | u
+\end{verbatim}
+\end{quote}
+
+消除 \texttt{B} 的直接左递归：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+A  -> B C
+B  -> r B'
+B' -> P B' | epsilon
+C  -> t | u
+\end{verbatim}
+\end{quote}
+
+FIRST：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FIRST(B)  = {r}
+FIRST(B') = {P, epsilon}
+FIRST(C)  = {t, u}
+FIRST(A)  = {r}
+\end{verbatim}
+\end{quote}
+
+FOLLOW：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW(A)  = {$}
+FOLLOW(B)  = {t, u}
+FOLLOW(B') = {t, u}
+FOLLOW(C)  = {$}
+\end{verbatim}
+\end{quote}
+
+预测表：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M[A, r] = A -> B C
+M[B, r] = B -> r B'
+M[B', P] = B' -> P B'
+M[B', t] = B' -> epsilon
+M[B', u] = B' -> epsilon
+M[C, t] = C -> t
+M[C, u] = C -> u
+\end{verbatim}
+\end{quote}
+
+结论：表中无多重入口，消除左递归后的文法是 LL(1)。
+
+\subsubsection{三、指令调度}
+
+目的：
+
+\begin{itemize}
+\item 让独立指令靠近，减少流水线停顿。
+\item 提高硬件并行执行利用率。
+\end{itemize}
+
+依赖定义：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+True dependence / RAW  : i 写 x，j 读 x，i 必须在 j 前。
+Anti dependence / WAR  : i 读 x，j 写 x，j 提前会破坏 i 读到的值。
+Output dependence / WAW: i 写 x，j 写 x，顺序影响最终写入值。
+\end{verbatim}
+\end{quote}
+
+构建依赖图：
+
+\begin{enumerate}
+\item 每条指令一个节点。
+\item RAW 画实线边。
+\item WAR 和 WAW 画虚线边。
+\item 寄存器重命名可消除 WAR 和 WAW。
+\item 对保留依赖图做拓扑排序，得到调度序列。
+\end{enumerate}
+
+\subsubsection{四、支配问题}
+
+定义：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Dom(n): 从入口到 n 的每条路径都经过的节点集合。
+PostDom(n): 从 n 到出口的每条路径都经过的节点集合。
+Dom Frontier(n): n 支配某个前驱，但不严格支配该节点的节点集合。
+\end{verbatim}
+\end{quote}
+
+支配关系图是森林的证明：
+
+\begin{enumerate}
+\item 除入口节点外，每个节点有唯一直接支配者。
+\item 直接支配者严格支配该节点。
+\item 严格支配关系无环。
+\item 因此每个节点至多一个父节点，且无环，构成以入口为根的树；多入口情形构成森林。
+\end{enumerate}
+
+\subsubsection{五、符号执行}
+
+敏感性定义：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Path-sensitive: 区分不同执行路径。
+Flow-sensitive: 区分程序点和语句顺序。
+Context-sensitive: 区分函数调用上下文。
+\end{verbatim}
+\end{quote}
+
+CNF：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+若干子句的合取，每个子句是文字的析取。
+(l11 or l12) and (l21 or l22 or l23)
+\end{verbatim}
+\end{quote}
+
+Tseitin 变换：
+
+\begin{enumerate}
+\item 为每个子表达式建新变量。
+\item 加入新变量与子表达式等价的 CNF 约束。
+\item 加入根变量为真。
+\item 得到与原式同时可满足的 CNF。
+\end{enumerate}
+
+题中同时可满足证明模板：
+
+\begin{itemize}
+\item 对辅助变量 \texttt{c} 分情况。
+\item 若左式可满足，则赋值满足其中一个含 \texttt{c} 子句和另一个含 \texttt{not c} 子句，去掉 \texttt{c} 后得到大析取式可满足。
+\item 若大析取式可满足，则若某个 \texttt{a\_i} 为真，令 \texttt{c=false}；若某个 \texttt{b\_j} 为真，令 \texttt{c=true}，左式可满足。
+\item 两边可满足性等价。
+\end{itemize}
+
+\subsubsection{六、指针别名：Andersen}
+
+题面语句模板：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+p = &a;
+q = &b;
+*p = q;
+r = &c;
+s = p;
+t = *p;
+*s = r;
+\end{verbatim}
+\end{quote}
+
+约束：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+a in pts(p)
+b in pts(q)
+for v in pts(p), pts(q) subset pts(v)
+c in pts(r)
+pts(p) subset pts(s)
+for v in pts(p), pts(v) subset pts(t)
+for v in pts(s), pts(r) subset pts(v)
+\end{verbatim}
+\end{quote}
+
+闭包推导：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+pts(p) = {a}
+pts(q) = {b}
+由 *p=q 得 pts(a) 包含 {b}
+pts(r) = {c}
+由 s=p 得 pts(s) 包含 {a}
+由 t=*p 且 pts(p)={a} 得 pts(a) subset pts(t)，所以 pts(t) 包含 {b}
+由 *s=r 且 pts(s)={a} 得 pts(a) 包含 {c}
+最终 pts(a) = {b,c}，pts(t) 包含 {b,c}
+\end{verbatim}
+\end{quote}
+
+\subsection{2023 答案}
+
+\subsubsection{题 1：正则表达式与自动机}
+
+题型同 2025 第一题。答案按 Thompson、子集构造、DFA 最小化三步写。
+
+\subsubsection{题 2：LL 语法分析}
+
+文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> cS | AB
+A -> aA | epsilon
+B -> bBa | d
+\end{verbatim}
+\end{quote}
+
+FIRST：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FIRST(A) = {a, epsilon}
+FIRST(B) = {b, d}
+FIRST(S) = {c, a, b, d}
+\end{verbatim}
+\end{quote}
+
+FOLLOW：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW(S) = {$}
+FOLLOW(A) = FIRST(B) = {b, d}
+FOLLOW(B) = FOLLOW(S) = {$}
+\end{verbatim}
+\end{quote}
+
+预测表：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M[S,c] = S -> cS
+M[S,a] = S -> AB
+M[S,b] = S -> AB
+M[S,d] = S -> AB
+M[A,a] = A -> aA
+M[A,b] = A -> epsilon
+M[A,d] = A -> epsilon
+M[B,b] = B -> bBa
+M[B,d] = B -> d
+\end{verbatim}
+\end{quote}
+
+结论：无冲突，是 LL(1) 文法。
+
+\subsubsection{题 3：ANTLR4 优先级上升}
+
+原文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> E
+E -> E ! | E ^ E | E + E | INT
+\end{verbatim}
+\end{quote}
+
+优先级：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+! 最高，后缀
+^ 右结合
++ 最低，左结合
+\end{verbatim}
+\end{quote}
+
+答题要点：
+
+\begin{itemize}
+\item 先把 \texttt{5!!} 归为后缀链。
+\item \texttt{2\textasciicircum{}3\textasciicircum{}4} 按右结合归为 \texttt{2\textasciicircum{}(3\textasciicircum{}4)}。
+\item 最外层用 \texttt{+} 左结合：\texttt{(1 + (2\textasciicircum{}(3\textasciicircum{}4))) + ((5!)!)}。
+\end{itemize}
+
+\subsubsection{题 4：语法制导翻译}
+
+任务：二进制小数转十进制。
+
+可定义属性：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S.val
+L.val, L.len
+B.val
+\end{verbatim}
+\end{quote}
+
+规则：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> L1 . L2   S.val = L1.val + L2.val / 2^(L2.len)
+S -> L         S.val = L.val
+L -> L1 B      L.val = L1.val * 2 + B.val; L.len = L1.len + 1
+L -> B         L.val = B.val; L.len = 1
+B -> 0         B.val = 0
+B -> 1         B.val = 1
+\end{verbatim}
+\end{quote}
+
+\subsubsection{题 5：中间代码生成}
+
+二分查找 while 部分按回填模板写。关键结构：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Lbegin:
+if low <= high goto Lbody
+goto Lexit
+Lbody:
+mid = (low + high) / 2
+if dict[mid] < key goto Lless
+goto Lnotless
+Lless:
+low = mid + 1
+goto Lbegin
+Lnotless:
+if dict[mid] > key goto Lgreater
+goto Lequal
+Lgreater:
+high = mid - 1
+goto Lbegin
+Lequal:
+return mid
+Lexit:
+return -1
+\end{verbatim}
+\end{quote}
+
+\subsection{2022 答案}
+
+\subsubsection{题 1：正则表达式与自动机}
+
+表达式：\texttt{(a | b)* a+}。
+
+作答：
+
+\begin{itemize}
+\item 对 \texttt{(a|b)} 构造选择 NFA。
+\item 对 \texttt{(a|b)*} 加星闭包。
+\item 对 \texttt{a+} 写成 \texttt{a a*}。
+\item 将两部分连接。
+\item 子集构造时 DFA 起始状态为起始点 epsilon-closure。
+\item 终止状态为包含 NFA 终点的集合。
+\end{itemize}
+
+\subsubsection{题 2：LL 语法分析}
+
+文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+D -> T L
+T -> int | real
+L -> L , id | id
+\end{verbatim}
+\end{quote}
+
+消除 \texttt{L} 左递归：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+D  -> T L
+T  -> int | real
+L  -> id L'
+L' -> , id L' | epsilon
+\end{verbatim}
+\end{quote}
+
+FIRST：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FIRST(D)  = {int, real}
+FIRST(T)  = {int, real}
+FIRST(L)  = {id}
+FIRST(L') = {',', epsilon}
+\end{verbatim}
+\end{quote}
+
+FOLLOW：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW(D)  = {$}
+FOLLOW(T)  = {id}
+FOLLOW(L)  = {$}
+FOLLOW(L') = {$}
+\end{verbatim}
+\end{quote}
+
+预测表：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M[D,int] = D -> T L
+M[D,real] = D -> T L
+M[T,int] = T -> int
+M[T,real] = T -> real
+M[L,id] = L -> id L'
+M[L',,] = L' -> , id L'
+M[L',$] = L' -> epsilon
+\end{verbatim}
+\end{quote}
+
+结论：无冲突，是 LL(1)。
+
+\subsubsection{题 5：语法制导定义}
+
+任务 1：统计声明个数。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+P -> D              P.count = D.count
+D -> D1 ; D2        D.count = D1.count + D2.count
+D -> T id           D.count = 1
+D -> func id {D1}   D.count = 1 + D1.count
+\end{verbatim}
+\end{quote}
+
+任务 2：打印变量嵌套深度。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+P -> D              D.depth = 0
+D -> D1 ; D2        D1.depth = D.depth; D2.depth = D.depth
+D -> T id           print(id, D.depth)
+D -> func id {D1}   D1.depth = D.depth + 1
+\end{verbatim}
+\end{quote}
+
+\subsubsection{题 6：中间代码生成}
+
+GCD while 部分：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Lbegin:
+if a != b goto Lbody
+goto Lexit
+Lbody:
+if a > b goto Lthen
+goto Lelse
+Lthen:
+a = a - b
+goto Lbegin
+Lelse:
+b = b - a
+goto Lbegin
+Lexit:
+return a
+\end{verbatim}
+\end{quote}
+
+\subsection{2021 与 2020 答案}
+
+PDF 文本抽取保留了题型主干，答案按通用模板作答：
+
+\begin{itemize}
+\item 正则表达式与自动机：Thompson NFA、子集构造 DFA、DFA 最小化。
+\item LL：消除左递归、FIRST、FOLLOW、预测表、LL(1) 判断。
+\item LR：FIRST/FOLLOW、LR(1) 自动机、LR(1) 分析表、冲突判断。
+\item CFG/CNF：按 Chomsky Normal Form 要求改写产生式。
+\item 语法制导翻译：定义综合属性和继承属性，写产生式对应语义规则。
+\item 目标代码生成：按题面给定指令集合填空，遵守调用约定、条件跳转、栈帧和返回值规则。
+\end{itemize}
+\end{document}

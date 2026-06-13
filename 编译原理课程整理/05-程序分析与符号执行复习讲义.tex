@@ -1,0 +1,378 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.1cm]{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{verbatim}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\emergencystretch=4em
+\sloppy
+\title{05-程序分析与符号执行复习讲义}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+\section{05 程序分析与符号执行复习讲义}
+
+对应资料：
+
+\begin{itemize}
+\item \texttt{Slides/Slides/Ch9-1 Dataflow Analysis.pdf}
+\item \texttt{Slides/Slides/Ch9-2-Symbolic Execution.pdf}
+\item \texttt{Slides/Slides/Ch12-1-Interprocedure Analysis.pdf}
+\item \texttt{Slides/Slides/Ch12-2 Pointer Analysis.pdf}
+\item \texttt{Review/compile.pdf}
+\item \texttt{Exam/2025.pdf} 符号执行与指针别名题
+\end{itemize}
+
+\subsection{一、数据流分析框架}
+
+数据流分析在 CFG 上计算程序点的事实。
+
+基本元素：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+facts             : 数据流事实集合
+in[B], out[B]     : 基本块入口和出口事实
+transfer function : 基本块内部如何改变事实
+meet function     : 多个前驱或后继事实如何合并
+\end{verbatim}
+\end{quote}
+
+前向分析：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+in[B]  = meet(out[P]) for P in pred(B)
+out[B] = transfer_B(in[B])
+\end{verbatim}
+\end{quote}
+
+后向分析：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+out[B] = meet(in[S]) for S in succ(B)
+in[B]  = transfer_B(out[B])
+\end{verbatim}
+\end{quote}
+
+\subsection{二、Worklist 算法}
+
+朴素迭代每次更新全部基本块。Worklist 只在依赖事实变化时更新相关块。
+
+前向算法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+初始化所有 in/out
+把入口或全部基本块加入 worklist
+while worklist 非空:
+    取出 B
+    old = out[B]
+    in[B] = meet(out[P]) for P in pred(B)
+    out[B] = transfer_B(in[B])
+    if out[B] != old:
+        把 succ(B) 加入 worklist
+\end{verbatim}
+\end{quote}
+
+\subsection{三、三种经典数据流分析}
+
+\subsubsection{可达定值分析}
+
+问题：哪些定义能不被覆盖地到达当前位置。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+方向  : 前向
+meet  : union
+初值  : emptyset
+形式  : out[B] = gen[B] union (in[B] - kill[B])
+\end{verbatim}
+\end{quote}
+
+\subsubsection{可用表达式分析}
+
+问题：哪些表达式在到达当前位置前一定计算过，并且操作数没有被重新定义。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+方向  : 前向
+meet  : intersection
+初值  : 全集；入口 out 初始化为空集
+形式  : out[B] = gen[B] union (in[B] - kill[B])
+\end{verbatim}
+\end{quote}
+
+\subsubsection{活跃变量分析}
+
+问题：哪些变量的当前值在之后还会被使用。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+方向  : 后向
+meet  : union
+初值  : emptyset
+形式  : in[B] = use[B] union (out[B] - def[B])
+\end{verbatim}
+\end{quote}
+
+\subsection{四、敏感性}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+flow-sensitive    : 区分程序点和语句顺序
+path-sensitive    : 区分不同控制流路径
+context-sensitive : 区分函数调用上下文
+field-sensitive   : 区分对象字段
+\end{verbatim}
+\end{quote}
+
+答题时写清：
+
+\begin{itemize}
+\item 精度越高，状态数和计算成本越高。
+\item 符号执行提供路径敏感性。
+\item 指针分析常讨论流敏感、上下文敏感、字段敏感。
+\end{itemize}
+
+\subsection{五、符号执行}
+
+符号执行为输入变量分配符号值，沿路径执行并维护路径条件。
+
+过程：
+
+\begin{enumerate}
+\item 输入变量变为符号，例如 \texttt{x = alpha\_x}。
+\item 遇到赋值，更新符号状态。
+\item 遇到分支，路径分裂。
+\item 每条路径维护 path condition。
+\item 使用约束求解器判断路径可满足。
+\end{enumerate}
+
+优点：
+
+\begin{itemize}
+\item 路径敏感，能发现深层错误。
+\item 可生成测试输入。
+\end{itemize}
+
+成本：
+
+\begin{itemize}
+\item 路径爆炸。
+\item 循环和递归处理复杂。
+\item 外部函数建模困难。
+\end{itemize}
+
+缓解方法：
+
+\begin{itemize}
+\item State Merging。
+\item Loop Induction。
+\item Concolic Execution。
+\end{itemize}
+
+\subsection{六、SAT、CNF 与 Tseitin}
+
+CNF：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+(l11 or l12 or ...) and (l21 or l22 or ...) and ...
+\end{verbatim}
+\end{quote}
+
+可满足性：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+存在一组布尔变量赋值，使公式为真。
+\end{verbatim}
+\end{quote}
+
+同时可满足：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+F1 可满足，当且仅当 F2 可满足。
+\end{verbatim}
+\end{quote}
+
+Tseitin 变换：
+
+\begin{enumerate}
+\item 为公式语法树中每个子表达式引入新变量。
+\item 用 CNF 约束新变量与子表达式语义等价。
+\item 加入根节点变量为真的约束。
+\item 生成与原公式同时可满足的 CNF，长度线性增长。
+\end{enumerate}
+
+常用等价转 CNF：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+x <-> (a and b)
+(not x or a) and (not x or b) and (x or not a or not b)
+
+x <-> (a or b)
+(x or not a) and (x or not b) and (not x or a or b)
+\end{verbatim}
+\end{quote}
+
+\subsection{七、DPLL 与 CDCL}
+
+DPLL：
+
+\begin{itemize}
+\item 选择一个变量赋值。
+\item 单子句传播。
+\item 冲突则回溯。
+\item 遍历搜索空间，直到找到解或证明不可满足。
+\end{itemize}
+
+CDCL：
+
+\begin{itemize}
+\item 在 DPLL 基础上进行冲突分析。
+\item 学习冲突子句。
+\item 非时序回溯。
+\item 实际 SAT 求解器主流方法。
+\end{itemize}
+
+\subsection{八、指针别名分析}
+
+别名：两个表达式表示同一个内存位置。
+
+May-alias：
+
+\begin{itemize}
+\item 分析结果为 no，表示两者一定不别名。
+\item 分析结果为 yes，表示两者存在别名关系的上近似。
+\end{itemize}
+
+Must-alias：
+
+\begin{itemize}
+\item 分析两个表达式是否一定指向同一内存位置。
+\end{itemize}
+
+\subsection{九、Andersen 指针分析}
+
+Andersen 是 inclusion-based 的 May 指针分析。
+
+约束：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+y = &x    : x in pts(y)
+y = x     : pts(x) subset pts(y)
+*y = x    : for v in pts(y), pts(x) subset pts(v)
+y = *x    : for v in pts(x), pts(v) subset pts(y)
+\end{verbatim}
+\end{quote}
+
+图闭包步骤：
+
+\begin{enumerate}
+\item \texttt{y = \&x} 加入 points-to 边 \texttt{y -> x}。
+\item \texttt{y = x} 加入指针流边 \texttt{x => y}。
+\item 若 \texttt{*y = x}，对 \texttt{pts(y)} 中每个 \texttt{v} 加边 \texttt{x => v}。
+\item 若 \texttt{y = *x}，对 \texttt{pts(x)} 中每个 \texttt{v} 加边 \texttt{v => y}。
+\item 新 points-to 事实产生后，重新触发相关 load/store 约束。
+\item 迭代到不动点。
+\end{enumerate}
+
+\subsection{十、Steensgaard 指针分析}
+
+Steensgaard 是 unification-based 分析，把包含关系改成相等关系。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+y = &x    : x in pts(y)
+y = x     : pts(x) = pts(y)
+*y = x    : for v in pts(y), pts(x) = pts(v)
+y = *x    : for v in pts(x), pts(v) = pts(y)
+\end{verbatim}
+\end{quote}
+
+特点：
+
+\begin{itemize}
+\item 效率高，可用并查集实现。
+\item 精度低于 Andersen。
+\end{itemize}
+
+\subsection{十一、Datalog}
+
+Datalog 由 facts 和 rules 组成。
+
+规则形式：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+P(a,b,...) :- A(...), B(...), ...
+\end{verbatim}
+\end{quote}
+
+可达定值示例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+def(B, N, X)             : B 的第 N 条语句定义变量 X
+succ(B, N, C)            : C 是 B 的后继
+rd(B,N,C,M,X)            : C.M 对 X 的定义到达 B.N
+
+rd(B,N,B,N,X) :- def(B,N,X)
+rd(B,N,C,M,X) :- rd(B,N-1,C,M,X), def(B,N,Y), X != Y
+rd(B,0,C,M,X) :- rd(D,N,C,M,X), succ(D,N,B)
+\end{verbatim}
+\end{quote}
+
+\subsection{十二、自测题与答案}
+
+\subsubsection{题 1：可达定值、可用表达式、活跃变量的方向和 meet。}
+
+答案：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+可达定值：前向，union
+可用表达式：前向，intersection
+活跃变量：后向，union
+\end{verbatim}
+\end{quote}
+
+\subsubsection{题 2：符号执行的核心成本是什么？}
+
+答案：路径爆炸。
+
+\subsubsection{题 3：Andersen 与 Steensgaard 的区别。}
+
+答案：Andersen 使用包含约束，精度高、成本高；Steensgaard 使用相等约束，可用并查集实现，效率高、精度低。
+
+\end{document}

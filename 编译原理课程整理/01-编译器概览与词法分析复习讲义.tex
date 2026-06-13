@@ -1,0 +1,293 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.1cm]{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{verbatim}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\emergencystretch=4em
+\sloppy
+\title{01-编译器概览与词法分析复习讲义}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+\section{01 编译器概览与词法分析复习讲义}
+
+对应资料：
+
+\begin{itemize}
+\item \texttt{讲解/Ch1-Introduction-to-Compilers.tex}
+\item \texttt{讲解/Ch3-1-Finite-Automata.tex}
+\item \texttt{Slides/Slides/Ch1-Introduction to Compilers.pdf}
+\item \texttt{Slides/Slides/Ch3-1-Finite Automata.pdf}
+\item \texttt{Slides/Slides/Ch3-2-Lexical Analysis.pdf}
+\item \texttt{Review/compile.pdf}
+\item \texttt{Exam/2025.pdf} 词法分析题
+\item \texttt{Exam/过时/2022-exam-A.pdf} 题目 1
+\item \texttt{Exam/过时/2023-exam-A.pdf} 题目 1
+\end{itemize}
+
+\subsection{一、编译器总流程}
+
+编译器把源语言程序翻译为目标语言程序。典型阶段：
+
+\begin{itemize}
+\item 词法分析：字符流到 token 流。
+\item 语法分析：token 流到 AST 或 parse tree。
+\item 语义分析：类型、作用域、声明使用关系检查。
+\item 中间代码生成：AST 到 IR。
+\item 机器无关优化：在 IR 上做数据流分析、SSA、公共子表达式等。
+\item 目标代码生成：IR 到机器代码。
+\item 机器相关优化：寄存器分配、指令调度、窥孔优化。
+\end{itemize}
+
+答题时常写成：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+Source Code -> Lexer -> Tokens -> Parser -> AST
+            -> Semantic Analysis -> IR -> Optimization
+            -> Target Code Generation -> Machine Code
+\end{verbatim}
+\end{quote}
+
+\subsection{二、字符串与语言操作}
+
+字符串操作：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+ab      : a 和 b 连接
+s^R     : s 反转
+|s|     : s 的长度
+epsilon : 空串，长度为 0
+\end{verbatim}
+\end{quote}
+
+语言操作：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+L1 L2 = {ab | a in L1, b in L2}
+L^0   = {epsilon}
+L^n   = {s1 s2 ... sn | si in L}
+L*    = union i>=0 L^i
+L+    = union i>=1 L^i
+Lbar  = {s in Sigma* | s notin L}
+L^R   = {s^R | s in L}
+\end{verbatim}
+\end{quote}
+
+易错点：
+
+\begin{itemize}
+\item \texttt{\{epsilon\}} 不是空集。
+\item \texttt{L+} 不包含空串，除非 \texttt{epsilon in L}。
+\item 正则语言对并、交、连接、反转、补、Kleene star 封闭。
+\end{itemize}
+
+\subsection{三、正则表达式}
+
+正则表达式语义：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+emptyset : L(emptyset) = emptyset
+epsilon  : L(epsilon) = {epsilon}
+A | B    : L(A|B) = L(A) union L(B)
+AB       : L(AB) = L(A)L(B)
+A*       : L(A*) = L(A)*
+(A)      : L((A)) = L(A)
+\end{verbatim}
+\end{quote}
+
+考试中正则到自动机固定考 Thompson 构造：
+
+\begin{itemize}
+\item \texttt{epsilon}：一条 epsilon 边。
+\item 字符 \texttt{a}：一条标记为 \texttt{a} 的边。
+\item \texttt{A|B}：新起点 epsilon 到 A、B 起点；A、B 终点 epsilon 到新终点。
+\item \texttt{AB}：A 终点 epsilon 到 B 起点。
+\item \texttt{A*}：新起点 epsilon 到 A 起点和新终点；A 终点 epsilon 到 A 起点和新终点。
+\end{itemize}
+
+\subsection{四、DFA}
+
+DFA 定义：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M = (Q, Sigma, delta, q0, F)
+Q      : 状态集合
+Sigma  : 字母表
+delta  : Q x Sigma -> Q
+q0     : 起始状态
+F      : 终止状态集合
+\end{verbatim}
+\end{quote}
+
+扩展转移：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+delta*(q, epsilon) = q
+delta*(q, xa) = delta(delta*(q, x), a)
+L(M) = {s in Sigma* | delta*(q0, s) in F}
+\end{verbatim}
+\end{quote}
+
+DFA 答题要点：
+
+\begin{itemize}
+\item 每个状态对每个输入字符有唯一后继。
+\item 接受条件是读完整个串后停在终止状态。
+\item 画图时起始状态有入箭头，终止状态双圈。
+\end{itemize}
+
+\subsection{五、NFA}
+
+NFA 定义：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M = (Q, Sigma, delta, q0, F)
+delta : Q x (Sigma union {epsilon}) -> 2^Q
+\end{verbatim}
+\end{quote}
+
+接受条件：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+L(M) = {s in Sigma* | delta*(q0, s) cap F != emptyset}
+\end{verbatim}
+\end{quote}
+
+NFA 与 DFA 的区别：
+
+\begin{itemize}
+\item NFA 一个状态读一个字符可以到达多个状态。
+\item NFA 可以有 epsilon 转移。
+\item NFA 只要存在一条接受路径即可接受。
+\item DFA 与 NFA 识别能力相同，都识别正则语言。
+\end{itemize}
+
+\subsection{六、NFA 到 DFA：子集构造法}
+
+输入：NFA \texttt{M = (Q, Sigma, delta, q0, F)}。
+
+输出：DFA，每个 DFA 状态是 NFA 状态的一个集合。
+
+步骤：
+
+\begin{enumerate}
+\item 起始状态为 \texttt{epsilon-closure(\{q0\})}。
+\item 对每个 DFA 状态 \texttt{S} 和输入字符 \texttt{a}，计算：
+\end{enumerate}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+move(S, a) = union delta(q, a), q in S
+next(S, a) = epsilon-closure(move(S, a))
+\end{verbatim}
+\end{quote}
+
+\begin{enumerate}
+\item 新集合还没出现就加入 DFA 状态集合。
+\item 含有 NFA 终止状态的集合就是 DFA 终止状态。
+\item 重复直到没有新状态。
+\end{enumerate}
+
+考场表格写法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+DFA状态     NFA状态集合     on a     on b
+A           {0,1,3}         B        C
+B           {...}           ...      ...
+\end{verbatim}
+\end{quote}
+
+\subsection{七、DFA 最小化}
+
+目标：合并 omega-等价状态。
+
+步骤：
+
+\begin{enumerate}
+\item 初始划分：终止状态一组，非终止状态一组。
+\item 对每一组按转移目标所在分组继续拆分。
+\item 重复拆分直到划分不再变化。
+\item 每个等价类合成一个状态。
+\end{enumerate}
+
+判断依据：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+q1 与 q2 在同一组，当且仅当对每个输入字符 a，
+delta(q1, a) 与 delta(q2, a) 仍落在同一组。
+\end{verbatim}
+\end{quote}
+
+\subsection{八、正则语言泵引理}
+
+泵引理形式：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+若 L 是正则语言，则存在常数 C，
+对任意 s in L 且 |s| >= C，
+存在分解 s = xyz，满足 |xy| <= C，|y| > 0，
+并且对任意 i >= 0，xy^i z in L。
+\end{verbatim}
+\end{quote}
+
+证明非正则语言的答题步骤：
+
+\begin{enumerate}
+\item 假设语言 L 是正则语言。
+\item 取泵长度 C。
+\item 选一个长度不少于 C 的字符串 \texttt{s in L}。
+\item 对任意满足条件的分解 \texttt{s = xyz}，分析 \texttt{y} 的位置。
+\item 取 \texttt{i=0} 或 \texttt{i=2}，推出 \texttt{xy\textasciicircum{}i z notin L}。
+\item 与泵引理矛盾，故 L 不是正则语言。
+\end{enumerate}
+
+\subsection{九、自测题与答案}
+
+\subsubsection{题 1：说明 \texttt{\{epsilon\}} 与 \texttt{emptyset} 的区别。}
+
+答案：\texttt{emptyset} 没有任何字符串，\texttt{\{epsilon\}} 有一个字符串，即空串。
+
+\subsubsection{题 2：DFA 与 NFA 识别能力是否相同？}
+
+答案：相同。NFA 可用子集构造法转换为等价 DFA，二者都识别正则语言。
+
+\subsubsection{题 3：子集构造法中 DFA 的终止状态如何确定？}
+
+答案：DFA 状态是 NFA 状态集合。只要该集合与 NFA 的终止状态集合相交，该 DFA 状态就是终止状态。
+
+\subsubsection{题 4：DFA 最小化第一步如何分组？}
+
+答案：按是否为终止状态分成两组：终止状态组和非终止状态组。
+
+\end{document}

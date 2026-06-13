@@ -1,0 +1,246 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.1cm]{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{verbatim}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\emergencystretch=4em
+\sloppy
+\title{04-代码生成与优化复习讲义}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+\section{04 代码生成与优化复习讲义}
+
+对应资料：
+
+\begin{itemize}
+\item \texttt{Slides/Slides/Ch8-1-Target Code Generation.pdf}
+\item \texttt{Slides/Slides/Ch8-2-Translation out of SSA.pdf}
+\item \texttt{Slides/Slides/Ch8-3-Register Allocation.pdf}
+\item \texttt{Slides/Slides/Ch10-Instruction Scheduling.pdf}
+\item \texttt{Review/compile.pdf}
+\item \texttt{Exam/2025.pdf} 指令调度题
+\item \texttt{Exam/过时/2020-final-exam.pdf} 目标代码生成题型
+\item \texttt{Exam/过时/2023-exam-A.pdf} 目标代码生成题型
+\end{itemize}
+
+\subsection{一、目标代码生成}
+
+目标代码生成把 IR 转换为目标机器指令。核心任务：
+
+\begin{itemize}
+\item 指令选择。
+\item 寄存器分配。
+\item 指令调度。
+\item 调用约定和栈帧处理。
+\item 地址计算和内存访问。
+\end{itemize}
+
+\subsection{二、寻址模式}
+
+常见模式：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+LD R1, a(R2)     : 取地址 (*R2)+a 处数据放入 R1
+LD R1, 100(R2)   : 取地址 (*R2)+100 处数据放入 R1
+LD R1, *R2       : 取地址 *R2 处数据放入 R1
+LD R1, *100(R2)  : 先取 (*R2)+100 处数据作为新地址，再取该地址数据
+LD R1, #100      : 将立即数 100 放入 R1
+\end{verbatim}
+\end{quote}
+
+\subsection{三、块内优化}
+
+常见优化：
+
+\begin{itemize}
+\item 局部公共子表达式消除。
+\item 强度削弱。
+\item 使用机器习语。
+\item 去除冗余 LOAD/STORE。
+\item 窥孔优化。
+\end{itemize}
+
+例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+x * 2      -> x + x
+x = x + 1  -> INC x
+t1 = a+b; t2 = a+b -> t2 = t1
+\end{verbatim}
+\end{quote}
+
+\subsection{四、从 SSA 转出}
+
+phi 消除思路：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+a = phi(a1 from P1, a2 from P2)
+\end{verbatim}
+\end{quote}
+
+改写：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+P1 末尾插入 a = a1
+P2 末尾插入 a = a2
+删除 phi
+\end{verbatim}
+\end{quote}
+
+完整流程要处理并行复制：
+
+\begin{enumerate}
+\item 把 phi 的输入复制放到对应前驱块末尾。
+\item 多个复制要按并行赋值语义处理。
+\item 存在环形复制时引入临时变量。
+\item 删除多余复制。
+\end{enumerate}
+
+\subsection{五、寄存器分配}
+
+目标：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+无限虚拟寄存器 -> 有限物理寄存器
+\end{verbatim}
+\end{quote}
+
+约束：
+
+\begin{itemize}
+\item 生成正确代码。
+\item 使用不超过 k 个物理寄存器。
+\item 减少 spill 的 load/store。
+\item 控制栈空间。
+\end{itemize}
+
+\subsection{六、局部寄存器分配}
+
+基本块内没有控制流分叉，可计算变量活跃区间。
+
+\texttt{MAXLIVE}：某个程序点之后仍活跃的变量数。
+
+若 \texttt{MAXLIVE > k}，要 spill。选择 spill 的经验规则：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+选择下一次使用距离最远的变量 spill。
+\end{verbatim}
+\end{quote}
+
+\subsection{七、全局寄存器分配与图染色}
+
+冲突图：
+
+\begin{itemize}
+\item 顶点：变量或虚拟寄存器。
+\item 边：两个变量活跃区间相交，不能分配同一物理寄存器。
+\end{itemize}
+
+k-染色：
+
+\begin{itemize}
+\item 若冲突图可 k-染色，则可用 k 个寄存器完成分配。
+\item 若不可染色，要 spill。
+\end{itemize}
+
+Chaitin 算法：
+
+\begin{enumerate}
+\item 找度数小于 k 的点，删除并压栈。
+\item 重复直到图空。
+\item 若找不到度数小于 k 的点，选一个点 spill。
+\item 出栈时分配颜色。
+\end{enumerate}
+
+Chaitin-Briggs：
+
+\begin{itemize}
+\item 度数大于等于 k 的点先不直接 spill，也压栈。
+\item 出栈染色失败时再 spill。
+\end{itemize}
+
+\subsection{八、指令调度}
+
+目的：
+
+\begin{itemize}
+\item 把相互独立的指令放近，让硬件流水线和乱序执行利用并行性。
+\item 减少停顿。
+\item 提高硬件利用率。
+\end{itemize}
+
+依赖类型：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+True dependence / RAW  : 写后读。i 写 x，j 读 x，i 必须在 j 前。
+Anti dependence / WAR  : 读后写。i 读 x，j 写 x，j 不能提前破坏 i 读到的值。
+Output dependence / WAW: 写后写。i 写 x，j 写 x，二者顺序影响最终值。
+\end{verbatim}
+\end{quote}
+
+寄存器重命名：
+
+\begin{itemize}
+\item 可消除 Anti dependence 和 Output dependence。
+\item 不能消除 True dependence。
+\end{itemize}
+
+\subsection{九、列表调度}
+
+步骤：
+
+\begin{enumerate}
+\item 建依赖图，节点是指令，边是依赖。
+\item 计算每个节点的就绪条件。
+\item 每个周期从 ready list 中选可发射指令。
+\item 使用优先级打破并列，例如关键路径长度更大者优先。
+\item 得到满足依赖的拓扑序。
+\end{enumerate}
+
+考场写法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+依赖图 -> ready list -> 每周期选择 -> 新指令序列
+\end{verbatim}
+\end{quote}
+
+\subsection{十、自测题与答案}
+
+\subsubsection{题 1：寄存器重命名能消除哪类依赖？}
+
+答案：能消除 Anti dependence 和 Output dependence，不能消除 True dependence。
+
+\subsubsection{题 2：冲突图中一条边表示什么？}
+
+答案：两个变量活跃区间重叠，不能放入同一个物理寄存器。
+
+\subsubsection{题 3：局部寄存器分配中何时 spill？}
+
+答案：某程序点活跃变量数超过可用寄存器数时要 spill。
+
+\end{document}
