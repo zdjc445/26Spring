@@ -24,7 +24,7 @@
 \subsection{卷面说明}
 
 
-本卷按 2025 年期末卷组织，主线题为词法分析、LL、指令调度、支配、符号执行、Andersen。最后设置旧卷加练题，覆盖 2022、2023 中仍有价值的传统题型。总分 100 分，加练题 10 分。
+本卷按 Slides/Slides/handout 与三份 Recap PPT 更新，主线覆盖前端自动机与 LL、中端 IR/SSA、数据流、符号执行、后端目标代码、寄存器分配、指令调度以及过程间/指针分析。总分 100 分。
 
 
 \section{A 卷题目}
@@ -123,7 +123,7 @@ B2->Exit
 \item 写出 Dom、PostDom、Dom Frontier 的定义。
 \item 计算每个节点的 Dom 集和 idom。
 \item 写出支配边界。
-\item 证明支配关系图是森林。
+\item 说明 SSA 中 phi 函数应放在什么位置。
 \end{enumerate}
 
 
@@ -174,14 +174,27 @@ w = *x
 \end{enumerate}
 
 
-\subsection{七、旧卷加练题（10 分）}
+\subsection{七、PPT 新增重点：过程间分析（10 分）}
 
 
-类型：SDD
+程序片段：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+id(x) { return x; }
+a = id(1);
+b = id(2);
+\end{verbatim}
+\end{quote}
 
 
-文法 S -> L.L | L, L -> LB | B, B -> 0 | 1，设计属性计算二进制小数值。
+\begin{enumerate}
+\item 说明过程间分析为什么需要区分调用上下文。
+\item 写出 context-insensitive 分析下 `id` 返回值可能是什么。
+\item 写出 1-call-string context-sensitive 分析下两个调用点的返回值。
 
+\end{enumerate}
 
 \section{B 详解}
 
@@ -403,7 +416,7 @@ DF(B2)={B2}
 DF(B3)={B2}
 其余节点 DF 为空集
 
-森林证明：除入口外，每个可达节点有唯一直接支配者；直接支配关系严格支配且无环；所以每个节点至多一个父节点，整体构成树，多入口时构成森林。
+SSA phi 放置：若变量在多个基本块中被定义，则在这些定义块的迭代支配边界处插入该变量的 phi。直观上，phi 放在多条控制流汇合且不同定义可能到达的位置。
 \end{verbatim}
 \end{quote}
 
@@ -472,15 +485,27 @@ pts(z)={o1}
 
 
 
-\subsection{七、旧卷加练题详解}
+\subsection{七、PPT 新增重点详解}
 
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-属性：S.val, L.val, L.len, B.val。规则：S->L1.L2: S.val=L1.val+L2.val/2^(L2.len)；S->L: S.val=L.val；L->L1B: L.val=L1.val*2+B.val, L.len=L1.len+1；L->B: L.val=B.val, L.len=1；B->0: B.val=0；B->1: B.val=1。
+过程间分析跨函数传播事实。
+如果不区分调用上下文，不同调用点的信息会合并，精度下降。
+
+context-insensitive：
+id 的参数事实来自两个调用点，会合并为 {1,2}。
+因此返回值也可能是 {1,2}。
+a 可能为 {1,2}，b 可能为 {1,2}。
+
+1-call-string context-sensitive：
+调用点 a=id(1) 的上下文中，id 返回 1。
+调用点 b=id(2) 的上下文中，id 返回 2。
+因此 a={1}, b={2}。
 \end{verbatim}
 \end{quote}
+
 
 
 \section{C 复盘清单}
@@ -491,11 +516,13 @@ pts(z)={o1}
 \begin{verbatim}
 词法：Thompson、epsilon-closure、move、终态集合、最小化分组。
 LL：左递归、FIRST、FOLLOW、预测表、多重入口。
-调度：RAW/WAR/WAW、重命名、拓扑序。
-支配：Dom、idom、DF、森林证明。
-SAT：敏感性、CNF、Tseitin 子句、同时可满足证明。
-Andersen：四类约束、闭包传播、最终 points-to 集。
+IR/SSA：三地址码、基本块、支配边界、phi 插入与转出。
+数据流：方向、meet、transfer、gen/kill、worklist、IN/OUT。
+后端：目标代码、地址模式、冲突图、spill、指令调度。
+符号执行：敏感性、CNF、Tseitin 子句、同时可满足证明。
+过程间/指针：调用上下文、上下文敏感、Andersen 约束与闭包。
 \end{verbatim}
 \end{quote}
+
 
 \end{document}
