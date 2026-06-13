@@ -19,9 +19,24 @@
 \date{}
 \begin{document}
 \maketitle
+\setcounter{tocdepth}{1}
 \tableofcontents
 \newpage
 
+\section{使用结构}
+
+\begin{enumerate}
+\item 先看“同题与同类题速查”，把重复考点合并复习。
+\item 再看“图形题作图答案索引”，集中掌握考试中要画的图。
+\item 最后按年份刷题，遇到标题旁的标注时回看同一考点的其他年份。
+\end{enumerate}
+
+标注规则：
+
+\begin{itemize}
+\item 同题：题干核心问题一致，答案框架可复用。
+\item 同类题：考查同一知识点，场景或问法不同，答案需要结合题面改写。
+\end{itemize}
 
 整理范围：
 
@@ -44,6 +59,25 @@
 \item 图形题已在“图形题作图答案索引”中集中绘制，正文保留文字说明和接口代码。
 \item 接口题中的包名是本答案采用的命名约定，用于体现分层和依赖方向。
 \end{itemize}
+
+\bigskip\hrule\bigskip
+
+\section{同题与同类题速查}
+
+\begin{longtable}{p{0.16\textwidth}p{0.43\textwidth}p{0.33\textwidth}}
+\textbf{知识点} & \textbf{对应题目} & \textbf{复习动作} \\
+\hline
+软件工程定义 & 2012 一；2013A 一；2013B 一；2014 一；2016 一；2020 一；2022 一；2025 一 & 背统一定义，答题时补“系统化、规范化、可度量、开发运行维护”。 \\
+生命周期、增量、迭代、演化 & 2012 二；2013A 一；2013B 一；2016 一；2020 一；2022 一；2025 一 & 区分“按功能分批交付”和“根据反馈持续调整”。 \\
+需求、用例、概念类图 & 2012 三；2013A 六；2013B 六；2014 四；2016 二、三；2020 二、三；2022 二、三；2025 二、三 & 按“参与者、系统事件、名词分析、关联和多重性”组织答案。 \\
+物理包图与接口 & 2016 四；2020 四；2022 四；2025 四 & 固定写客户端三包和展示层、服务器端 Controller/Service/Repository、HTTP REST API。 \\
+详细设计与顺序图 & 2012 四；2013A 三；2013B 三；2014 六；2016 五；2020 五；2022 五；2025 五 & 先定参与者和对象，再按 Controller、Service、Repository 分层传递消息。 \\
+耦合、内聚、信息隐藏、设计原则 & 2012 五、六；2013A 二、四、五；2013B 二、三、四、五；2014 五；2016 六；2020 六、八；2022 六、八；2025 六 & 先判定坏味道，再写原则，最后给重构方向。 \\
+Strategy 策略模式 & 2013A 二；2016 七；2020 五；2022 五、七；2025 七 & 固定写策略接口、具体策略、上下文对象、OCP 和 DIP。 \\
+表驱动与构造改进 & 2013A 九；2013B 九；2016 八；2020 八；2025 八 & 用数组、Map、规则对象替代长分支，并补非法输入处理。 \\
+测试 & 2012 八；2013A 七；2013B 七；2014 九；2016 九；2020 十；2022 十；2025 九 & 根据题干选择等价类、边界值、条件覆盖、分支覆盖或圈复杂度。 \\
+HCI & 2013A 八；2013B 八；2014 八；2016 十；2020 九；2022 九；2025 十 & 按“现象、原则、影响、改进”四步写。 \\
+\end{longtable}
 
 \bigskip\hrule\bigskip
 
@@ -409,7 +443,7 @@
 
 \subsection{一、名词解释}
 
-\subsubsection{软件工程}
+\subsubsection{软件工程（同题：2013A 一、2013B 一、2014 一、2016 一、2020 一、2022 一、2025 一）}
 
 软件工程是把系统化、规范化、可度量的方法应用于软件开发、运行和维护的工程活动，并研究这些方法。它关注程序、数据、文档和知识等完整软件制品，目标是在受控的质量、成本和进度下交付可维护的软件系统。
 
@@ -421,7 +455,7 @@
 
 功能内聚是高内聚的一种形式，模块内部所有元素共同完成一个明确功能。模块只有一个清晰目标，内部语句和数据都服务于该功能。
 
-\subsection{二、增量交付模型与演化开发模型}
+\subsection{二、增量交付模型与演化开发模型（同类题：2013B 一、2016 一、2022 一、2025 一）}
 
 增量交付模型把系统按功能优先级拆成多个增量，每个增量经历需求、设计、构造和测试，并交付可运行版本。优点是早交付、早反馈、风险分散；缺点是需要稳定架构和良好的增量规划。
 
@@ -429,7 +463,7 @@
 
 共同点：都不是一次性完成系统，都强调迭代和反馈。区别：增量交付更强调有计划地分批交付功能；演化开发更强调在使用和反馈中持续调整系统。
 
-\subsection{三、超市销售用例分析类图}
+\subsection{三、超市销售用例分析类图（同类题：2016 三、2020 三、2022 三、2025 三）}
 
 概念类：
 
@@ -467,7 +501,7 @@ Receipt: receiptNo, printTime
 \end{verbatim}
 \end{quote}
 
-\subsection{四、销售用例详细设计}
+\subsection{四、销售用例详细设计（同类题：2013A 三、2013B 三、2014 六、2016 五、2020 五、2022 五、2025 五）}
 
 题目要求所有销售设计因素写在一个模块、数据在 \texttt{Sales.txt}、集中式控制。可设计为：
 
@@ -518,7 +552,7 @@ SalesController -> SalesView: printReceipt()
 \item 由 \texttt{SalesView} 只负责显示和输入。
 \end{enumerate}
 
-\subsection{五、信息隐藏分析}
+\subsection{五、信息隐藏分析（同类题：2012 六、2022 六、2025 六）}
 
 \texttt{SalesView} 隐藏界面控件和事件响应；\texttt{SalesLogic} 隐藏销售总额计算规则；\texttt{SalesData} 隐藏文件名、文件格式、记录读取和解析。
 
@@ -551,7 +585,7 @@ salesRepository;
 \end{verbatim}
 \end{quote}
 
-\subsection{六、DIP 分析}
+\subsection{六、DIP 分析（同类题：2013A 二、2020 七、2022 七、2025 七）}
 
 \texttt{SalesLogic} 直接依赖 \texttt{SalesData} 违反依赖倒置原则。高层业务逻辑不应依赖低层数据访问实现，二者都应依赖抽象接口。修正方式是定义 \texttt{SalesRepository} 接口，\texttt{SalesLogic} 依赖接口，文件存储和数据库存储分别实现接口。
 
@@ -578,7 +612,7 @@ public final class SalesData {
 
 注意：现代项目中优先使用依赖注入管理单例生命周期，避免可变全局状态。
 
-\subsection{八、防御式编程与测试驱动}
+\subsection{八、防御式编程与测试驱动（同类题：2013A 七、2013B 七、2016 九、2020 十、2022 十、2025 九）}
 
 \texttt{num1} 范围是 \texttt{-1..22767}，\texttt{num2} 范围是 \texttt{-100..12767}。
 
@@ -633,19 +667,19 @@ range");
 
 \subsection{一、名词解释}
 
-\subsubsection{软件工程}
+\subsubsection{软件工程（同题：2012 一、2013B 一、2014 一、2016 一、2020 一、2022 一、2025 一）}
 
-同 2012 第一题。
+软件工程是把系统化、规范化、可度量的方法应用于软件开发、运行和维护的工程活动，并研究这些方法。它关注程序、数据、文档和知识等完整软件制品，目标是在受控的质量、成本和进度下交付可维护的软件系统。
 
-\subsubsection{软件演化生命周期模型}
+\subsubsection{软件演化生命周期模型（同类题：2012 二、2016 一、2022 一、2025 一）}
 
 软件经历初始开发、运行服务、持续演化、逐步淘汰和停止服务。它强调软件交付后仍会因需求、环境和技术变化而长期修改。
 
-\subsubsection{螺旋模型}
+\subsubsection{螺旋模型（同题：2014 二；图 1）}
 
 螺旋模型以风险驱动为核心，每一轮包括目标设定、风险分析、开发验证和计划下一轮。它结合原型、迭代和风险控制，适合大型高风险系统。
 
-\subsection{二、应用描述代码重构}
+\subsection{二、应用描述代码重构（同类题：2016 七、2020 五、2022 五、2025 七）}
 
 问题：
 
@@ -721,7 +755,7 @@ result.append(strategy.rateSourceLine());
 \end{verbatim}
 \end{quote}
 
-\subsection{三、电影租赁积分}
+\subsection{三、电影租赁积分（同类题：2013B 三、2014 六、2016 五、2020 五、2022 五、2025 五）}
 
 原设计问题：
 
@@ -780,7 +814,7 @@ Rental --> Customer: point
 \end{verbatim}
 \end{quote}
 
-\subsection{四、继承设计}
+\subsection{四、继承设计（同类题：2013B 四）}
 
 \texttt{MyStack extends Vector} 不合理。Stack 只需要压栈、弹栈、大小和空判断，继承 \texttt{Vector} 会暴露大量不属于栈的操作，违反封装和 LSP。改用组合：
 
@@ -808,13 +842,13 @@ elements.firstElement();
 
 \texttt{Employee extends Person} 合理，员工是人，子类没有改变父类语义。若题目关注领域职责，也可让 \texttt{Employee} 扩展工号、职位等属性。
 
-\subsection{五、耦合类型}
+\subsection{五、耦合类型（同题：2020 六；同类题：2013B 五、2016 六、2022 六、2025 六）}
 
 第一段 \texttt{validate\_request} 调用 \texttt{valid\_month(date d)}，传入日期对象并只使用月份字段，属于印记耦合。改进：只传 \texttt{month}。
 
 第二段 \texttt{valid(String s, int type)} 使用类型码控制内部逻辑，属于控制耦合。改进：拆成 \texttt{validString}、\texttt{validDate}，或使用 Validator 策略。
 
-\subsection{六、ATM 需求}
+\subsection{六、ATM 需求（同类题：2013B 六、2014 四、2016 二、2020 二、2022 二、2025 二）}
 
 业务需求：提供自助金融服务，减少柜台压力，提高存取款和查询效率。
 
@@ -837,7 +871,7 @@ elements.firstElement();
 
 其他需求：安全性、性能、可靠性、可用性、对外接口、硬件接口、数据需求、约束。
 
-\subsection{七、栈测试}
+\subsection{七、栈测试（同类题：2013B 七、2016 九、2020 十、2022 十、2025 九）}
 
 测试思路：
 
@@ -864,7 +898,7 @@ assertTrue(stack.isEmpty());
 \end{verbatim}
 \end{quote}
 
-\subsection{八、Eclipse HCI 优点}
+\subsection{八、Eclipse HCI 优点（同类题：2013B 八、2014 八、2016 十、2020 九、2022 九、2025 十）}
 
 \begin{itemize}
 \item 菜单和工具栏分类清楚，体现一致性和识别优于回忆。
@@ -873,7 +907,7 @@ assertTrue(stack.isEmpty());
 \item 快捷键和插件扩展支持专家用户，体现灵活性和效率。
 \end{itemize}
 
-\subsection{九、税率代码改进}
+\subsection{九、税率代码改进（同类题：2013B 九、2016 八、2020 八、2025 八）}
 
 使用表驱动：
 
@@ -914,16 +948,22 @@ RATES[RATES.length - 1];
 
 \section{2013B 答案}
 
-\subsection{一、名词解释}
+\subsection{一、名词解释（同类题：2012 一、2013A 一、2014 一、2016 一、2020 一、2022 一、2025 一）}
 
-软件工程：同 2012 第一题。
+\subsubsection{软件工程（同题：2012 一、2013A 一、2014 一、2016 一、2020 一、2022 一、2025 一）}
 
-软件验证与确认：
+软件工程是把系统化、规范化、可度量的方法应用于软件开发、运行和维护的工程活动，并研究这些方法。它关注程序、数据、文档和知识等完整软件制品，目标是在受控的质量、成本和进度下交付可维护的软件系统。
+
+\subsubsection{软件验证与确认}
+
+验证与确认：
 
 \begin{itemize}
 \item 验证：检查软件是否正确实现规格说明，即“是否正确地构建产品”。
 \item 确认：检查软件是否满足用户真实需求，即“是否构建了正确的产品”。
 \end{itemize}
+
+\subsubsection{增量开发模型和迭代开发模型（同类题：2012 二、2016 一、2022 一、2025 一）}
 
 增量开发模型和迭代开发模型：
 
@@ -933,7 +973,7 @@ RATES[RATES.length - 1];
 \item 实际项目中常合并为迭代增量开发。
 \end{itemize}
 
-\subsection{二、借阅者设计}
+\subsection{二、借阅者设计（同类题：2013A 二、2016 七、2022 七、2025 七）}
 
 原代码问题：
 
@@ -991,7 +1031,7 @@ when unavailable
 \end{verbatim}
 \end{quote}
 
-\subsection{三、\texttt{getSubtotal} 内聚}
+\subsection{三、\texttt{getSubtotal} 内聚（同类题：2013A 三、2014 六、2016 五、2020 五、2022 五、2025 五）}
 
 原方法在 \texttt{Sales} 中根据商品 ID 找商品价格、找销售明细数量、计算小计。问题：
 
@@ -1013,7 +1053,7 @@ SalesLineItem --> Sales: subtotal
 \end{verbatim}
 \end{quote}
 
-\subsection{四、正方形继承长方形}
+\subsection{四、正方形继承长方形（同类题：2013A 四）}
 
 不合理。长方形允许独立设置长和宽，正方形要求长宽相等。正方形继承长方形后会加强父类不变式，违反 LSP。
 
@@ -1041,7 +1081,7 @@ public class Square implements Shape {
 \end{verbatim}
 \end{quote}
 
-\subsection{五、Top50 平均成绩}
+\subsection{五、Top50 平均成绩（同类题：2013A 五、2016 六、2020 六、2022 六、2025 六）}
 
 \texttt{Grade} 直接依赖 \texttt{ArrayList<Student>} 并调用排序，属于内容耦合或过强的具体类型耦合。改进：
 
@@ -1067,7 +1107,7 @@ ranker.rankByGrade(students);
 \end{verbatim}
 \end{quote}
 
-\subsection{六、ATM 用例图与系统顺序图}
+\subsection{六、ATM 用例图与系统顺序图（同类题：2013A 六、2014 四、2016 二、2020 二、2022 二、2025 二）}
 
 参与者：用户、银行主机、维护人员。
 
@@ -1091,7 +1131,7 @@ ATMSystem -> User: printReceipt()
 \end{verbatim}
 \end{quote}
 
-\subsection{七、有理数黑盒测试}
+\subsection{七、有理数黑盒测试（同类题：2012 八、2013A 七、2016 九、2020 十、2022 十、2025 九）}
 
 等价类：
 
@@ -1116,7 +1156,7 @@ ATMSystem -> User: printReceipt()
 \end{verbatim}
 \end{quote}
 
-\subsection{八、浏览器 HCI 优点}
+\subsection{八、浏览器 HCI 优点（同类题：2013A 八、2014 八、2016 十、2020 九、2022 九、2025 十）}
 
 \begin{itemize}
 \item 地址栏和搜索合一，减少记忆负担。
@@ -1125,21 +1165,40 @@ ATMSystem -> User: printReceipt()
 \item 加载进度和安全锁图标显示系统状态。
 \end{itemize}
 
-\subsection{九、月份天数表驱动}
+\subsection{九、月份天数表驱动（同类题：2013A 九、2016 八、2020 八、2025 八）}
 
-见 05 讲义表驱动示例。核心是使用数组替代长 \texttt{if-else}，并检查月份范围。
+核心是使用数组替代长 \texttt{if-else}，并检查月份范围。
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+public int getMonthDays(int month) {
+    int[] days = {31, 28, 31, 30, 31, 30,
+            31, 31, 30, 31, 30, 31};
+    if (month < 1 || month > 12) {
+        throw new IllegalArgumentException(
+                "month out of range");
+    }
+    return days[month - 1];
+}
+\end{verbatim}
+\end{quote}
 
 \bigskip\hrule\bigskip
 
 \section{2014 答案}
 
-\subsection{一、名词解释}
+\subsection{一、名词解释（同类题：2012 一、2013A 一、2013B 一、2016 一、2020 一、2022 一、2025 一）}
 
-软件工程：同 2012 第一题。
+\subsubsection{软件工程（同题：2012 一、2013A 一、2013B 一、2016 一、2020 一、2022 一、2025 一）}
+
+软件工程是把系统化、规范化、可度量的方法应用于软件开发、运行和维护的工程活动，并研究这些方法。它关注程序、数据、文档和知识等完整软件制品，目标是在受控的质量、成本和进度下交付可维护的软件系统。
+
+\subsubsection{软件设计}
 
 软件设计：在需求和实现之间建立解决方案结构的活动，决定系统如何分解为模块、组件、类、接口、数据结构和交互关系。
 
-\subsection{二、螺旋模型}
+\subsection{二、螺旋模型（同题：2013A 一；图 1）}
 
 螺旋模型每一轮围绕风险展开：
 
@@ -1166,7 +1225,7 @@ ATMSystem -> User: printReceipt()
 \item 过程审计和发布前检查。
 \end{itemize}
 
-\subsection{四、图书馆系统用例建模}
+\subsection{四、图书馆系统用例建模（同类题：2013A 六、2013B 六、2016 二、2020 二、2022 二、2025 二）}
 
 参与者：
 
@@ -1198,7 +1257,7 @@ ATMSystem -> User: printReceipt()
 \item 归还图书 include 更新图书状态。
 \end{itemize}
 
-\subsection{五、代码内聚}
+\subsection{五、代码内聚（同类题：2013B 三、2025 六）}
 
 \texttt{init()} 同时初始化 \texttt{FinancialReport}、\texttt{WeatherData} 和 \texttt{totalcount}，这些职责属于不同功能，属于偶然内聚或逻辑内聚，达不到功能内聚。
 
@@ -1221,7 +1280,7 @@ private void initMasterCount() { }
 
 进一步改进是把财务报表和天气数据的创建放到各自工厂或服务中。
 
-\subsection{六、CD 推荐用例职责分配}
+\subsection{六、CD 推荐用例职责分配（同类题：2012 四、2013A 三、2013B 三、2016 五、2020 五、2022 五、2025 五）}
 
 题面给出顾客查询、系统返回推荐列表、顾客选定 CD、系统返回详情、顾客购买的流程。
 
@@ -1271,7 +1330,7 @@ save(purchase)
 \end{verbatim}
 \end{quote}
 
-\subsection{七、Observer 模式}
+\subsection{七、Observer 模式（同类题：2013A 二、2016 七、2022 七、2025 七）}
 
 结构：
 
@@ -1320,7 +1379,7 @@ name, String birthday) {
 \end{verbatim}
 \end{quote}
 
-\subsection{八、HCI 原则}
+\subsection{八、HCI 原则（同类题：2013A 八、2013B 八、2016 十、2020 九、2022 九、2025 十）}
 
 打印界面：
 
@@ -1339,7 +1398,7 @@ Office 2010 Ribbon：
 \item 功能较多，初学者仍有认知负担。
 \end{itemize}
 
-\subsection{九、黑盒与白盒测试}
+\subsection{九、黑盒与白盒测试（同类题：2012 八、2013A 七、2013B 七、2016 九、2020 十、2022 十、2025 九）}
 
 黑盒测试根据需求规格设计测试，不关注内部代码结构。优点是贴近用户需求，适合功能、边界值和等价类测试；缺点是内部路径覆盖不可见。
 
@@ -1351,11 +1410,17 @@ Office 2010 Ribbon：
 
 \section{2016 答案}
 
-\subsection{一、简答}
+\subsection{一、简答（同类题：2012 一、二；2013A 一；2013B 一；2020 一；2022 一；2025 一）}
 
-软件工程：同 2012 第一题。
+\subsubsection{软件工程（同题：2012 一、2013A 一、2013B 一、2014 一、2020 一、2022 一、2025 一）}
 
-演化模型：同 01 讲义。优点是适合需求变化、用户反馈充分、逐步交付；缺点是范围和进度难控制，过程管理弱时会退化成随意修改。
+软件工程是把系统化、规范化、可度量的方法应用于软件开发、运行和维护的工程活动，并研究这些方法。它关注程序、数据、文档和知识等完整软件制品，目标是在受控的质量、成本和进度下交付可维护的软件系统。
+
+\subsubsection{演化模型（同类题：2012 二、2013A 一、2022 一、2025 一）}
+
+演化模型先交付一个初始版本，再根据用户反馈、环境变化和新需求持续修改。优点是适合需求变化、用户反馈充分、逐步交付；缺点是范围和进度难控制，过程管理弱时会退化成随意修改。
+
+\subsubsection{正向工程与逆向工程}
 
 正向工程与逆向工程：
 
@@ -1365,7 +1430,7 @@ Office 2010 Ribbon：
 \item 正向工程关注构造，逆向工程关注理解和抽象恢复。
 \end{itemize}
 
-\subsection{二、支付宝用例图}
+\subsection{二、支付宝用例图（同类题：2013A 六、2013B 六、2014 四、2020 二、2022 二、2025 二）}
 
 参与者：消费者、商家、支付平台、银行或第三方账户系统。
 
@@ -1389,7 +1454,7 @@ Office 2010 Ribbon：
 \item 使用优惠券或红包 extend 付款。
 \end{itemize}
 
-\subsection{三、支付概念类图}
+\subsection{三、支付概念类图（同类题：2012 三、2020 三、2022 三、2025 三）}
 
 概念类：
 
@@ -1420,7 +1485,7 @@ Office 2010 Ribbon：
 \item \texttt{AntPoint} 与消费者账户关联。
 \end{itemize}
 
-\subsection{四、付款模块物理包图与接口}
+\subsection{四、付款模块物理包图与接口（同类题：2020 四、2022 四、2025 四）}
 
 物理包图：
 
@@ -1499,7 +1564,7 @@ public interface PointRepository {
 \end{verbatim}
 \end{quote}
 
-\subsection{五、支付详细设计关系}
+\subsection{五、支付详细设计关系（同类题：2012 四、2013A 三、2013B 三、2014 六、2020 五、2022 五、2025 五）}
 
 \begin{quote}
 \footnotesize
@@ -1538,7 +1603,7 @@ PaymentController --> PaymentView: result
 \end{verbatim}
 \end{quote}
 
-\subsection{六、消除印记耦合}
+\subsection{六、消除印记耦合（同类题：2013A 五、2013B 五、2020 六、2022 六、2025 六）}
 
 印记耦合是传入整个对象或数据结构，但被调用方只使用其中一部分。消除方式：
 
@@ -1549,7 +1614,7 @@ PaymentController --> PaymentView: result
 \item 不暴露完整内部结构。
 \end{itemize}
 
-\subsection{七、会员等级积分策略}
+\subsection{七、会员等级积分策略（同类题：2013A 二、2020 五、2022 五、2022 七、2025 七）}
 
 使用 Strategy。
 
@@ -1582,7 +1647,7 @@ return amount * 2; }
 
 会员类持有 \texttt{PointStrategy}，新增 S 级时新增策略类。
 
-\subsection{八、表驱动}
+\subsection{八、表驱动（同类题：2013A 九、2013B 九、2020 八、2025 八）}
 
 把等级和积分规则放入表或 Map：
 
@@ -1601,7 +1666,7 @@ SLevelPointStrategy()
 \end{verbatim}
 \end{quote}
 
-\subsection{九、更改密码黑盒测试}
+\subsection{九、更改密码黑盒测试（同类题：2012 八、2013A 七、2013B 七、2014 九、2020 十、2022 十、2025 九）}
 
 测试维度：
 
@@ -1627,7 +1692,7 @@ user, old=123456, new=abc -> 失败
 \end{verbatim}
 \end{quote}
 
-\subsection{十、支付宝界面 HCI}
+\subsection{十、支付宝界面 HCI（同类题：2013A 八、2013B 八、2014 八、2020 九、2022 九、2025 十）}
 
 语言切换界面：
 
@@ -1649,9 +1714,13 @@ user, old=123456, new=abc -> 失败
 
 \section{2020 答案}
 
-\subsection{一、简答}
+\subsection{一、简答（同类题：2012 一、二；2013A 一；2013B 一；2016 一；2022 一；2025 一）}
 
-软件工程：同 2012 第一题。
+\subsubsection{软件工程（同题：2012 一、2013A 一、2013B 一、2014 一、2016 一、2022 一、2025 一）}
+
+软件工程是把系统化、规范化、可度量的方法应用于软件开发、运行和维护的工程活动，并研究这些方法。它关注程序、数据、文档和知识等完整软件制品，目标是在受控的质量、成本和进度下交付可维护的软件系统。
+
+\subsubsection{持续集成}
 
 持续集成：
 
@@ -1660,11 +1729,11 @@ user, old=123456, new=abc -> 失败
 \item 工具链：Git、GitHub/GitLab、Maven/Gradle、JUnit、静态分析、CI 服务、制品库、部署脚本。
 \end{itemize}
 
-软件生命周期：
+\subsubsection{软件生命周期（同类题：2012 二、2013A 一、2016 一、2022 一、2025 一）}
 
 软件从设想、需求、设计、构造、测试、部署、运行维护到退役的全过程。模型示例：瀑布模型、迭代增量模型、演化模型、螺旋模型。
 
-\subsection{二、采购补货用例与需求分类}
+\subsection{二、采购补货用例与需求分类（同类题：2013A 六、2013B 六、2014 四、2016 二、2022 二、2025 二）}
 
 用例 1：手工创建询价单。
 
@@ -1687,7 +1756,7 @@ user, old=123456, new=abc -> 失败
 \item “收入金额不能含非数字字符”是数据需求，因为它规定数据字段的格式约束。
 \end{itemize}
 
-\subsection{三、采购补货概念类图}
+\subsection{三、采购补货概念类图（同类题：2012 三、2016 三、2022 三、2025 三）}
 
 概念类：
 
@@ -1729,7 +1798,7 @@ Supplier: supplierId, name
 \end{verbatim}
 \end{quote}
 
-\subsection{四、物理包图与接口}
+\subsection{四、物理包图与接口（同类题：2016 四、2022 四、2025 四）}
 
 物理包图按“图 2：Web / 校园卡物理包图”的分层方式绘制，功能模块替换为销售、采购、仓库、会计、发票、付款、收款。
 
@@ -1783,7 +1852,7 @@ requisition);
 \end{verbatim}
 \end{quote}
 
-\subsection{五、订货规则详细设计}
+\subsection{五、订货规则详细设计（同类题：2012 四、2013A 三、2013B 三、2014 六、2016 五、2022 五、2025 五）}
 
 具体天数和销量变化属于业务规则参数变化。用配置表、规则对象或策略对象封装。
 
@@ -1833,7 +1902,7 @@ save(order)
 \end{verbatim}
 \end{quote}
 
-\subsection{六、耦合}
+\subsection{六、耦合（同题：2013A 五；同类题：2013B 五、2016 六、2022 六、2025 六）}
 
 第一段：\texttt{validate\_request} 传入 \texttt{date}，\texttt{valid\_month} 只用月份，属于印记耦合。改为传 \texttt{month}，或把 \texttt{isValidMonth()} 放到 \texttt{date} 对象中。
 
@@ -1848,7 +1917,7 @@ public interface Validator<T> {
 \end{verbatim}
 \end{quote}
 
-\subsection{七、DAO 模式}
+\subsection{七、DAO 模式（同类题：2012 六、2022 七、2025 七）}
 
 使用 Abstract Factory 或 Factory Method 组织 DAO 创建。业务层依赖 DAO 接口，MySQL DAO 和 SQL Server DAO 是具体实现。
 
@@ -1870,7 +1939,7 @@ SqlServerProductDao
 
 使用原则：DIP、OCP、面向接口编程、信息隐藏。
 
-\subsection{八、订货规则代码问题}
+\subsection{八、订货规则代码问题（同类题：2013A 九、2013B 九、2016 八、2025 八）}
 
 问题：
 
@@ -1906,7 +1975,7 @@ missing");
 \end{verbatim}
 \end{quote}
 
-\subsection{九、HCI 点评}
+\subsection{九、HCI 点评（同类题：2013A 八、2013B 八、2014 八、2016 十、2022 九、2025 十）}
 
 按截图可从以下角度答：
 
@@ -1918,7 +1987,7 @@ missing");
 \item 是否保持术语、颜色、位置一致。
 \end{itemize}
 
-\subsection{十、边界值测试}
+\subsection{十、边界值测试（同类题：2012 八、2013A 七、2013B 七、2014 九、2016 九、2022 十、2025 九）}
 
 边界是 3、7、10、15、20。测试值：
 
@@ -1939,15 +2008,23 @@ missing");
 
 \section{2022 答案}
 
-\subsection{一、简答}
+\subsection{一、简答（同类题：2012 一、二；2013A 一；2013B 一；2016 一；2020 一；2025 一）}
 
-软件工程：同 2012 第一题。
+\subsubsection{软件工程（同题：2012 一、2013A 一、2013B 一、2014 一、2016 一、2020 一、2025 一）}
+
+软件工程是把系统化、规范化、可度量的方法应用于软件开发、运行和维护的工程活动，并研究这些方法。它关注程序、数据、文档和知识等完整软件制品，目标是在受控的质量、成本和进度下交付可维护的软件系统。
+
+\subsubsection{配置管理变更控制}
 
 配置管理变更控制：提交 CR；影响分析；风险评估；CCB 审查；批准后制定实施和回滚计划；执行变更；更新基线；配置审计；上线验证；状态报告。
 
-迭代增量模型和演化模型：见 01 讲义高频考点。
+\subsubsection{迭代增量模型和演化模型（同类题：2012 二、2013B 一、2016 一、2025 一）}
 
-\subsection{二、校园卡需求获取}
+迭代增量模型把系统拆成多个增量，每一轮完成一部分可运行功能，并通过迭代不断改进。优点是早交付、早反馈、风险分散；缺点是需要稳定架构和清晰的增量规划。
+
+演化模型先交付初始版本，再根据用户反馈持续修改。优点是适合需求变化和探索型系统；缺点是范围控制、进度控制和架构保持更难。
+
+\subsection{二、校园卡需求获取（同类题：2013A 六、2013B 六、2014 四、2016 二、2020 二、2025 二）}
 
 用例：
 
@@ -1976,7 +2053,7 @@ missing");
 
 API 供其他管理系统调用属于对外接口需求。其他接口包括支付平台接口、统一认证接口、校园卡中心接口、短信或消息通知接口。
 
-\subsection{三、校园卡概念类图}
+\subsection{三、校园卡概念类图（同类题：2012 三、2016 三、2020 三、2025 三）}
 
 概念类：
 
@@ -1999,7 +2076,7 @@ API 供其他管理系统调用属于对外接口需求。其他接口包括支�
 \item 一张校园卡对应零条或多条消费明细。
 \end{itemize}
 
-\subsection{四、物理包图与充值接口}
+\subsection{四、物理包图与充值接口（同类题：2016 四、2020 四、2025 四）}
 
 物理包图见“图 2：Web / 校园卡物理包图”，把功能模块填为登录、充值、充值记录、余额查询、挂失、交易记录。
 
@@ -2047,7 +2124,7 @@ public interface RechargeRecordRepository {
 \end{verbatim}
 \end{quote}
 
-\subsection{五、优惠券和支付方式设计}
+\subsection{五、优惠券和支付方式设计（同类题：2013A 二、2016 七、2020 五、2022 七、2025 七）}
 
 使用两个策略族：
 
@@ -2097,7 +2174,7 @@ result
 \end{verbatim}
 \end{quote}
 
-\subsection{六、模块化与信息隐藏}
+\subsection{六、模块化与信息隐藏（同类题：2012 五、六；2013A 五；2013B 五；2016 六；2020 六；2025 六）}
 
 用户包和优惠券包互相依赖，违反无循环依赖原则，也违反低耦合。改进：
 
@@ -2137,7 +2214,7 @@ user.receiveCoupon(coupon);
 \end{verbatim}
 \end{quote}
 
-\subsection{七、设计模式}
+\subsection{七、设计模式（同类题：2013A 二、2016 七、2020 七、2022 五、2025 七）}
 
 支付方式扩展使用 Strategy。
 
@@ -2158,7 +2235,7 @@ user.receiveCoupon(coupon);
 \item 低耦合和高内聚。
 \end{itemize}
 
-\subsection{八、\texttt{doPost} 构造分析}
+\subsection{八、\texttt{doPost} 构造分析（同类题：2020 八、2025 八）}
 
 优点：
 
@@ -2190,7 +2267,7 @@ user.receiveCoupon(coupon);
 \item 返回结构化结果。
 \end{itemize}
 
-\subsection{九、HCI}
+\subsection{九、HCI（同类题：2013A 八、2013B 八、2014 八、2016 十、2020 九、2025 十）}
 
 好的地方：
 
@@ -2210,7 +2287,7 @@ user.receiveCoupon(coupon);
 \item 记录列表要支持时间、金额和状态筛选。
 \end{itemize}
 
-\subsection{十、\texttt{doPost} 测试}
+\subsection{十、\texttt{doPost} 测试（同类题：2012 八、2013A 七、2013B 七、2014 九、2016 九、2020 十、2025 九）}
 
 圈复杂度：
 
@@ -2264,15 +2341,23 @@ C4: new1.indexOf(old) == -1
 
 \section{2025 答案}
 
-\subsection{名词解释}
+\subsection{一、名词解释（同类题：2012 一、二；2013A 一；2013B 一；2016 一；2020 一；2022 一）}
 
-软件工程：同 2012 第一题。
+\subsubsection{软件工程（同题：2012 一、2013A 一、2013B 一、2014 一、2016 一、2020 一、2022 一）}
+
+软件工程是把系统化、规范化、可度量的方法应用于软件开发、运行和维护的工程活动，并研究这些方法。它关注程序、数据、文档和知识等完整软件制品，目标是在受控的质量、成本和进度下交付可维护的软件系统。
+
+\subsubsection{再工程}
 
 再工程：对已有软件系统进行分析、理解、改造和重新实现，以改善结构、质量、可维护性或适配新平台。再工程通常包括逆向工程、重构、迁移和重新文档化。
 
-增量迭代模型和演化模型：见 01 讲义高频考点。
+\subsubsection{增量迭代模型和演化模型（同类题：2012 二、2013B 一、2016 一、2022 一）}
 
-\subsection{需求}
+增量迭代模型把系统拆成多个增量，每一轮完成一部分可运行功能，并通过迭代不断改进。演化模型先交付初始版本，再根据用户反馈持续修改。
+
+区别：增量迭代强调有计划地分批交付功能；演化模型强调在使用和反馈中持续调整系统。
+
+\subsection{二、需求（同类题：2013A 六、2013B 六、2014 四、2016 二、2020 二、2022 二）}
 
 判断需求级别：
 
@@ -2303,13 +2388,13 @@ C4: new1.indexOf(old) == -1
 \item 写成可验证的 SRS 条目。
 \end{enumerate}
 
-\subsection{需求图}
+\subsection{三、需求图（同类题：2012 三、2016 三、2020 三、2022 三）}
 
 概念类图：根据题面名词提取领域概念，删除纯属性和界面词，补属性、关联和多重性。
 
 顺序图：从一个用例基本流程开始，按参与者、界面、Controller、Service、Repository、外部系统排列消息。
 
-\subsection{Spring Boot 三层}
+\subsection{四、Spring Boot 三层（同类题：2016 四、2020 四、2022 四）}
 
 \begin{quote}
 \footnotesize
@@ -2347,7 +2432,7 @@ scheduleService.arrange(command);
 \end{verbatim}
 \end{quote}
 
-\subsection{详细设计}
+\subsection{五、详细设计（同类题：2012 四、2013A 三、2013B 三、2014 六、2016 五、2020 五、2022 五）}
 
 Controller-Service-Repository 顺序图：
 
@@ -2371,7 +2456,7 @@ Controller --> User: response
 \item 委托式：控制器保留主流程，把子任务交给专业对象。业务系统优先采用委托式。
 \end{itemize}
 
-\subsection{代码好坏}
+\subsection{六、代码好坏（同类题：2013A 五、2013B 三、五、2014 五、2016 六、2020 六、八、2022 六、八）}
 
 坏代码特征：
 
@@ -2394,7 +2479,7 @@ Controller --> User: response
 \item 测试覆盖边界和异常。
 \end{itemize}
 
-\subsection{策略模式：课程冲突检测}
+\subsection{七、策略模式：课程冲突检测（同类题：2013A 二、2016 七、2020 五、2022 五、七）}
 
 \begin{quote}
 \footnotesize
@@ -2451,7 +2536,7 @@ strategy.check(context))
 
 优点：新增冲突类型时新增策略类，符合 OCP；上下文依赖接口，符合 DIP；每个策略职责单一。缺点是类数量增加，策略选择和组合需要管理。
 
-\subsection{改坏代码}
+\subsection{八、改坏代码（同类题：2013A 九、2013B 九、2016 八、2020 八、2022 八）}
 
 一堆 AND/OR 条件的布尔方法可按下面方式改：
 
@@ -2475,7 +2560,7 @@ canArrange(CourseArrangeRequest request) {
 \end{verbatim}
 \end{quote}
 
-\subsection{测试}
+\subsection{九、测试（同类题：2012 八、2013A 七、2013B 七、2014 九、2016 九、2020 十、2022 十）}
 
 圈复杂度：
 
@@ -2488,7 +2573,7 @@ V(G)=判定节点数+1
 
 分支覆盖：每个 \texttt{if} 的真分支和假分支至少执行一次。设计测试时列出每个判定条件，再为每个分支构造输入。
 
-\subsection{HCI}
+\subsection{十、HCI（同类题：2013A 八、2013B 八、2014 八、2016 十、2020 九、2022 九）}
 
 评价截图按四步：
 
