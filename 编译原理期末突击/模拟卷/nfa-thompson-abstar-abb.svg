@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="520" viewBox="0 0 1400 520">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#222"/>
+    </marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #111; }
+      .state { fill: #fff; stroke: #222; stroke-width: 2; }
+      .edge { fill: none; stroke: #222; stroke-width: 2; marker-end: url(#arrow); }
+      .label { font-size: 16px; paint-order: stroke; stroke: #fff; stroke-width: 5px; stroke-linejoin: round; }
+      .node-label { font-size: 17px; text-anchor: middle; dominant-baseline: middle; }
+      .small { font-size: 14px; }
+    </style>
+  </defs>
+
+  <text x="680" y="34" font-size="24" text-anchor="middle">Thompson NFA for (a|b)*abb</text>
+
+  <!-- start and outer star -->
+  <path class="edge" d="M 20 260 L 50 260"/>
+  <text class="small" x="20" y="242">start</text>
+  <path class="edge" d="M 90 260 L 150 260"/>
+  <text class="label" x="120" y="242">epsilon</text>
+  <path class="edge" d="M 70 240 C 220 50, 570 50, 672 240"/>
+  <text class="label" x="370" y="70">epsilon</text>
+  <path class="edge" d="M 540 364 C 400 462, 255 462, 182 279"/>
+  <text class="label" x="358" y="462">epsilon</text>
+  <path class="edge" d="M 578 260 L 670 260"/>
+  <text class="label" x="624" y="242">epsilon</text>
+
+  <!-- a|b -->
+  <path class="edge" d="M 187 245 C 218 201, 251 175, 282 165"/>
+  <text class="label" x="238" y="205">epsilon</text>
+  <path class="edge" d="M 187 275 C 218 319, 251 345, 282 355"/>
+  <text class="label" x="238" y="334">epsilon</text>
+  <path class="edge" d="M 320 160 L 410 160"/>
+  <text class="label" x="365" y="142">a</text>
+  <path class="edge" d="M 320 360 L 410 360"/>
+  <text class="label" x="365" y="342">b</text>
+  <path class="edge" d="M 449 171 C 492 190, 523 226, 543 249"/>
+  <text class="label" x="505" y="199">epsilon</text>
+  <path class="edge" d="M 449 349 C 492 330, 523 294, 543 271"/>
+  <text class="label" x="505" y="329">epsilon</text>
+
+  <!-- abb tail -->
+  <path class="edge" d="M 710 260 L 790 260"/>
+  <text class="label" x="750" y="242">epsilon</text>
+  <path class="edge" d="M 830 260 L 910 260"/>
+  <text class="label" x="870" y="242">a</text>
+  <path class="edge" d="M 950 260 L 1030 260"/>
+  <text class="label" x="990" y="242">epsilon</text>
+  <path class="edge" d="M 1070 260 L 1150 260"/>
+  <text class="label" x="1110" y="242">b</text>
+  <path class="edge" d="M 1190 260 L 1270 260"/>
+  <text class="label" x="1230" y="242">epsilon</text>
+  <path class="edge" d="M 1310 260 L 1340 260"/>
+  <text class="label" x="1324" y="242">b</text>
+
+  <!-- states -->
+  <circle class="state" cx="70" cy="260" r="20"/>
+  <text class="node-label" x="70" y="260">q0</text>
+
+  <circle class="state" cx="170" cy="260" r="20"/>
+  <text class="node-label" x="170" y="260">q2</text>
+
+  <circle class="state" cx="300" cy="160" r="20"/>
+  <text class="node-label" x="300" y="160">q4</text>
+
+  <circle class="state" cx="430" cy="160" r="20"/>
+  <text class="node-label" x="430" y="160">q5</text>
+
+  <circle class="state" cx="300" cy="360" r="20"/>
+  <text class="node-label" x="300" y="360">q6</text>
+
+  <circle class="state" cx="430" cy="360" r="20"/>
+  <text class="node-label" x="430" y="360">q7</text>
+
+  <circle class="state" cx="560" cy="260" r="20"/>
+  <text class="node-label" x="560" y="260">q3</text>
+
+  <circle class="state" cx="690" cy="260" r="20"/>
+  <text class="node-label" x="690" y="260">q1</text>
+
+  <circle class="state" cx="810" cy="260" r="20"/>
+  <text class="node-label" x="810" y="260">q8</text>
+
+  <circle class="state" cx="930" cy="260" r="20"/>
+  <text class="node-label" x="930" y="260">q9</text>
+
+  <circle class="state" cx="1050" cy="260" r="20"/>
+  <text class="node-label" x="1050" y="260">q10</text>
+
+  <circle class="state" cx="1170" cy="260" r="20"/>
+  <text class="node-label" x="1170" y="260">q11</text>
+
+  <circle class="state" cx="1290" cy="260" r="20"/>
+  <text class="node-label" x="1290" y="260">q12</text>
+
+  <circle class="state" cx="1348" cy="260" r="22"/>
+  <circle class="state" cx="1348" cy="260" r="16"/>
+  <text class="node-label" x="1348" y="260">q13</text>
+</svg>

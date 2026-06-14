@@ -4,33 +4,68 @@
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{verbatim}
+\usepackage{graphicx}
 \usepackage{xcolor}
+\usepackage{fancyhdr}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
 \emergencystretch=4em
 \sloppy
-\title{模拟卷02-2025风格题目与详解}
-\author{}
-\date{}
+\fancypagestyle{exam}{%
+  \fancyhf{}%
+  \fancyhead[R]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+\pagestyle{exam}
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\newcommand{\examcover}[1]{%
+\thispagestyle{plain}
+\vspace*{1.35cm}
+\begin{center}
+{\zihao{2}\bfseries 考试科目名称 编译原理；模拟卷 #1}
+\end{center}
+\vspace{0.95cm}
+\noindent 考试方式：\underline{\hspace{2.0cm}}\hfill 考试日期：\underline{\hspace{3.2cm}}\hfill 教师：\underline{\hspace{2.2cm}}
+
+\vspace{0.45cm}
+\noindent 院系（专业）：\underline{\hspace{5.0cm}}\hfill 年级：\underline{\hspace{2.2cm}}
+
+\vspace{0.45cm}
+\noindent 姓名：\underline{\hspace{3.2cm}}\hfill 学号：\underline{\hspace{3.2cm}}\hfill 成绩：\underline{\hspace{2.4cm}}
+
+\vspace{0.75cm}
+\begin{center}
+\renewcommand{\arraystretch}{1.65}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+题号 & 一 & 二 & 三 & 四 & 五 & 六 & 七 & 总分 \\
+\hline
+分数 &  &  &  &  &  &  &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{1.05cm}
+\begin{center}
+{\zihao{3}\bfseries 注意事项：}
+\end{center}
+\begin{itemize}
+\item 诚信考试，不得作弊。
+\item 若对题意有疑问，请及时提出。
+\item 题目不是按照难度排列的，请注意合理分配时间。
+\item 为了避免连锁错误造成的影响，请尽量给出关键步骤。
+\item 字迹要尽可能工整，解题过程要尽可能清晰。
+\end{itemize}
+\clearpage
+}
+\newcommand{\examquestion}[3]{\clearpage\noindent{\large\bfseries 题目 #1 (#2 (#3 分))}\par\vspace{0.45em}}
+\newcommand{\answerquestion}[2]{\par\vspace{0.75em}\noindent{\large\bfseries 题目 #1 #2}\par\vspace{0.35em}}
 \begin{document}
-\maketitle
-\setcounter{tocdepth}{1}
-\tableofcontents
-\newpage
-\section{编译原理 2025 风格模拟卷02（题目与详解）}
+\examcover{02}
 
 
-\subsection{卷面说明}
-
-
-本卷按 Slides/Slides/handout 与三份 Recap PPT 更新，主线覆盖前端自动机与 LL、中端 IR/SSA、数据流、符号执行、后端目标代码、寄存器分配、指令调度以及过程间/指针分析。总分 100 分。
-
-
-\section{A 卷题目}
-
-
-\subsection{一、词法分析（15 分）}
+\examquestion{1}{词法分析}{15}
 
 
 正则表达式：
@@ -51,7 +86,7 @@
 \end{enumerate}
 
 
-\subsection{二、LL 语法分析（15 分）}
+\examquestion{2}{LL 语法分析}{15}
 
 
 文法：
@@ -75,7 +110,7 @@ E -> m | n
 \end{enumerate}
 
 
-\subsection{三、指令调度（15 分）}
+\examquestion{3}{指令调度}{15}
 
 
 给定指令：
@@ -101,7 +136,7 @@ I5: R10 = R4 + R1
 \end{enumerate}
 
 
-\subsection{四、支配问题（15 分）}
+\examquestion{4}{支配问题}{15}
 
 
 CFG：while 循环
@@ -127,7 +162,7 @@ B2->Exit
 \end{enumerate}
 
 
-\subsection{五、符号执行与 SAT（20 分）}
+\examquestion{5}{符号执行与 SAT}{20}
 
 
 公式：
@@ -149,7 +184,7 @@ F = ((a2 and b2) or c2)
 \end{enumerate}
 
 
-\subsection{六、Andersen 指针分析（20 分）}
+\examquestion{6}{Andersen 指针分析}{20}
 
 
 程序：
@@ -174,7 +209,7 @@ w = *x
 \end{enumerate}
 
 
-\subsection{七、PPT 新增重点：数据流分析（10 分）}
+\examquestion{7}{PPT 新增重点：数据流分析}{10}
 
 
 CFG 与可用表达式信息：
@@ -204,10 +239,19 @@ B4: gen={}, kill={}
 
 \end{enumerate}
 
-\section{B 详解}
+\clearpage
+\begin{center}
+{\zihao{3}\bfseries 参考答案}
+\end{center}
 
 
-\subsection{一、词法分析详解}
+\answerquestion{1}{词法分析详解}
+
+下图为正则表达式 \texttt{((epsilon|a)b*)*} 的 Thompson NFA：
+
+\begin{center}
+\includegraphics[width=\textwidth]{nfa-thompson-regex-02-q1.png}
+\end{center}
 
 
 \begin{quote}
@@ -262,7 +306,7 @@ D2:
 
 
 
-\subsection{二、LL 语法分析详解}
+\answerquestion{2}{LL 语法分析详解}
 
 
 \begin{quote}
@@ -306,7 +350,7 @@ M[E,n] = E -> n
 
 
 
-\subsection{三、指令调度详解}
+\answerquestion{3}{指令调度详解}
 
 
 定义：
@@ -353,7 +397,7 @@ I1, I3, I4, I2, I5
 
 
 
-\subsection{四、支配问题详解}
+\answerquestion{4}{支配问题详解}
 
 
 定义：
@@ -403,7 +447,7 @@ SSA phi 放置：若变量在多个基本块中被定义，则在这些定义块
 
 
 
-\subsection{五、符号执行与 SAT 详解}
+\answerquestion{5}{符号执行与 SAT 详解}
 
 
 \begin{quote}
@@ -435,7 +479,7 @@ F2 为真时，若某个 ai=true 令 c=false；若某个 bj=true 令 c=true，�
 
 
 
-\subsection{六、Andersen 指针分析详解}
+\answerquestion{6}{Andersen 指针分析详解}
 
 
 \begin{quote}
@@ -466,7 +510,7 @@ pts(z)={o1}
 
 
 
-\subsection{七、PPT 新增重点详解}
+\answerquestion{7}{PPT 新增重点详解}
 
 
 \begin{quote}
@@ -498,7 +542,10 @@ Available Expressions 是 must analysis，用 intersection。
 
 
 
-\section{C 复盘清单}
+\clearpage
+\begin{center}
+{\zihao{3}\bfseries 复盘清单}
+\end{center}
 
 
 \begin{quote}
