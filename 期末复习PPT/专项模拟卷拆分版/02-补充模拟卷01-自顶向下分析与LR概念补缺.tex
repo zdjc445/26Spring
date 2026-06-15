@@ -1,0 +1,345 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=1.85cm]{geometry}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\emergencystretch=4em
+\sloppy
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{期末复习 PPT 专项模拟卷}
+\rhead{\thepage}
+\title{补充模拟卷 01：自顶向下分析与 LR 概念补缺}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+
+
+\section*{A 卷题目}
+\addcontentsline{toc}{section}{A 卷题目}
+
+\subsection*{一、递归下降、回溯与左公因子（20 分）}
+\addcontentsline{toc}{subsection}{一、递归下降、回溯与左公因子（20 分）}
+
+文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> a A | a B
+A -> c
+B -> d
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 说明该文法在递归下降分析中为什么可能需要回溯。\\
+\noindent 2. 提取左公因子。\\
+\noindent 3. 判断提取左公因子后的文法是否适合构造 LL(1) 预测分析表。\\
+
+\subsection*{二、二义性文法与预测分析表（20 分）}
+\addcontentsline{toc}{subsection}{二、二义性文法与预测分析表（20 分）}
+
+文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E -> E + E | E * E | id
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 说明该文法为什么不适合直接构造 LL(1) 预测分析表。\\
+\noindent 2. 指出它至少存在的两个问题。\\
+\noindent 3. 简述通常需要怎样处理。\\
+
+\subsection*{三、句柄与归约序列（20 分）}
+\addcontentsline{toc}{subsection}{三、句柄与归约序列（20 分）}
+
+文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> A B
+A -> a
+B -> b
+\end{verbatim}
+\end{quote}
+
+对输入串：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+a b
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 写出自底向上的归约序列。\\
+\noindent 2. 说明该归约序列与最右推导的关系。\\
+
+\subsection*{四、规约-规约冲突（20 分）}
+\addcontentsline{toc}{subsection}{四、规约-规约冲突（20 分）}
+
+某 LR(0) 状态中有：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+A -> id .
+B -> id .
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 说明为什么这是规约-规约冲突。\\
+\noindent 2. 若 \texttt{FOLLOW(A) = \{ ; \}}，\texttt{FOLLOW(B) = \{ ) \}}，说明 SLR 如何处理。\\
+\noindent 3. 若 \texttt{FOLLOW(A)} 和 \texttt{FOLLOW(B)} 有公共符号，会发生什么。\\
+
+\subsection*{五、内核项、非内核项与 SLR 弱点（20 分）}
+\addcontentsline{toc}{subsection}{五、内核项、非内核项与 SLR 弱点（20 分）}
+
+回答：
+
+\noindent 1. 什么是 LR(0) 项集中的内核项。\\
+\noindent 2. 什么是非内核项。\\
+\noindent 3. SLR 为什么比 LR(0) 强。\\
+\noindent 4. SLR 为什么仍然有弱点。\\
+
+\section*{B 简明答案}
+\addcontentsline{toc}{section}{B 简明答案}
+
+\subsection*{一、递归下降、回溯与左公因子答案}
+\addcontentsline{toc}{subsection}{一、递归下降、回溯与左公因子答案}
+
+原文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> a A | a B
+\end{verbatim}
+\end{quote}
+
+两条 \texttt{S} 的产生式右部都以 \texttt{a} 开头。递归下降分析看到输入第一个符号 \texttt{a} 时，不能只根据这一个符号判断应该选择 \texttt{S -> a A} 还是 \texttt{S -> a B}，因此可能先选错再回溯。
+
+提取左公因子：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S  -> a S'
+S' -> A | B
+A  -> c
+B  -> d
+\end{verbatim}
+\end{quote}
+
+也可以直接写成：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S  -> a S'
+S' -> c | d
+\end{verbatim}
+\end{quote}
+
+判断：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FIRST(c) = { c }
+FIRST(d) = { d }
+\end{verbatim}
+\end{quote}
+
+两条 \texttt{S'} 规则右部的 FIRST 集不相交，因此提取左公因子后可以构造 LL(1) 预测分析表。
+
+\subsection*{二、二义性文法与预测分析表答案}
+\addcontentsline{toc}{subsection}{二、二义性文法与预测分析表答案}
+
+该文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E -> E + E | E * E | id
+\end{verbatim}
+\end{quote}
+
+不适合直接构造 LL(1) 预测分析表，原因：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1. 有直接左递归：E -> E + E 和 E -> E * E。
+2. 没有体现 + 和 * 的优先级与结合性，表达式可能有多棵语法树。
+\end{verbatim}
+\end{quote}
+
+例如：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+id + id * id
+\end{verbatim}
+\end{quote}
+
+可能先结合 \texttt{+}，也可能先结合 \texttt{*}。通常需要：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1. 改写文法，消除二义性。
+2. 消除左递归。
+3. 必要时提取左公因子。
+4. 再计算 FIRST、FOLLOW 并构造预测分析表。
+\end{verbatim}
+\end{quote}
+
+\subsection*{三、句柄与归约序列答案}
+\addcontentsline{toc}{subsection}{三、句柄与归约序列答案}
+
+输入：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+a b
+\end{verbatim}
+\end{quote}
+
+自底向上归约：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+a b
+=> A b
+=> A B
+=> S
+\end{verbatim}
+\end{quote}
+
+每一步都是把某个产生式右部归约为左部：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+a => A
+b => B
+A B => S
+\end{verbatim}
+\end{quote}
+
+自底向上分析的归约序列等价于某个最右推导的逆过程。
+
+对应最右推导：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S => A B => A b => a b
+\end{verbatim}
+\end{quote}
+
+\subsection*{四、规约-规约冲突答案}
+\addcontentsline{toc}{subsection}{四、规约-规约冲突答案}
+
+状态中有两个完成项：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+A -> id .
+B -> id .
+\end{verbatim}
+\end{quote}
+
+在 LR(0) 中，完成项会在所有终结符上放置规约动作，因此同一状态可能同时要求：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+reduce A -> id
+reduce B -> id
+\end{verbatim}
+\end{quote}
+
+这就是规约-规约冲突。
+
+若：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW(A) = { ; }
+FOLLOW(B) = { ) }
+\end{verbatim}
+\end{quote}
+
+SLR 只在 FOLLOW 集对应的终结符上填规约：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+ACTION[状态, ;] = r(A -> id)
+ACTION[状态, )] = r(B -> id)
+\end{verbatim}
+\end{quote}
+
+如果 \texttt{FOLLOW(A)} 和 \texttt{FOLLOW(B)} 有公共符号，那么公共符号对应的 ACTION 表项仍然会同时出现两个规约动作，冲突仍然存在。
+
+\subsection*{五、内核项、非内核项与 SLR 弱点答案}
+\addcontentsline{toc}{subsection}{五、内核项、非内核项与 SLR 弱点答案}
+
+内核项：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1. 初始项 S' -> . S。
+2. 所有点不在产生式最左端的 LR(0) 项。
+\end{verbatim}
+\end{quote}
+
+非内核项：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+除了 S' -> . S 之外，点在产生式最左端的项。
+\end{verbatim}
+\end{quote}
+
+SLR 比 LR(0) 强：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+LR(0) 对完成项不看输入符号，容易在所有终结符上放置规约。
+SLR 使用 FOLLOW 集限制规约，只在 FOLLOW(A) 上对 A -> alpha . 规约。
+\end{verbatim}
+\end{quote}
+
+SLR 的弱点：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW 集只和非终结符有关，不区分具体 LR 状态中的上下文。
+FOLLOW 集过大时，仍可能在不该规约的位置放置规约动作。
+因此有些冲突需要 LR(1) 或 LALR(1) 才能处理。
+\end{verbatim}
+\end{quote}
+\end{document}

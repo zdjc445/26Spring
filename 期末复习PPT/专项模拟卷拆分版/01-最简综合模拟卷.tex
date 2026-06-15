@@ -1,0 +1,518 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=1.85cm]{geometry}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\hypersetup{hidelinks}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\emergencystretch=4em
+\sloppy
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{期末复习 PPT 专项模拟卷}
+\rhead{\thepage}
+\title{最简综合模拟卷}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+
+
+\section*{A 卷题目}
+\addcontentsline{toc}{section}{A 卷题目}
+
+\subsection*{一、词法分析：正则表达式、NFA、DFA、最小化（20 分）}
+\addcontentsline{toc}{subsection}{一、词法分析：正则表达式、NFA、DFA、最小化（20 分）}
+
+给定正则表达式：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+(a|b)*abb
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 使用 Thompson 构造法给出等价 NFA。\\
+\noindent 2. 使用子集构造法构造 DFA，写出每个 DFA 状态对应的 NFA 状态集合。\\
+\noindent 3. 对 DFA 进行最小化。\\
+
+\subsection*{二、LL(1) 分析（20 分）}
+\addcontentsline{toc}{subsection}{二、LL(1) 分析（20 分）}
+
+文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E -> E + T | T
+T -> T * F | F
+F -> ( E ) | id
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 消除直接左递归。\\
+\noindent 2. 写出消除左递归后文法的 FIRST 集和 FOLLOW 集。\\
+\noindent 3. 构造预测分析表。\\
+\noindent 4. 判断消除左递归后的文法是否为 LL(1)。\\
+
+\subsection*{三、LR(0) 项集族与 SLR 分析表（20 分）}
+\addcontentsline{toc}{subsection}{三、LR(0) 项集族与 SLR 分析表（20 分）}
+
+文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S' -> S
+S  -> C C
+C  -> c C | d
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 构造规范 LR(0) 项集族。\\
+\noindent 2. 写出 GOTO 转移。\\
+\noindent 3. 写出 FOLLOW 集。\\
+\noindent 4. 写出 SLR 分析表中的 ACTION/GOTO 条目。\\
+
+\subsection*{四、语义分析：S 属性与 L 属性（20 分）}
+\addcontentsline{toc}{subsection}{四、语义分析：S 属性与 L 属性（20 分）}
+
+\noindent 1. 对下面声明文法设计 L 属性 SDD，把每个 \texttt{id} 加入符号表并记录类型。\\
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+D  -> T L
+T  -> int | float
+L  -> id L'
+L' -> , id L' | epsilon
+\end{verbatim}
+\end{quote}
+
+\noindent 2. 对下面表达式文法设计 S 属性 SDD，使属性 \texttt{code} 表示后缀表达式，并计算 \texttt{3 + 4 + 5} 的 \texttt{code}。\\
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E -> E + T | T
+T -> num
+\end{verbatim}
+\end{quote}
+
+\subsection*{五、中间代码：短路求值、回填、SSA（20 分）}
+\addcontentsline{toc}{subsection}{五、中间代码：短路求值、回填、SSA（20 分）}
+
+\noindent 1. 为下面语句生成带标签的三地址码，要求体现短路求值和回填后的跳转目标。\\
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+if ((x < y) && (y < z) || (x == z))
+  a = 2;
+else
+  a = 3;
+\end{verbatim}
+\end{quote}
+
+\noindent 2. 把下面循环翻译成 SSA 风格的三地址码，要求在循环头写出必要的 phi 函数。\\
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+i = 0;
+s = 0;
+while (i < n) {
+  s = s + i;
+  i = i + 1;
+}
+\end{verbatim}
+\end{quote}
+
+\section*{B 简明答案}
+\addcontentsline{toc}{section}{B 简明答案}
+
+\subsection*{一、词法分析答案}
+\addcontentsline{toc}{subsection}{一、词法分析答案}
+
+Thompson NFA 边表：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+q0 --epsilon--> q2
+q0 --epsilon--> q1
+q2 --epsilon--> q4
+q2 --epsilon--> q6
+q4 --a--> q5
+q6 --b--> q7
+q5 --epsilon--> q3
+q7 --epsilon--> q3
+q3 --epsilon--> q2
+q3 --epsilon--> q1
+q1 --epsilon--> q8
+q8 --a--> q9
+q9 --epsilon--> q10
+q10 --b--> q11
+q11 --epsilon--> q12
+q12 --b--> q13
+\end{verbatim}
+\end{quote}
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+起点：q0
+终点：q13
+\end{verbatim}
+\end{quote}
+
+子集构造：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+D0 = {q0,q1,q2,q4,q6,q8}
+  on a -> D1
+  on b -> D2
+  终态：否
+
+D1 = {q1,q2,q3,q4,q5,q6,q8,q9,q10}
+  on a -> D1
+  on b -> D3
+  终态：否
+
+D2 = {q1,q2,q3,q4,q6,q7,q8}
+  on a -> D1
+  on b -> D2
+  终态：否
+
+D3 = {q1,q2,q3,q4,q6,q7,q8,q11,q12}
+  on a -> D1
+  on b -> D4
+  终态：否
+
+D4 = {q1,q2,q3,q4,q6,q7,q8,q13}
+  on a -> D1
+  on b -> D2
+  终态：是
+\end{verbatim}
+\end{quote}
+
+最小化：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+G0 = {D0,D2}
+G1 = {D1}
+G2 = {D3}
+G3 = {D4}
+
+G0 --a--> G1, G0 --b--> G0
+G1 --a--> G1, G1 --b--> G2
+G2 --a--> G1, G2 --b--> G3
+G3 --a--> G1, G3 --b--> G0
+
+G0 是初态，G3 是终态。
+\end{verbatim}
+\end{quote}
+
+\subsection*{二、LL(1) 答案}
+\addcontentsline{toc}{subsection}{二、LL(1) 答案}
+
+消除直接左递归：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E  -> T E'
+E' -> + T E' | epsilon
+T  -> F T'
+T' -> * F T' | epsilon
+F  -> ( E ) | id
+\end{verbatim}
+\end{quote}
+
+FIRST：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FIRST(E)  = { (, id }
+FIRST(E') = { +, epsilon }
+FIRST(T)  = { (, id }
+FIRST(T') = { *, epsilon }
+FIRST(F)  = { (, id }
+\end{verbatim}
+\end{quote}
+
+FOLLOW：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW(E)  = { ), $ }
+FOLLOW(E') = { ), $ }
+FOLLOW(T)  = { +, ), $ }
+FOLLOW(T') = { +, ), $ }
+FOLLOW(F)  = { *, +, ), $ }
+\end{verbatim}
+\end{quote}
+
+预测分析表：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M[E,  ( ] = E -> T E'
+M[E, id ] = E -> T E'
+
+M[E', + ] = E' -> + T E'
+M[E', ) ] = E' -> epsilon
+M[E', $ ] = E' -> epsilon
+
+M[T,  ( ] = T -> F T'
+M[T, id ] = T -> F T'
+
+M[T', * ] = T' -> * F T'
+M[T', + ] = T' -> epsilon
+M[T', ) ] = T' -> epsilon
+M[T', $ ] = T' -> epsilon
+
+M[F,  ( ] = F -> ( E )
+M[F, id ] = F -> id
+\end{verbatim}
+\end{quote}
+
+结论：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+预测分析表没有多重入口，因此消除左递归后的文法是 LL(1)。
+\end{verbatim}
+\end{quote}
+
+\subsection*{三、LR(0)/SLR 答案}
+\addcontentsline{toc}{subsection}{三、LR(0)/SLR 答案}
+
+规范 LR(0) 项集族：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+I0:
+S' -> . S
+S  -> . C C
+C  -> . c C
+C  -> . d
+
+I1:
+S' -> S .
+
+I2:
+S -> C . C
+C -> . c C
+C -> . d
+
+I3:
+C -> c . C
+C -> . c C
+C -> . d
+
+I4:
+C -> d .
+
+I5:
+S -> C C .
+
+I6:
+C -> c C .
+\end{verbatim}
+\end{quote}
+
+GOTO：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+GOTO(I0, S) = I1
+GOTO(I0, C) = I2
+GOTO(I0, c) = I3
+GOTO(I0, d) = I4
+
+GOTO(I2, C) = I5
+GOTO(I2, c) = I3
+GOTO(I2, d) = I4
+
+GOTO(I3, C) = I6
+GOTO(I3, c) = I3
+GOTO(I3, d) = I4
+\end{verbatim}
+\end{quote}
+
+FOLLOW：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW(S) = { $ }
+FOLLOW(C) = { c, d, $ }
+\end{verbatim}
+\end{quote}
+
+SLR 表条目：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+ACTION[0,c] = s3
+ACTION[0,d] = s4
+GOTO[0,S] = 1
+GOTO[0,C] = 2
+
+ACTION[1,$] = acc
+
+ACTION[2,c] = s3
+ACTION[2,d] = s4
+GOTO[2,C] = 5
+
+ACTION[3,c] = s3
+ACTION[3,d] = s4
+GOTO[3,C] = 6
+
+ACTION[4,c] = r(C -> d)
+ACTION[4,d] = r(C -> d)
+ACTION[4,$] = r(C -> d)
+
+ACTION[5,$] = r(S -> C C)
+
+ACTION[6,c] = r(C -> c C)
+ACTION[6,d] = r(C -> c C)
+ACTION[6,$] = r(C -> c C)
+\end{verbatim}
+\end{quote}
+
+\subsection*{四、语义分析答案}
+\addcontentsline{toc}{subsection}{四、语义分析答案}
+
+L 属性 SDD：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+D -> T L
+  L.in = T.type
+
+T -> int
+  T.type = int
+
+T -> float
+  T.type = float
+
+L -> id L'
+  addType(id.name, L.in)
+  L'.in = L.in
+
+L' -> , id L'1
+  addType(id.name, L'.in)
+  L'1.in = L'.in
+
+L' -> epsilon
+  不执行动作
+\end{verbatim}
+\end{quote}
+
+这是 L 属性的原因：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+L.in 来自左侧的 T.type。
+L'.in 来自父结点 L 或 L'。
+继承属性只依赖父结点或左侧兄弟结点，不依赖右侧兄弟结点。
+\end{verbatim}
+\end{quote}
+
+S 属性 SDD：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E -> E1 + T
+  E.code = E1.code || T.code || "+"
+
+E -> T
+  E.code = T.code
+
+T -> num
+  T.code = num.lexeme
+\end{verbatim}
+\end{quote}
+
+计算：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+3 + 4 + 5 按左结合为 ((3 + 4) + 5)
+
+3 + 4 的 code = 3 4 +
+(3 + 4) + 5 的 code = 3 4 + 5 +
+
+最终 E.code = 3 4 + 5 +
+\end{verbatim}
+\end{quote}
+
+\subsection*{五、中间代码答案}
+\addcontentsline{toc}{subsection}{五、中间代码答案}
+
+布尔表达式回填后的三地址码：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+1: if x < y goto 3
+2: goto 5
+3: if y < z goto 7
+4: goto 5
+5: if x == z goto 7
+6: goto 9
+7: a = 2
+8: goto 10
+9: a = 3
+10:
+\end{verbatim}
+\end{quote}
+
+SSA：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+entry:
+i1 = 0
+s1 = 0
+goto L_header
+
+L_header:
+i2 = phi(i1, i3)
+s2 = phi(s1, s3)
+t1 = i2 < n
+if t1 goto L_body else L_exit
+
+L_body:
+s3 = s2 + i2
+i3 = i2 + 1
+goto L_header
+
+L_exit:
+\end{verbatim}
+\end{quote}
+\end{document}
