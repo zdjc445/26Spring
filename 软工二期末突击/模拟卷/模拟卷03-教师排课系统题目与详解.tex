@@ -5,6 +5,7 @@
 \usepackage{longtable}
 \usepackage{verbatim}
 \usepackage{xcolor}
+\input{diagram-macros.tex}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
@@ -65,7 +66,7 @@
 \begin{enumerate}
 \item 识别问题域概念类。
 \item 写出概念类之间的关联、聚合、组合或继承。
-\item 写出关键属性并给出文字版类图。
+\item 写出关键属性并画出类图。
 \end{enumerate}
 
 
@@ -118,7 +119,7 @@
 
 \begin{enumerate}
 \item 写出模式适用原因。
-\item 画出文字版类图。
+\item 画出类图。
 \item 说明使用到的设计原则。
 \item 说明优缺点。
 \end{enumerate}
@@ -200,30 +201,32 @@
 \subsection{三、需求分析题详解}
 
 
-概念类图文字答案：
+概念类图答案：
 
+\begin{center}
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}
+\node[umlbox] (teacher) at (0,2.6) {Teacher};
+\node[umlbox] (course) at (4,2.6) {Course};
+\node[umlbox] (group) at (8,2.6) {StudentGroup};
+\node[umlbox] (plan) at (4,0.3) {SchedulePlan};
+\node[umlbox] (classroom) at (0,0.3) {Classroom};
+\node[umlbox] (timeslot) at (8,0.3) {TimeSlot};
+\node[umlbox] (report) at (4,-1.8) {ConflictReport};
+\draw (teacher) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (course);
+\draw (course) -- node[above,pos=0.12,font=\scriptsize] {*} node[above,pos=0.88,font=\scriptsize] {*} (group);
+\draw (course) -- node[right,pos=0.12,font=\scriptsize] {1} node[right,pos=0.88,font=\scriptsize] {0..*} (plan);
+\draw (plan) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {1} (classroom);
+\draw (plan) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {1} (timeslot);
+\draw (report) -- node[right,pos=0.12,font=\scriptsize] {*} node[right,pos=0.88,font=\scriptsize] {1} (plan);
+\end{tikzpicture}}
+\end{center}
+
+关键属性：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-类：
-Course
-Teacher
-Classroom
-TimeSlot
-SchedulePlan
-ConflictReport
-StudentGroup
-
-关系：
-Teacher 1 -- 0..* Course
-Course * -- * StudentGroup
-Course 1 -- 0..* SchedulePlan
-SchedulePlan 1 -- 1 Classroom
-SchedulePlan 1 -- 1 TimeSlot
-ConflictReport * -- 1 SchedulePlan
-
-关键属性：
 Course(courseId, name, credit)
 Teacher(teacherId, name)
 Classroom(roomId, capacity, location)
@@ -243,27 +246,7 @@ ConflictReport(type, description, severity)
 物理包图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-客户端 / 浏览器
-  html
-  css
-  javascript
-  presentation
-        |
-        | HTTP + REST API + JSON
-        v
-服务器端
-  controller/api
-  service 逻辑层
-  repository 数据层接口
-  domain/entity
-  modules
-  course teacher classroom schedule conflict
-  database
-\end{verbatim}
-\end{quote}
+\ExamPhysicalPackageDiagram{course \quad teacher \quad classroom \quad schedule \quad conflict}
 
 
 
@@ -323,20 +306,7 @@ public class ScheduleController {
 顺序图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-User -> Controller: submit 课程排课与冲突检测 request
-Controller -> ScheduleService: scheduleCourse(command)
-ScheduleService -> CourseRepository: query domain object
-ScheduleService -> Strategy/Domain: check rules and calculate result
-ScheduleService -> ExternalService: call external interface if needed
-ScheduleService -> CourseRepository: save updated entity
-ScheduleService -> SchedulePlanRepository: query or update related data
-ScheduleService --> Controller: result DTO
-Controller --> User: HTTP response
-\end{verbatim}
-\end{quote}
+\ExamDetailedSequenceDiagram{课程排课与冲突检测}{ScheduleService}{scheduleCourse}{CourseRepository}{SchedulePlanRepository}
 
 
 
@@ -368,17 +338,13 @@ Controller --> User: HTTP response
 \subsection{七、设计模式题详解}
 
 
-Strategy 设计：
+Strategy 类图：
 
+\ExamStrategyDiagram{Context}{Strategy}{TeacherConflictStrategy}{ClassroomConflictStrategy}{StudentGroupConflictStrategy}
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Context -> Strategy
-Strategy <|.. TeacherConflictStrategy
-Strategy <|.. ClassroomConflictStrategy
-Strategy <|.. StudentGroupConflictStrategy
-
 场景：教师、教室、学生选课冲突检测
 做法：把变化算法抽成 Strategy 接口，Context 只依赖接口。
 原则：OCP、DIP、SRP。

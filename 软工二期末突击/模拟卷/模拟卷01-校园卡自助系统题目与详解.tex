@@ -5,6 +5,7 @@
 \usepackage{longtable}
 \usepackage{verbatim}
 \usepackage{xcolor}
+\input{diagram-macros.tex}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
@@ -65,7 +66,7 @@
 \begin{enumerate}
 \item 识别问题域概念类。
 \item 写出概念类之间的关联、聚合、组合或继承。
-\item 写出关键属性并给出文字版类图。
+\item 写出关键属性并画出类图。
 \end{enumerate}
 
 
@@ -118,7 +119,7 @@
 
 \begin{enumerate}
 \item 写出模式适用原因。
-\item 画出文字版类图。
+\item 画出类图。
 \item 说明使用到的设计原则。
 \item 说明优缺点。
 \end{enumerate}
@@ -200,28 +201,30 @@
 \subsection{三、需求分析题详解}
 
 
-概念类图文字答案：
+概念类图答案：
 
+\begin{center}
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}
+\node[umlbox] (user) at (0,2.3) {User};
+\node[umlbox] (campusCard) at (4,2.3) {CampusCard};
+\node[umlbox] (bankCard) at (0,0.4) {BankCard};
+\node[umlbox] (rechargeRecord) at (8,2.3) {RechargeRecord};
+\node[umlbox] (paymentOrder) at (12,2.3) {PaymentOrder};
+\node[umlbox] (transactionDetail) at (4,0.4) {TransactionDetail};
+\draw (user) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (campusCard);
+\draw (user) -- node[left,pos=0.12,font=\scriptsize] {1} node[left,pos=0.88,font=\scriptsize] {0..*} (bankCard);
+\draw (campusCard) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (rechargeRecord);
+\draw (rechargeRecord) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {1} (paymentOrder);
+\draw (campusCard) -- node[right,pos=0.12,font=\scriptsize] {1} node[right,pos=0.88,font=\scriptsize] {0..*} (transactionDetail);
+\end{tikzpicture}}
+\end{center}
+
+关键属性：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-类：
-User
-CampusCard
-BankCard
-RechargeRecord
-PaymentOrder
-TransactionDetail
-
-关系：
-User 1 -- 0..* CampusCard
-User 1 -- 0..* BankCard
-CampusCard 1 -- 0..* RechargeRecord
-RechargeRecord 1 -- 1 PaymentOrder
-CampusCard 1 -- 0..* TransactionDetail
-
-关键属性：
 User(userId, name, role)
 CampusCard(cardNo, balance, status)
 BankCard(bankCardNo, bankName, ownerName)
@@ -241,27 +244,7 @@ PaymentOrder(orderNo, payChannel, payStatus)
 物理包图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-客户端 / 浏览器
-  html
-  css
-  javascript
-  presentation
-        |
-        | HTTP + REST API + JSON
-        v
-服务器端
-  controller/api
-  service 逻辑层
-  repository 数据层接口
-  domain/entity
-  modules
-  card recharge payment record user
-  database
-\end{verbatim}
-\end{quote}
+\ExamPhysicalPackageDiagram{card \quad recharge \quad payment \quad record \quad user}
 
 
 
@@ -321,20 +304,7 @@ public class RechargeController {
 顺序图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-User -> Controller: submit 充值与查询充值记录 request
-Controller -> RechargeService: recharge(command)
-RechargeService -> CampusCardRepository: query domain object
-RechargeService -> Strategy/Domain: check rules and calculate result
-RechargeService -> ExternalService: call external interface if needed
-RechargeService -> CampusCardRepository: save updated entity
-RechargeService -> RechargeRecordRepository: query or update related data
-RechargeService --> Controller: result DTO
-Controller --> User: HTTP response
-\end{verbatim}
-\end{quote}
+\ExamDetailedSequenceDiagram{充值与查询充值记录}{RechargeService}{recharge}{CampusCardRepository}{RechargeRecordRepository}
 
 
 
@@ -366,17 +336,13 @@ Controller --> User: HTTP response
 \subsection{七、设计模式题详解}
 
 
-Strategy 设计：
+Strategy 类图：
 
+\ExamStrategyDiagram{Context}{Strategy}{FixedAmountCouponStrategy}{RateCouponStrategy}{WechatPaymentStrategy}
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Context -> Strategy
-Strategy <|.. FixedAmountCouponStrategy
-Strategy <|.. RateCouponStrategy
-Strategy <|.. WechatPaymentStrategy
-
 场景：优惠券和支付渠道
 做法：把变化算法抽成 Strategy 接口，Context 只依赖接口。
 原则：OCP、DIP、SRP。

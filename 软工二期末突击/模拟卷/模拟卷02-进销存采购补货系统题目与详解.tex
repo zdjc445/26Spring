@@ -5,6 +5,7 @@
 \usepackage{longtable}
 \usepackage{verbatim}
 \usepackage{xcolor}
+\input{diagram-macros.tex}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
@@ -65,7 +66,7 @@
 \begin{enumerate}
 \item 识别问题域概念类。
 \item 写出概念类之间的关联、聚合、组合或继承。
-\item 写出关键属性并给出文字版类图。
+\item 写出关键属性并画出类图。
 \end{enumerate}
 
 
@@ -118,7 +119,7 @@
 
 \begin{enumerate}
 \item 写出模式适用原因。
-\item 画出文字版类图。
+\item 画出类图。
 \item 说明使用到的设计原则。
 \item 说明优缺点。
 \end{enumerate}
@@ -200,30 +201,32 @@
 \subsection{三、需求分析题详解}
 
 
-概念类图文字答案：
+概念类图答案：
 
+\begin{center}
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}
+\node[umlbox] (manager) at (0,2.6) {WarehouseManager};
+\node[umlbox] (rule) at (4,2.6) {ReorderRule};
+\node[umlbox] (product) at (8,2.6) {Product};
+\node[umlbox] (inventory) at (12,2.6) {Inventory};
+\node[umlbox] (keeper) at (0,0.3) {StockKeeper};
+\node[umlbox] (run) at (4,0.3) {ScheduleRun};
+\node[umlbox] (inquiry) at (8,0.3) {PurchaseInquiry};
+\draw (manager) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (rule);
+\draw (keeper) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (run);
+\draw (product) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {1} (inventory);
+\draw (rule) -- node[above,pos=0.12,font=\scriptsize] {*} node[above,pos=0.88,font=\scriptsize] {1} (product);
+\draw (run) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (inquiry);
+\draw (inquiry) -- node[right,pos=0.12,font=\scriptsize] {*} node[right,pos=0.88,font=\scriptsize] {*} (product);
+\end{tikzpicture}}
+\end{center}
+
+关键属性：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-类：
-WarehouseManager
-StockKeeper
-Product
-Inventory
-ReorderRule
-ScheduleRun
-PurchaseInquiry
-
-关系：
-WarehouseManager 1 -- 0..* ReorderRule
-StockKeeper 1 -- 0..* ScheduleRun
-Product 1 -- 1 Inventory
-ReorderRule * -- 1 Product
-ScheduleRun 1 -- 0..* PurchaseInquiry
-PurchaseInquiry * -- * Product
-
-关键属性：
 Product(productId, name, supplierId)
 Inventory(productId, quantity, safetyStock)
 ReorderRule(ruleId, threshold, leadDays)
@@ -243,27 +246,7 @@ PurchaseInquiry(inquiryNo, status, createdAt)
 物理包图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-客户端 / 浏览器
-  html
-  css
-  javascript
-  presentation
-        |
-        | HTTP + REST API + JSON
-        v
-服务器端
-  controller/api
-  service 逻辑层
-  repository 数据层接口
-  domain/entity
-  modules
-  sales purchase inventory invoice accounting
-  database
-\end{verbatim}
-\end{quote}
+\ExamPhysicalPackageDiagram{sales \quad purchase \quad inventory \quad invoice \quad accounting}
 
 
 
@@ -323,20 +306,7 @@ public class ReplenishmentController {
 顺序图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-User -> Controller: submit 自动生成采购询价单 request
-Controller -> ReplenishmentService: runSchedule(command)
-ReplenishmentService -> InventoryRepository: query domain object
-ReplenishmentService -> Strategy/Domain: check rules and calculate result
-ReplenishmentService -> ExternalService: call external interface if needed
-ReplenishmentService -> InventoryRepository: save updated entity
-ReplenishmentService -> PurchaseInquiryRepository: query or update related data
-ReplenishmentService --> Controller: result DTO
-Controller --> User: HTTP response
-\end{verbatim}
-\end{quote}
+\ExamDetailedSequenceDiagram{自动生成采购询价单}{ReplenishmentService}{runSchedule}{InventoryRepository}{PurchaseInquiryRepository}
 
 
 
@@ -368,17 +338,13 @@ Controller --> User: HTTP response
 \subsection{七、设计模式题详解}
 
 
-Strategy 设计：
+Strategy 类图：
 
+\ExamStrategyDiagram{Context}{Strategy}{FixedThresholdRule}{LeadTimeRule}{PromotionRule}
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Context -> Strategy
-Strategy <|.. FixedThresholdRule
-Strategy <|.. LeadTimeRule
-Strategy <|.. PromotionRule
-
 场景：订货规则计算
 做法：把变化算法抽成 Strategy 接口，Context 只依赖接口。
 原则：OCP、DIP、SRP。

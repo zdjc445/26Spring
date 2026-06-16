@@ -5,6 +5,7 @@
 \usepackage{longtable}
 \usepackage{verbatim}
 \usepackage{xcolor}
+\input{diagram-macros.tex}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
@@ -65,7 +66,7 @@
 \begin{enumerate}
 \item 识别问题域概念类。
 \item 写出概念类之间的关联、聚合、组合或继承。
-\item 写出关键属性并给出文字版类图。
+\item 写出关键属性并画出类图。
 \end{enumerate}
 
 
@@ -118,7 +119,7 @@
 
 \begin{enumerate}
 \item 写出模式适用原因。
-\item 画出文字版类图。
+\item 画出类图。
 \item 说明使用到的设计原则。
 \item 说明优缺点。
 \end{enumerate}
@@ -200,30 +201,32 @@
 \subsection{三、需求分析题详解}
 
 
-概念类图文字答案：
+概念类图答案：
 
+\begin{center}
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}
+\node[umlbox] (patient) at (0,2.6) {Patient};
+\node[umlbox] (appointment) at (4,2.6) {Appointment};
+\node[umlbox] (doctor) at (8,2.6) {Doctor};
+\node[umlbox] (department) at (12,2.6) {Department};
+\node[umlbox] (timeslot) at (4,0.5) {TimeSlot};
+\node[umlbox] (payment) at (0,0.5) {PaymentOrder};
+\node[umlbox] (refund) at (8,0.5) {RefundRecord};
+\draw (patient) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (appointment);
+\draw (doctor) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (appointment);
+\draw (doctor) -- node[above,pos=0.12,font=\scriptsize] {*} node[above,pos=0.88,font=\scriptsize] {1} (department);
+\draw (appointment) -- node[right,pos=0.12,font=\scriptsize] {1} node[right,pos=0.88,font=\scriptsize] {1} (timeslot);
+\draw (appointment) -- node[below,pos=0.12,font=\scriptsize] {1} node[below,pos=0.88,font=\scriptsize] {0..1} (payment);
+\draw (appointment) -- node[below,pos=0.12,font=\scriptsize] {1} node[below,pos=0.88,font=\scriptsize] {0..1} (refund);
+\end{tikzpicture}}
+\end{center}
+
+关键属性：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-类：
-Patient
-Doctor
-Department
-Appointment
-TimeSlot
-PaymentOrder
-RefundRecord
-
-关系：
-Patient 1 -- 0..* Appointment
-Doctor 1 -- 0..* Appointment
-Doctor * -- 1 Department
-Appointment 1 -- 1 TimeSlot
-Appointment 1 -- 0..1 PaymentOrder
-Appointment 1 -- 0..1 RefundRecord
-
-关键属性：
 Patient(patientId, name, phone)
 Doctor(doctorId, name, title)
 Department(deptId, name)
@@ -243,27 +246,7 @@ PaymentOrder(orderNo, amount, status)
 物理包图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-客户端 / 浏览器
-  html
-  css
-  javascript
-  presentation
-        |
-        | HTTP + REST API + JSON
-        v
-服务器端
-  controller/api
-  service 逻辑层
-  repository 数据层接口
-  domain/entity
-  modules
-  patient doctor appointment payment refund
-  database
-\end{verbatim}
-\end{quote}
+\ExamPhysicalPackageDiagram{patient \quad doctor \quad appointment \quad payment \quad refund}
 
 
 
@@ -323,20 +306,7 @@ public class AppointmentController {
 顺序图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-User -> Controller: submit 预约挂号与退号 request
-Controller -> AppointmentService: bookAppointment(command)
-AppointmentService -> AppointmentRepository: query domain object
-AppointmentService -> Strategy/Domain: check rules and calculate result
-AppointmentService -> ExternalService: call external interface if needed
-AppointmentService -> AppointmentRepository: save updated entity
-AppointmentService -> DoctorScheduleRepository: query or update related data
-AppointmentService --> Controller: result DTO
-Controller --> User: HTTP response
-\end{verbatim}
-\end{quote}
+\ExamDetailedSequenceDiagram{预约挂号与退号}{AppointmentService}{bookAppointment}{AppointmentRepository}{DoctorScheduleRepository}
 
 
 
@@ -368,18 +338,13 @@ Controller --> User: HTTP response
 \subsection{七、设计模式题详解}
 
 
-Abstract Factory 设计：
+Abstract Factory 类图：
 
+\ExamAbstractFactoryDiagram
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Client -> HisDaoFactory
-HisDaoFactory -> PatientDao
-HisDaoFactory -> AppointmentDao
-NjuHisDaoFactory creates one product family
-PartnerHisDaoFactory creates another product family
-
 原则：DIP、OCP、面向接口编程。
 作用：业务逻辑依赖 DAO 抽象，替换 HIS 数据源时替换工厂和产品族。
 \end{verbatim}

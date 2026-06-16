@@ -5,6 +5,7 @@
 \usepackage{longtable}
 \usepackage{verbatim}
 \usepackage{xcolor}
+\input{diagram-macros.tex}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
@@ -65,7 +66,7 @@
 \begin{enumerate}
 \item 识别问题域概念类。
 \item 写出概念类之间的关联、聚合、组合或继承。
-\item 写出关键属性并给出文字版类图。
+\item 写出关键属性并画出类图。
 \end{enumerate}
 
 
@@ -118,7 +119,7 @@
 
 \begin{enumerate}
 \item 写出模式适用原因。
-\item 画出文字版类图。
+\item 画出类图。
 \item 说明使用到的设计原则。
 \item 说明优缺点。
 \end{enumerate}
@@ -200,30 +201,32 @@
 \subsection{三、需求分析题详解}
 
 
-概念类图文字答案：
+概念类图答案：
 
+\begin{center}
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}
+\node[umlbox] (user) at (0,2.6) {User};
+\node[umlbox] (reservation) at (4,2.6) {Reservation};
+\node[umlbox] (device) at (8,2.6) {Device};
+\node[umlbox] (lab) at (12,2.6) {Lab};
+\node[umlbox] (ticket) at (8,0.5) {RepairTicket};
+\node[umlbox] (maintenance) at (12,0.5) {MaintenanceRecord};
+\node[umlbox] (notification) at (0,0.5) {Notification};
+\draw (user) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (reservation);
+\draw (reservation) -- node[above,pos=0.12,font=\scriptsize] {*} node[above,pos=0.88,font=\scriptsize] {1} (device);
+\draw (device) -- node[above,pos=0.12,font=\scriptsize] {*} node[above,pos=0.88,font=\scriptsize] {1} (lab);
+\draw (device) -- node[right,pos=0.12,font=\scriptsize] {1} node[right,pos=0.88,font=\scriptsize] {0..*} (ticket);
+\draw (ticket) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (maintenance);
+\draw (notification) -- node[left,pos=0.12,font=\scriptsize] {*} node[left,pos=0.88,font=\scriptsize] {1} (user);
+\end{tikzpicture}}
+\end{center}
+
+关键属性：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-类：
-User
-Device
-Reservation
-RepairTicket
-MaintenanceRecord
-Lab
-Notification
-
-关系：
-User 1 -- 0..* Reservation
-Reservation * -- 1 Device
-Device * -- 1 Lab
-Device 1 -- 0..* RepairTicket
-RepairTicket 1 -- 0..* MaintenanceRecord
-Notification * -- 1 User
-
-关键属性：
 User(userId, name, role)
 Device(deviceId, name, status)
 Reservation(reservationNo, startTime, endTime, status)
@@ -243,27 +246,7 @@ MaintenanceRecord(recordId, result, finishedAt)
 物理包图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-客户端 / 浏览器
-  html
-  css
-  javascript
-  presentation
-        |
-        | HTTP + REST API + JSON
-        v
-服务器端
-  controller/api
-  service 逻辑层
-  repository 数据层接口
-  domain/entity
-  modules
-  device reservation repair maintenance notification
-  database
-\end{verbatim}
-\end{quote}
+\ExamPhysicalPackageDiagram{device \quad reservation \quad repair \quad maintenance \quad notification}
 
 
 
@@ -323,20 +306,7 @@ public class DeviceReservationController {
 顺序图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-User -> Controller: submit 设备预约、归还与报修 request
-Controller -> DeviceReservationService: reserve(command)
-DeviceReservationService -> DeviceRepository: query domain object
-DeviceReservationService -> Strategy/Domain: check rules and calculate result
-DeviceReservationService -> ExternalService: call external interface if needed
-DeviceReservationService -> DeviceRepository: save updated entity
-DeviceReservationService -> ReservationRepository: query or update related data
-DeviceReservationService --> Controller: result DTO
-Controller --> User: HTTP response
-\end{verbatim}
-\end{quote}
+\ExamDetailedSequenceDiagram{设备预约、归还与报修}{DeviceReservationService}{reserve}{DeviceRepository}{ReservationRepository}
 
 
 
@@ -368,18 +338,13 @@ Controller --> User: HTTP response
 \subsection{七、设计模式题详解}
 
 
-Iterator 设计：
+Iterator 类图：
 
+\ExamIteratorDiagram
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Aggregate: DeviceCollection
-Iterator: DeviceIterator
-ConcreteIterator:
-AvailableDeviceIterator
-NearestLabDeviceIterator
-
 作用：客户端按统一接口遍历设备，不依赖设备集合的内部结构。
 原则：封装内部表示、SRP。
 \end{verbatim}

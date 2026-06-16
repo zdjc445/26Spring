@@ -5,6 +5,7 @@
 \usepackage{longtable}
 \usepackage{verbatim}
 \usepackage{xcolor}
+\input{diagram-macros.tex}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
@@ -65,7 +66,7 @@
 \begin{enumerate}
 \item 识别问题域概念类。
 \item 写出概念类之间的关联、聚合、组合或继承。
-\item 写出关键属性并给出文字版类图。
+\item 写出关键属性并画出类图。
 \end{enumerate}
 
 
@@ -118,7 +119,7 @@
 
 \begin{enumerate}
 \item 写出模式适用原因。
-\item 画出文字版类图。
+\item 画出类图。
 \item 说明使用到的设计原则。
 \item 说明优缺点。
 \end{enumerate}
@@ -200,30 +201,32 @@
 \subsection{三、需求分析题详解}
 
 
-概念类图文字答案：
+概念类图答案：
 
+\begin{center}
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}
+\node[umlbox] (student) at (0,2.6) {Student};
+\node[umlbox] (enrollment) at (4,2.6) {Enrollment};
+\node[umlbox] (offering) at (8,2.6) {CourseOffering};
+\node[umlbox] (waiting) at (12,3.6) {WaitingList};
+\node[umlbox] (capacity) at (12,1.6) {CapacityRule};
+\node[umlbox] (prereq) at (8,0.4) {PrerequisiteRule};
+\node[umlbox] (transcript) at (0,0.4) {Transcript};
+\draw (student) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (enrollment);
+\draw (enrollment) -- node[above,pos=0.12,font=\scriptsize] {*} node[above,pos=0.88,font=\scriptsize] {1} (offering);
+\draw (offering) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..1} (waiting);
+\draw (offering) -- node[below,pos=0.12,font=\scriptsize] {1} node[below,pos=0.88,font=\scriptsize] {1} (capacity);
+\draw (prereq) -- node[right,pos=0.12,font=\scriptsize] {*} node[right,pos=0.88,font=\scriptsize] {1} (offering);
+\draw (transcript) -- node[left,pos=0.12,font=\scriptsize] {1} node[left,pos=0.88,font=\scriptsize] {1} (student);
+\end{tikzpicture}}
+\end{center}
+
+关键属性：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-类：
-Student
-CourseOffering
-Enrollment
-WaitingList
-CapacityRule
-PrerequisiteRule
-Transcript
-
-关系：
-Student 1 -- 0..* Enrollment
-Enrollment * -- 1 CourseOffering
-CourseOffering 1 -- 0..1 WaitingList
-CourseOffering 1 -- 1 CapacityRule
-PrerequisiteRule * -- 1 CourseOffering
-Transcript 1 -- 1 Student
-
-关键属性：
 Student(studentId, name, grade)
 CourseOffering(offeringId, capacity, timeSlot)
 Enrollment(status, enrolledAt)
@@ -243,27 +246,7 @@ Transcript(studentId, passedCourses)
 物理包图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-客户端 / 浏览器
-  html
-  css
-  javascript
-  presentation
-        |
-        | HTTP + REST API + JSON
-        v
-服务器端
-  controller/api
-  service 逻辑层
-  repository 数据层接口
-  domain/entity
-  modules
-  student course enrollment waiting notification
-  database
-\end{verbatim}
-\end{quote}
+\ExamPhysicalPackageDiagram{student \quad course \quad enrollment \quad waiting \quad notification}
 
 
 
@@ -323,20 +306,7 @@ public class EnrollmentController {
 顺序图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-User -> Controller: submit 选课、退课与候补 request
-Controller -> EnrollmentService: enroll(command)
-EnrollmentService -> CourseOfferingRepository: query domain object
-EnrollmentService -> Strategy/Domain: check rules and calculate result
-EnrollmentService -> ExternalService: call external interface if needed
-EnrollmentService -> CourseOfferingRepository: save updated entity
-EnrollmentService -> EnrollmentRepository: query or update related data
-EnrollmentService --> Controller: result DTO
-Controller --> User: HTTP response
-\end{verbatim}
-\end{quote}
+\ExamDetailedSequenceDiagram{选课、退课与候补}{EnrollmentService}{enroll}{CourseOfferingRepository}{EnrollmentRepository}
 
 
 
@@ -368,17 +338,13 @@ Controller --> User: HTTP response
 \subsection{七、设计模式题详解}
 
 
-Strategy 设计：
+Strategy 类图：
 
+\ExamStrategyDiagram{Context}{Strategy}{CapacityCheckStrategy}{PrerequisiteCheckStrategy}{TimeConflictCheckStrategy}
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Context -> Strategy
-Strategy <|.. CapacityCheckStrategy
-Strategy <|.. PrerequisiteCheckStrategy
-Strategy <|.. TimeConflictCheckStrategy
-
 场景：选课资格、容量、先修课校验
 做法：把变化算法抽成 Strategy 接口，Context 只依赖接口。
 原则：OCP、DIP、SRP。

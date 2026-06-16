@@ -5,6 +5,7 @@
 \usepackage{longtable}
 \usepackage{verbatim}
 \usepackage{xcolor}
+\input{diagram-macros.tex}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
@@ -65,7 +66,7 @@
 \begin{enumerate}
 \item 识别问题域概念类。
 \item 写出概念类之间的关联、聚合、组合或继承。
-\item 写出关键属性并给出文字版类图。
+\item 写出关键属性并画出类图。
 \end{enumerate}
 
 
@@ -118,7 +119,7 @@
 
 \begin{enumerate}
 \item 写出模式适用原因。
-\item 画出文字版类图。
+\item 画出类图。
 \item 说明使用到的设计原则。
 \item 说明优缺点。
 \end{enumerate}
@@ -200,30 +201,32 @@
 \subsection{三、需求分析题详解}
 
 
-概念类图文字答案：
+概念类图答案：
 
+\begin{center}
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}
+\node[umlbox] (borrower) at (0,2.6) {Borrower};
+\node[umlbox] (loan) at (4,2.6) {Loan};
+\node[umlbox] (copy) at (8,2.6) {BookCopy};
+\node[umlbox] (title) at (12,2.6) {BookTitle};
+\node[umlbox] (reservation) at (4,0.4) {Reservation};
+\node[umlbox] (notice) at (4,-1.5) {OverdueNotice};
+\node[umlbox] (librarian) at (0,0.4) {Librarian};
+\draw (borrower) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {0..*} (loan);
+\draw (loan) -- node[above,pos=0.12,font=\scriptsize] {1} node[above,pos=0.88,font=\scriptsize] {1..*} (copy);
+\draw (copy) -- node[above,pos=0.12,font=\scriptsize] {*} node[above,pos=0.88,font=\scriptsize] {1} (title);
+\draw (borrower) -- node[below,pos=0.12,font=\scriptsize] {1} node[below,pos=0.88,font=\scriptsize] {0..*} (reservation);
+\draw (reservation) -- node[below,pos=0.12,font=\scriptsize] {*} node[below,pos=0.88,font=\scriptsize] {1} (title);
+\draw (notice) -- node[right,pos=0.12,font=\scriptsize] {*} node[right,pos=0.88,font=\scriptsize] {1} (loan);
+\end{tikzpicture}}
+\end{center}
+
+关键属性：
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-类：
-Borrower
-BookTitle
-BookCopy
-Loan
-Reservation
-Librarian
-OverdueNotice
-
-关系：
-Borrower 1 -- 0..* Loan
-Loan 1 -- 1..* BookCopy
-BookCopy * -- 1 BookTitle
-Borrower 1 -- 0..* Reservation
-Reservation * -- 1 BookTitle
-OverdueNotice * -- 1 Loan
-
-关键属性：
 Borrower(borrowerId, name, type)
 BookTitle(isbn, title, author)
 BookCopy(copyId, status)
@@ -243,27 +246,7 @@ Reservation(reservationId, priority, createdAt)
 物理包图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-客户端 / 浏览器
-  html
-  css
-  javascript
-  presentation
-        |
-        | HTTP + REST API + JSON
-        v
-服务器端
-  controller/api
-  service 逻辑层
-  repository 数据层接口
-  domain/entity
-  modules
-  catalog loan reservation notice borrower
-  database
-\end{verbatim}
-\end{quote}
+\ExamPhysicalPackageDiagram{catalog \quad loan \quad reservation \quad notice \quad borrower}
 
 
 
@@ -323,20 +306,7 @@ public class LoanController {
 顺序图：
 
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-User -> Controller: submit 借书、还书与预约 request
-Controller -> LoanService: borrowBooks(command)
-LoanService -> BookCopyRepository: query domain object
-LoanService -> Strategy/Domain: check rules and calculate result
-LoanService -> ExternalService: call external interface if needed
-LoanService -> BookCopyRepository: save updated entity
-LoanService -> ReservationRepository: query or update related data
-LoanService --> Controller: result DTO
-Controller --> User: HTTP response
-\end{verbatim}
-\end{quote}
+\ExamDetailedSequenceDiagram{借书、还书与预约}{LoanService}{borrowBooks}{BookCopyRepository}{ReservationRepository}
 
 
 
@@ -368,19 +338,13 @@ Controller --> User: HTTP response
 \subsection{七、设计模式题详解}
 
 
-Observer 设计：
+Observer 类图：
 
+\ExamObserverDiagram
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Subject: NoticeSubject
-Observer: NoticeObserver
-ConcreteObserver:
-EmailNoticeDisplay
-SmsNoticeDisplay
-AppNoticeDisplay
-
 流程：借阅、预约或逾期状态变化后，Subject 调用 notifyObservers，多个通知端同步更新。
 原则：OCP、低耦合。
 \end{verbatim}
