@@ -4,6 +4,7 @@
 \usepackage{verbatim}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
+\definecolor{answerblue}{RGB}{18,82,145}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
@@ -26,7 +27,7 @@
 \section*{卷面说明}
 \addcontentsline{toc}{section}{卷面说明}
 
-本卷只针对前面四套卷没有完全展开的 PPT 内容。题型按知识点适合方式安排：
+本卷只针对前面四套卷没有完全展开的 PPT 内容。题型按知识点适合方式安排。本版采用“题目后紧跟参考答案”的排版，便于复习时对照。
 
 \begin{quote}
 \footnotesize
@@ -38,11 +39,10 @@
 \end{verbatim}
 \end{quote}
 
-\section*{A 卷题目}
-\addcontentsline{toc}{section}{A 卷题目}
+\section*{一、背景型简答：IR、NFA/DFA、SSA（20 分）}
+\addcontentsline{toc}{section}{一、背景型简答：IR、NFA/DFA、SSA（20 分）}
 
-\subsection*{一、背景型简答：IR、NFA/DFA、SSA（20 分）}
-\addcontentsline{toc}{subsection}{一、背景型简答：IR、NFA/DFA、SSA（20 分）}
+\subsection*{题目}
 
 回答下列问题：
 
@@ -51,103 +51,8 @@
 \noindent 3. 说明 SSA 为什么有利于优化。\\
 \noindent 4. 说明工业编译器中使用 SSA 或类似 SSA 形式的原因。\\
 
-\subsection*{二、理论细节：SDD、SDT、属性文法（20 分）}
-\addcontentsline{toc}{subsection}{二、理论细节：SDD、SDT、属性文法（20 分）}
-
-回答下列问题：
-
-\noindent 1. 说明 SDD 和 SDT 的区别。\\
-\noindent 2. 说明属性文法和带副作用语义动作的区别。\\
-\noindent 3. 为什么属性依赖图中存在环时，属性值无法正常求值。\\
-\noindent 4. 什么是受控副作用，写出两个基本要求。\\
-
-\subsection*{三、过程型小题：LR 表格驱动分析器（20 分）}
-\addcontentsline{toc}{subsection}{三、过程型小题：LR 表格驱动分析器（20 分）}
-
-已知某 LR 分析表有如下条目：
-
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-ACTION[0,id] = s1
-ACTION[1,+]  = r(E -> id)
-ACTION[1,$]  = r(E -> id)
-ACTION[2,+]  = s3
-ACTION[2,$]  = acc
-ACTION[3,id] = s4
-ACTION[4,$]  = r(E -> E + id)
-
-GOTO[0,E] = 2
-\end{verbatim}
-\end{quote}
-
-输入串：
-
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-id + id $
-\end{verbatim}
-\end{quote}
-
-要求：
-
-\noindent 1. 说明 ACTION 表和 GOTO 表分别在什么时候使用。\\
-\noindent 2. 写出分析过程中栈和输入的大致变化。\\
-\noindent 3. 说明什么时候接受输入。\\
-
-\subsection*{四、次级流程题：通用左递归消除（20 分）}
-\addcontentsline{toc}{subsection}{四、次级流程题：通用左递归消除（20 分）}
-
-文法：
-
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-S -> A a | b
-A -> S d | c
-\end{verbatim}
-\end{quote}
-
-按非终结符顺序：
-
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-S, A
-\end{verbatim}
-\end{quote}
-
-\noindent 1. 判断该文法是否存在间接左递归。\\
-\noindent 2. 按通用左递归消除思路，先把 \texttt{A -> S d} 中的 \texttt{S} 用 \texttt{S} 的产生式替换。\\
-\noindent 3. 消除替换后 \texttt{A} 的直接左递归。\\
-
-\subsection*{五、次级流程题：数组类型的 L 属性定义（20 分）}
-\addcontentsline{toc}{subsection}{五、次级流程题：数组类型的 L 属性定义（20 分）}
-
-考虑数组类型声明：
-
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-T -> B C
-B -> int | float
-C -> [ num ] C | epsilon
-\end{verbatim}
-\end{quote}
-
-设计一个 L 属性 SDD，用于计算类型 \texttt{T.type}。要求：
-
-\noindent 1. \texttt{B.type} 表示基本类型。\\
-\noindent 2. \texttt{C.in} 表示从左侧传入的已有类型。\\
-\noindent 3. \texttt{C.type} 表示加上数组维度后的类型。\\
-\noindent 4. 对声明形式 \texttt{int[10][20]} 写出类型构造顺序。\\
-
-\section*{B 简明答案}
-\addcontentsline{toc}{section}{B 简明答案}
-
-\subsection*{一、背景型简答答案}
-\addcontentsline{toc}{subsection}{一、背景型简答答案}
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
 
 高层 IR 和低层 IR：
 
@@ -190,8 +95,22 @@ SSA 能简化数据流分析，让优化算法更容易实现。
 \end{verbatim}
 \end{quote}
 
-\subsection*{二、理论细节答案}
-\addcontentsline{toc}{subsection}{二、理论细节答案}
+\endgroup
+
+\section*{二、理论细节：SDD、SDT、属性文法（20 分）}
+\addcontentsline{toc}{section}{二、理论细节：SDD、SDT、属性文法（20 分）}
+
+\subsection*{题目}
+
+回答下列问题：
+
+\noindent 1. 说明 SDD 和 SDT 的区别。\\
+\noindent 2. 说明属性文法和带副作用语义动作的区别。\\
+\noindent 3. 为什么属性依赖图中存在环时，属性值无法正常求值。\\
+\noindent 4. 什么是受控副作用，写出两个基本要求。\\
+
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
 
 SDD 和 SDT：
 
@@ -236,8 +155,47 @@ SDT 是语法制导翻译，偏实现，把语义动作嵌入到产生式中，�
 \end{verbatim}
 \end{quote}
 
-\subsection*{三、过程型小题答案}
-\addcontentsline{toc}{subsection}{三、过程型小题答案}
+\endgroup
+
+\section*{三、过程型小题：LR 表格驱动分析器（20 分）}
+\addcontentsline{toc}{section}{三、过程型小题：LR 表格驱动分析器（20 分）}
+
+\subsection*{题目}
+
+已知某 LR 分析表有如下条目：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+ACTION[0,id] = s1
+ACTION[1,+]  = r(E -> id)
+ACTION[1,$]  = r(E -> id)
+ACTION[2,+]  = s3
+ACTION[2,$]  = acc
+ACTION[3,id] = s4
+ACTION[4,$]  = r(E -> E + id)
+
+GOTO[0,E] = 2
+\end{verbatim}
+\end{quote}
+
+输入串：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+id + id $
+\end{verbatim}
+\end{quote}
+
+要求：
+
+\noindent 1. 说明 ACTION 表和 GOTO 表分别在什么时候使用。\\
+\noindent 2. 写出分析过程中栈和输入的大致变化。\\
+\noindent 3. 说明什么时候接受输入。\\
+
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
 
 ACTION 和 GOTO：
 
@@ -274,8 +232,38 @@ GOTO[state, 非终结符] 用于规约出非终结符之后决定进入哪个状
 \end{verbatim}
 \end{quote}
 
-\subsection*{四、通用左递归消除答案}
-\addcontentsline{toc}{subsection}{四、通用左递归消除答案}
+\endgroup
+
+\section*{四、次级流程题：通用左递归消除（20 分）}
+\addcontentsline{toc}{section}{四、次级流程题：通用左递归消除（20 分）}
+
+\subsection*{题目}
+
+文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> A a | b
+A -> S d | c
+\end{verbatim}
+\end{quote}
+
+按非终结符顺序：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S, A
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 判断该文法是否存在间接左递归。\\
+\noindent 2. 按通用左递归消除思路，先把 \texttt{A -> S d} 中的 \texttt{S} 用 \texttt{S} 的产生式替换。\\
+\noindent 3. 消除替换后 \texttt{A} 的直接左递归。\\
+
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
 
 原文法：
 
@@ -335,8 +323,33 @@ A' -> a d A' | epsilon
 \end{verbatim}
 \end{quote}
 
-\subsection*{五、数组类型 L 属性定义答案}
-\addcontentsline{toc}{subsection}{五、数组类型 L 属性定义答案}
+\endgroup
+
+\section*{五、次级流程题：数组类型的 L 属性定义（20 分）}
+\addcontentsline{toc}{section}{五、次级流程题：数组类型的 L 属性定义（20 分）}
+
+\subsection*{题目}
+
+考虑数组类型声明：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+T -> B C
+B -> int | float
+C -> [ num ] C | epsilon
+\end{verbatim}
+\end{quote}
+
+设计一个 L 属性 SDD，用于计算类型 \texttt{T.type}。要求：
+
+\noindent 1. \texttt{B.type} 表示基本类型。\\
+\noindent 2. \texttt{C.in} 表示从左侧传入的已有类型。\\
+\noindent 3. \texttt{C.type} 表示加上数组维度后的类型。\\
+\noindent 4. 对声明形式 \texttt{int[10][20]} 写出类型构造顺序。\\
+
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
 
 语义规则：
 
@@ -399,4 +412,532 @@ T.type = array(20, array(10, int))
 如果课程约定数组类型按相反嵌套顺序表示，卷面应按老师 PPT 中的记法调整。
 \end{verbatim}
 \end{quote}
+\endgroup
+
+\section*{六、词法题原型补齐：词素、词法单元与 PPT 原题自动机（20 分）}
+\addcontentsline{toc}{section}{六、词法题原型补齐：词素、词法单元与 PPT 原题自动机（20 分）}
+
+\subsection*{题目}
+
+回答并完成下列小题：
+
+\noindent 1. 说明词素和词法单元的区别。\\
+\noindent 2. 对正则表达式 \texttt{r = (a|b)*a+}，写出一个 Thompson NFA 的边表。\\
+\noindent 3. 按子集构造法写出该 NFA 对应 DFA 的主要状态集合和转移。\\
+\noindent 4. 对密码识别规则写出正则表达式：字符只含 \texttt{a,b,0,1}，必须以字母开头，必须以 \texttt{abb} 结尾，中间不能出现连续两个数字。\\
+
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
+
+词素和词法单元：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+词素是源程序中实际出现的字符序列，例如具体的变量名 count。
+词法单元是词法分析器输出的类别或记号，例如 id、num、if。
+同一个词法单元可以对应很多不同词素。
+\end{verbatim}
+\end{quote}
+
+\texttt{r = (a|b)*a+} 的一种 Thompson NFA 边表：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+0 --epsilon--> 1
+0 --epsilon--> 7
+1 --epsilon--> 2
+1 --epsilon--> 3
+2 --a--> 4
+3 --b--> 5
+4 --epsilon--> 6
+5 --epsilon--> 6
+6 --epsilon--> 1
+6 --epsilon--> 7
+7 --epsilon--> 8
+8 --a--> 9
+9 --a--> 9
+
+起点：0
+终点：9
+\end{verbatim}
+\end{quote}
+
+子集构造的主要状态集合：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+A = epsilon-closure({0}) = {0,1,2,3,7,8}
+B = epsilon-closure(move(A,a)) = {1,2,3,4,6,7,8,9}
+C = epsilon-closure(move(A,b)) = {1,2,3,5,6,7,8}
+\end{verbatim}
+\end{quote}
+
+DFA 转移：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+状态   on a   on b   是否终态
+A      B      C      否
+B      B      C      是
+C      B      C      否
+\end{verbatim}
+\end{quote}
+
+密码识别正则表达式：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+(a|b)((a|b)|0(a|b)|1(a|b))*abb
+\end{verbatim}
+\end{quote}
+
+说明：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+(a|b) 保证以字母开头。
+末尾的 abb 保证以 abb 结尾。
+中间部分每个数字 0 或 1 后面都必须跟一个字母，因此不会出现 00、01、10、11。
+\end{verbatim}
+\end{quote}
+\endgroup
+
+\section*{七、LL(1) 原题文法与二进制小数 SDD（20 分）}
+\addcontentsline{toc}{section}{七、LL(1) 原题文法与二进制小数 SDD（20 分）}
+
+\subsection*{题目}
+
+给定文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> c S | A B
+A -> a A | epsilon
+B -> b B a | d
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 计算 FIRST 集和 FOLLOW 集。\\
+\noindent 2. 构造 LL(1) 预测分析表。\\
+\noindent 3. 判断该文法是否为 LL(1) 文法。\\
+
+再给定文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+S -> L . L | L
+L -> L B | B
+B -> 0 | 1
+\end{verbatim}
+\end{quote}
+
+\noindent 4. 设计 SDD，计算二进制小数对应的十进制值。\\
+\noindent 5. 用该 SDD 计算 \texttt{101.101}。\\
+
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
+
+FIRST 集：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FIRST(A) = { a, epsilon }
+FIRST(B) = { b, d }
+FIRST(S) = { a, b, c, d }
+\end{verbatim}
+\end{quote}
+
+FOLLOW 集：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+FOLLOW(S) = { $ }
+FOLLOW(A) = { b, d }
+FOLLOW(B) = { a, $ }
+\end{verbatim}
+\end{quote}
+
+预测分析表：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M[S,c] = S -> c S
+M[S,a] = S -> A B
+M[S,b] = S -> A B
+M[S,d] = S -> A B
+
+M[A,a] = A -> a A
+M[A,b] = A -> epsilon
+M[A,d] = A -> epsilon
+
+M[B,b] = B -> b B a
+M[B,d] = B -> d
+\end{verbatim}
+\end{quote}
+
+判断：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+每个表项最多只有一条产生式，因此该文法是 LL(1) 文法。
+\end{verbatim}
+\end{quote}
+
+二进制小数 SDD：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+属性：
+v(B)：B 对应的数值
+v(L)：L 对应的数值
+v(S)：S 对应的数值
+l(L)：L 的二进制位数
+
+S -> L1 . L2
+  v(S) = v(L1) + v(L2) / 2 ^ l(L2)
+
+S -> L
+  v(S) = v(L)
+
+L1 -> L2 B
+  v(L1) = 2 * v(L2) + v(B)
+  l(L1) = l(L2) + 1
+
+L -> B
+  v(L) = v(B)
+  l(L) = 1
+
+B -> 0
+  v(B) = 0
+
+B -> 1
+  v(B) = 1
+\end{verbatim}
+\end{quote}
+
+计算 \texttt{101.101}：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+左侧 101：
+v(L1) = 5, l(L1) = 3
+
+右侧 101：
+v(L2) = 5, l(L2) = 3
+
+v(S) = 5 + 5 / 2^3 = 5 + 0.625 = 5.625
+\end{verbatim}
+\end{quote}
+\endgroup
+
+\section*{八、AST 构造 SDD 与语法树结点表示（20 分）}
+\addcontentsline{toc}{section}{八、AST 构造 SDD 与语法树结点表示（20 分）}
+
+\subsection*{题目}
+
+给定表达式文法：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E -> E + T | T
+T -> T * F | F
+F -> ( E ) | id
+\end{verbatim}
+\end{quote}
+
+\noindent 1. 设计构造 AST 的 SDD。\\
+\noindent 2. 说明 AST 结点对象通常需要保存哪些域。\\
+\noindent 3. 画出 \texttt{a + b * c} 的 AST。\\
+
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
+
+构造 AST 的 SDD：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+E -> E1 + T
+  E.node = Node("+", E1.node, T.node)
+
+E -> T
+  E.node = T.node
+
+T -> T1 * F
+  T.node = Node("*", T1.node, F.node)
+
+T -> F
+  T.node = F.node
+
+F -> ( E )
+  F.node = E.node
+
+F -> id
+  F.node = Leaf(id.lexeme)
+\end{verbatim}
+\end{quote}
+
+AST 结点对象的常见域：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+op：内部结点的运算符或语法构造名称。
+children：指向子结点的指针列表。
+value/name：叶子结点保存的词法值或标识符名字。
+type：语义分析后可附加类型信息。
+entry：标识符结点可绑定符号表条目。
+\end{verbatim}
+\end{quote}
+
+\texttt{a + b * c} 的 AST：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+      +
+     / \
+    a   *
+       / \
+      b   c
+\end{verbatim}
+\end{quote}
+\endgroup
+
+\section*{九、IR 分类、设计维度与 phi 实现策略（20 分）}
+\addcontentsline{toc}{section}{九、IR 分类、设计维度与 phi 实现策略（20 分）}
+
+\subsection*{题目}
+
+回答下列问题：
+
+\noindent 1. 说明高层 IR、中层 IR、低层 IR 的区别。\\
+\noindent 2. 列出 IR 设计与分析的关键维度。\\
+\noindent 3. 说明树形 IR、三地址码、SSA、堆栈式 IR 的特点。\\
+\noindent 4. 说明 phi 函数在后端通常如何展开。\\
+
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
+
+高层 IR、中层 IR、低层 IR：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+高层 IR 保留函数、循环、异常、对象等源语言结构，适合高层优化。
+中层 IR 常见形式是三地址码、四元式、SSA 形式的 TAC，兼顾分析和变换。
+低层 IR 接近机器，显式表示寄存器、栈、load/store、分支和调用约定。
+\end{verbatim}
+\end{quote}
+
+IR 设计与分析的关键维度：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+控制流表示：结构化控制流，或显式跳转和基本块图。
+数据表示：三地址临时变量，或堆栈操作数。
+赋值模型：普通赋值，或静态单赋值 SSA。
+内存与地址：显式 load/store，是否暴露别名和指针。
+类型与语义信息：强类型 IR、弱类型 IR，是否保留异常、越界检查、GC 屏障等信息。
+可分析性：是否便于构建 CFG、DFG 和做数据流分析。
+\end{verbatim}
+\end{quote}
+
+常见 IR 范式：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+树形 IR：如 AST，适合前端和早期高层变换，不适合低层优化。
+三地址码：线性、接近机器，便于生成控制流和做数据流分析。
+SSA：每个变量版本只赋值一次，def-use 关系清晰，优化友好。
+堆栈式 IR：操作数隐含在栈上，形式紧凑，但数据依赖不如三地址码显式。
+LLVM IR、Sea-of-Nodes 等工业 IR 也属于常见代表。
+\end{verbatim}
+\end{quote}
+
+phi 函数展开：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+phi 在 SSA 中表示控制流汇合处按前驱选择不同变量版本。
+理想语义可看作并行赋值。
+后端通常在每个前驱基本块末尾插入 move，把对应版本复制到汇合点使用的名字。
+若边上不能直接插入指令，需要拆分边并增加中间块。
+寄存器分配阶段可通过合并不冲突的版本减少复制。
+\end{verbatim}
+\end{quote}
+
+示例：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+L1:
+  x1 = -1
+  goto L3
+L2:
+  x2 = 1
+  goto L3
+L3:
+  x3 = phi(x1 from L1, x2 from L2)
+  y = x3 * a
+
+展开思路：
+L1 末尾插入 x3 = x1
+L2 末尾插入 x3 = x2
+L3 中直接使用 x3
+\end{verbatim}
+\end{quote}
+\endgroup
+
+\section*{十、控制流翻译：穿越、回填表项与布尔值求值（20 分）}
+\addcontentsline{toc}{section}{十、控制流翻译：穿越、回填表项与布尔值求值（20 分）}
+
+\subsection*{题目}
+
+回答并完成下列小题：
+
+\noindent 1. 说明 \texttt{truelist}、\texttt{falselist}、\texttt{nextlist} 的含义。\\
+\noindent 2. 说明 \texttt{makelist}、\texttt{merge}、\texttt{backpatch}、\texttt{nextquad} 的作用。\\
+\noindent 3. 说明标记非终结符 \texttt{M} 和 \texttt{N} 的作用。\\
+\noindent 4. 写出 \texttt{B1 \&\& B2}、\texttt{B1 || B2} 的回填规则。\\
+\noindent 5. 说明“穿越”和 \texttt{fall-through} 的关系。\\
+\noindent 6. 将赋值语句 \texttt{x = a < b \&\& c < d} 翻译为三地址码，要求得到布尔值 \texttt{0} 或 \texttt{1}。\\
+
+\subsection*{\textcolor{answerblue}{参考答案}}
+\begingroup\small\color{answerblue}
+
+列表属性：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+B.truelist：B 为真时应跳转、但目标尚未确定的指令位置列表。
+B.falselist：B 为假时应跳转、但目标尚未确定的指令位置列表。
+S.nextlist：语句 S 执行完后应跳到下一条语句、但目标尚未确定的指令位置列表。
+\end{verbatim}
+\end{quote}
+
+辅助函数：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+makelist(i)：创建只包含指令位置 i 的列表。
+merge(p1, p2)：合并两个指令位置列表。
+backpatch(p, L)：把列表 p 中所有未填目标的跳转指令目标改为 L。
+nextquad：下一条将要生成的三地址指令编号。
+\end{verbatim}
+\end{quote}
+
+标记非终结符：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M -> epsilon
+  M.instr = nextquad
+
+N -> epsilon
+  N.nextlist = makelist(nextquad)
+  emit("goto _")
+\end{verbatim}
+\end{quote}
+
+说明：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+M 用来记录后续代码开始位置，方便前面的跳转回填到这里。
+N 用来生成跳过某段代码的 goto 指令坯，并把它加入 nextlist。
+\end{verbatim}
+\end{quote}
+
+布尔表达式回填规则：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+B -> B1 && M B2
+  backpatch(B1.truelist, M.instr)
+  B.truelist = B2.truelist
+  B.falselist = merge(B1.falselist, B2.falselist)
+
+B -> B1 || M B2
+  backpatch(B1.falselist, M.instr)
+  B.truelist = merge(B1.truelist, B2.truelist)
+  B.falselist = B2.falselist
+
+B -> E1 relop E2
+  B.truelist = makelist(nextquad)
+  emit("if E1 relop E2 goto _")
+  B.falselist = makelist(nextquad)
+  emit("goto _")
+\end{verbatim}
+\end{quote}
+
+穿越与 fall-through：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+穿越是在语法制导翻译中通过继承属性向下传递未确定跳转目标。
+fall-through 表示不生成显式 goto，让控制流自然进入下一条指令。
+在优化控制流翻译时，可以把某些 true 或 false 目标设为 fall，从而减少冗余 goto。
+\end{verbatim}
+\end{quote}
+
+\texttt{x = a < b \&\& c < d} 的一种三地址码：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+if a < b goto L_check2
+goto L_false
+
+L_check2:
+if c < d goto L_true
+goto L_false
+
+L_true:
+x = 1
+goto L_next
+
+L_false:
+x = 0
+
+L_next:
+\end{verbatim}
+\end{quote}
+
+说明：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+这里布尔表达式不是只改变控制流，而是要计算赋值右部的逻辑值。
+因此最终必须把 true 分支落成 x = 1，把 false 分支落成 x = 0。
+\end{verbatim}
+\end{quote}
+\endgroup
+
 \end{document}
