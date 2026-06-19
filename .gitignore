@@ -1,0 +1,11 @@
+# Local extraction, browser, and rendering artifacts
+tmp/
+
+# LaTeX intermediate files
+output/pdf/**/*.aux
+output/pdf/**/*.log
+output/pdf/**/*.out
+output/pdf/**/*.toc
+output/pdf/**/*.fls
+output/pdf/**/*.fdb_latexmk
+output/pdf/**/*.synctex.gz
