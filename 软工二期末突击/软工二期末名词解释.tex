@@ -25,8 +25,31 @@
 \subsection{使用说明}
 
 
-本文件用于背诵名词解释和简答题开头定义。每个名词按卷面可写的短定义整理，展开句只保留能直接拿分的要点。
+本文件按 PPT/ 课件和 软工二课程整理/课程框架与重点名词.md 重新梳理。背诵顺序不按原来的零散名词走，而按软件工程活动链路走：
 
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+为什么需要工程
+-> 怎样管理项目
+-> 怎样把现实问题写成需求
+-> 怎样把需求组织成架构
+-> 怎样把架构细化成类和模块
+-> 怎样写出可维护代码并测试
+-> AI 和工具链如何贯穿全过程
+\end{verbatim}
+\end{quote}
+
+
+记忆方法：
+
+
+\begin{itemize}
+\item 先背每章的“记忆链”，知道概念之间的上下位关系。
+\item 再背名词定义，答题时按“是什么 + 解决什么问题 + 常见关键词”写。
+\item 最后背卷面判定句，用来区分相似概念。
+\end{itemize}
 
 整理依据：
 
@@ -34,75 +57,70 @@
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-Exam/答案整理/期末试题答案汇总.md
+PPT/00-00-课程Overview.pdf
+PPT/01-01-软件工程基础.pdf
+PPT/01-02-项目管理基础.pdf
+PPT/02-01 到 02-05 需求工程课件
+PPT/03-01 到 03-04 体系结构与人机交互课件
+PPT/04-01 详细设计.pdf
+PPT/04-02 面向对象的模块化与信息隐藏.pdf
+PPT/设计模式.pdf
+PPT/代码设计.pdf
+PPT/软件构造.pdf
 软工二课程整理/课程框架与重点名词.md
-软工二期末突击/00-零基础期末总复习资料.md
-Review/名词解释.pdf
-Review/补充简答题.pdf
-Review/复习提纲.pdf
-Review/summary-重点.pdf
 \end{verbatim}
 \end{quote}
 
 
-\section{一、AI 协作与工具链}
+\section{一、总图：先记住软件工程活动链}
 
 
-\subsubsection*{K-A-S-D}
+\subsection{1. 总体顺序}
 
 
-课程评价框架。K 是知识，A 是 AI 协作与判断，S 是工程技能，D 是过程与态度。
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+现实问题
+-> 需求工程
+-> 体系结构设计
+-> 详细设计
+-> 构造、测试、重构
+-> 交付、维护、演化
+\end{verbatim}
+\end{quote}
 
 
-\subsubsection*{Prompt Engineering}
+这条线是最重要的。名词解释题大多不是孤立考定义，而是考你能否判断一个概念属于哪个阶段、解决什么问题。
 
 
-提示词工程。通过角色、任务、约束、格式控制 AI 输出，使输出更符合需求、设计和工程约束。
+\subsection{2. 各阶段一句话}
 
 
-\subsubsection*{AI 输出审查}
+\begin{itemize}
+\item 需求工程：把现实世界问题变成可验证、可追踪的规格。
+\item 体系结构：决定系统大的部件、连接方式和约束。
+\item 详细设计：把架构细化成类、方法、接口和对象协作。
+\item 软件构造：把设计变成可运行、可测试、可维护的代码。
+\item 项目管理：在范围、时间、成本和质量之间做控制。
+\item AI 协作：生成初稿可以交给 AI，工程判断必须由人负责。
+\end{itemize}
+
+\section{二、为什么需要软件工程}
 
 
-对 AI 生成内容进行人工检查，重点识别错误、遗漏、歧义、冲突、幻觉和不符合工程约束的部分。
+\subsection{记忆链}
 
 
-\subsubsection*{Human-in-the-Loop}
-
-
-人在环。AI 负责生成、分析或辅助修改，人负责审查、决策、验证和承担最终责任。
-
-
-\subsubsection*{VibeCoding}
-
-
-用自然语言和 AI 工具驱动原型、前端、后端、调试和移动端开发。它提高开发速度，但必须保留需求验证、代码审查、测试和安全检查。
-
-
-\subsubsection*{REST}
-
-
-以资源为中心设计接口，用 URL 表示资源，用 HTTP 方法表达操作，强调无状态和统一接口。
-
-
-\subsubsection*{JSON}
-
-
-前后端和系统之间交换结构化数据的常用文本格式，适合 REST API 的请求体和响应体。
-
-
-\subsubsection*{Spring Boot}
-
-
-Java Web 后端开发框架，用自动配置、依赖管理和内嵌服务器简化应用开发。考试中常与 Controller、Service、Repository 三层职责一起出现。
-
-
-\subsubsection*{JWT}
-
-
-JSON Web Token。用于在无状态 HTTP 请求中携带身份声明，常由客户端保存并随请求发送给服务器验证。
-
-
-\section{二、软件工程基础与项目管理}
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+程序只是代码
+-> 软件 = 程序 + 数据 + 文档 + 知识
+-> 软件复杂后出现软件危机
+-> 所以需要软件工程的方法、过程和质量控制
+\end{verbatim}
+\end{quote}
 
 
 \subsubsection*{软件}
@@ -120,13 +138,72 @@ JSON Web Token。用于在无状态 HTTP 请求中携带身份声明，常由客
 \subsubsection*{软件危机}
 
 
-软件规模和复杂度增长后，传统个人式开发难以控制成本、进度、质量和维护，导致项目失败、延期、超支和难维护。
+软件规模和复杂度增长后，传统个人式开发难以控制成本、进度、质量和维护，导致延期、超支、缺陷多和难维护。
 
 
 \subsubsection*{软件生命周期}
 
 
 软件从提出、需求、设计、构造、测试、部署、运行维护到退役的全过程。
+
+
+\subsubsection*{软件维护}
+
+
+软件交付后修改系统或部件，以修正缺陷、改进性能或适应环境变化。
+
+
+\subsubsection*{正向工程}
+
+
+从需求和设计出发构造代码、文档和可运行系统的过程。
+
+
+\subsubsection*{逆向工程}
+
+
+从已有系统分析其部件、关系、需求和设计，用更高层抽象描述系统。
+
+
+\subsubsection*{再工程}
+
+
+在理解旧系统基础上重构、迁移或重新实现，以改善结构、质量、可维护性或适配新环境。
+
+
+\section{三、项目管理与过程控制}
+
+
+\subsection{记忆链}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+项目有目标和边界
+-> 项目受范围、时间、成本约束
+-> 过程模型组织开发节奏
+-> 风险、质量和配置管理保证项目可控
+\end{verbatim}
+\end{quote}
+
+
+\subsubsection*{项目}
+
+
+为创建唯一产品、服务或成果而进行的临时性工作，具有明确开始和结束。
+
+
+\subsubsection*{铁三角}
+
+
+项目管理中的范围、时间、成本三类约束，三者共同影响软件质量。
+
+
+\subsubsection*{风险管理}
+
+
+对不确定事件及其影响进行识别、分析、排序、应对和监控。
 
 
 \subsubsection*{Build-and-Fix Model}
@@ -138,7 +215,7 @@ JSON Web Token。用于在无状态 HTTP 请求中携带身份声明，常由客
 \subsubsection*{Waterfall Model}
 
 
-瀑布模型。需求、设计、实现、测试、交付按阶段顺序推进。适合需求稳定、合同边界明确的项目。
+瀑布模型。需求、设计、实现、测试、交付按阶段顺序推进，适合需求稳定、合同边界明确的项目。
 
 
 \subsubsection*{Incremental Model}
@@ -169,24 +246,6 @@ JSON Web Token。用于在无状态 HTTP 请求中携带身份声明，常由客
 
 
 螺旋模型。风险驱动的迭代模型，每一轮包括目标设定、风险分析、开发验证和计划下一轮。
-
-
-\subsubsection*{项目}
-
-
-为创建唯一产品、服务或成果而进行的临时性工作，具有明确开始和结束。
-
-
-\subsubsection*{铁三角}
-
-
-项目管理中的范围、时间、成本三类约束，三者共同影响软件质量。
-
-
-\subsubsection*{风险管理}
-
-
-对不确定事件及其影响进行识别、分析、排序、应对和监控。
 
 
 \subsubsection*{SQA}
@@ -231,48 +290,6 @@ JSON Web Token。用于在无状态 HTTP 请求中携带身份声明，常由客
 持续交付或持续部署。用自动化流水线把构建、测试、制品管理和发布过程做成可重复、可审计、可回滚的流程。
 
 
-\subsubsection*{主程序员团队}
-
-
-以主程序员为核心进行技术决策和任务组织的团队结构，决策集中，适合规模较小且技术核心明确的团队。
-
-
-\subsubsection*{民主团队}
-
-
-成员共同参与决策和协作，强调平等沟通和集体责任。
-
-
-\subsubsection*{开放团队}
-
-
-边界更开放，成员围绕任务动态协作，适合知识共享和跨角色协作。
-
-
-\subsubsection*{正向工程}
-
-
-从需求和设计出发构造代码、文档和可运行系统的过程。
-
-
-\subsubsection*{逆向工程}
-
-
-从已有系统分析其部件、关系、需求和设计，用更高层抽象描述系统。
-
-
-\subsubsection*{再工程}
-
-
-在理解旧系统基础上重构、迁移或重新实现，以改善结构、质量、可维护性或适配新环境。
-
-
-\subsubsection*{软件维护}
-
-
-软件交付后修改系统或部件，以修正缺陷、改进性能或适应环境变化。
-
-
 \subsubsection*{用户文档}
 
 
@@ -285,7 +302,26 @@ JSON Web Token。用于在无状态 HTTP 请求中携带身份声明，常由客
 面向维护和运维人员的文档，说明软硬件配置、网络、安全、备份、部署、故障处理和部件替换。
 
 
-\section{三、需求工程}
+\section{四、需求工程：把现实问题变成规格}
+
+
+\subsection{记忆链}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+问题域
+-> 需求获取
+-> 需求分析
+-> 规格说明
+-> 需求验证
+-> 需求管理
+\end{verbatim}
+\end{quote}
+
+
+需求部分最容易混淆的是层次和类型。层次回答“站在谁的角度”，类型回答“约束什么内容”。
 
 
 \subsubsection*{需求}
@@ -468,7 +504,23 @@ JSON Web Token。用于在无状态 HTTP 请求中携带身份声明，常由客
 规格驱动开发。把规格说明作为首要产物，后续设计、任务拆分、代码和测试从规格推导。
 
 
-\section{四、体系结构与人机交互}
+\section{五、体系结构与人机交互：把规格组织成系统}
+
+
+\subsection{记忆链}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+需求
+-> 设计
+-> 分解、抽象、关注点分离
+-> 部件、连接件、配置
+-> 架构风格和架构决策
+-> HCI 保证用户能有效使用系统
+\end{verbatim}
+\end{quote}
 
 
 \subsubsection*{软件设计}
@@ -540,7 +592,7 @@ JSON Web Token。用于在无状态 HTTP 请求中携带身份声明，常由客
 \subsubsection*{分层架构}
 
 
-将系统分为展示层、业务逻辑层、数据访问层等，上层依赖下层或下层接口。它适合企业信息系统。
+将系统分为展示层、业务逻辑层、数据访问层等，上层依赖下层或下层接口，适合企业信息系统。
 
 
 \subsubsection*{MVC}
@@ -663,7 +715,22 @@ Plain Old Java Object。普通 Java 对象，常用于表达实体或简单数�
 让用户和利益相关人参与界面和交互设计，通过反馈提升可用性和任务匹配度。
 
 
-\section{五、详细设计、模块化与原则}
+\section{六、详细设计与模块化：把架构落到类和对象}
+
+
+\subsection{记忆链}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+架构给出大结构
+-> 详细设计分配职责
+-> 对象通过协作完成行为
+-> 模块化追求高内聚、低耦合
+-> 信息隐藏和封装隔离变化
+\end{verbatim}
+\end{quote}
 
 
 \subsubsection*{详细设计}
@@ -912,7 +979,21 @@ Plain Old Java Object。普通 Java 对象，常用于表达实体或简单数�
 方法级设计原则。Short、One thing、Few arguments、Abstraction level consistency。
 
 
-\section{六、设计模式}
+\section{七、设计模式：用稳定抽象隔离变化}
+
+
+\subsection{记忆链}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+设计模式不是背类图
+-> 先找变化点
+-> 再用稳定接口隔离变化
+-> 最后说明代价
+\end{verbatim}
+\end{quote}
 
 
 \subsubsection*{设计模式}
@@ -963,7 +1044,22 @@ Plain Old Java Object。普通 Java 对象，常用于表达实体或简单数�
 数据访问对象模式。用接口封装持久化访问，使业务层不依赖具体数据库或存储技术。
 
 
-\section{七、构造、代码与测试}
+\section{八、软件构造、代码质量与测试}
+
+
+\subsection{记忆链}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+详细设计
+-> 编码
+-> 单元测试和集成测试
+-> 调试和代码评审
+-> 重构和回归测试
+\end{verbatim}
+\end{quote}
 
 
 \subsubsection*{软件构造}
@@ -1155,13 +1251,83 @@ TDD 三阶段：先让测试失败，再写代码让测试通过，再重构改�
 \subsubsection*{圈复杂度}
 
 
-度量程序控制流复杂度。常用公式是 \texttt{V(G) = 判定节点数 + 1}。
+度量程序控制流复杂度。常用公式是 V(G) = 判定节点数 + 1。
 
 
-\section{八、卷面速记}
+\section{九、AI 协作、工具链与 Web 实现}
 
 
-\subsubsection*{需求层次判定句}
+\subsection{记忆链}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+AI 不是单独一章
+-> 它贯穿需求、设计、编码、测试
+-> 关键不是生成，而是审查、验证和承担责任
+\end{verbatim}
+\end{quote}
+
+
+\subsubsection*{K-A-S-D}
+
+
+课程评价框架。K 是知识，A 是 AI 协作与判断，S 是工程技能，D 是过程与态度。
+
+
+\subsubsection*{Prompt Engineering}
+
+
+提示词工程。通过角色、任务、约束、格式控制 AI 输出，使输出更符合需求、设计和工程约束。
+
+
+\subsubsection*{AI 输出审查}
+
+
+对 AI 生成内容进行人工检查，重点识别错误、遗漏、歧义、冲突、幻觉和不符合工程约束的部分。
+
+
+\subsubsection*{Human-in-the-Loop}
+
+
+人在环。AI 负责生成、分析或辅助修改，人负责审查、决策、验证和承担最终责任。
+
+
+\subsubsection*{VibeCoding}
+
+
+用自然语言和 AI 工具驱动原型、前端、后端、调试和移动端开发。它提高开发速度，但必须保留需求验证、代码审查、测试和安全检查。
+
+
+\subsubsection*{REST}
+
+
+以资源为中心设计接口，用 URL 表示资源，用 HTTP 方法表达操作，强调无状态和统一接口。
+
+
+\subsubsection*{JSON}
+
+
+前后端和系统之间交换结构化数据的常用文本格式，适合 REST API 的请求体和响应体。
+
+
+\subsubsection*{Spring Boot}
+
+
+Java Web 后端开发框架，用自动配置、依赖管理和内嵌服务器简化应用开发。考试中常与 Controller、Service、Repository 三层职责一起出现。
+
+
+\subsubsection*{JWT}
+
+
+JSON Web Token。用于在无状态 HTTP 请求中携带身份声明，常由客户端保存并随请求发送给服务器验证。
+
+
+\section{十、卷面速记：相似概念判定句}
+
+
+\subsection{需求层次}
 
 
 \begin{quote}
@@ -1174,7 +1340,7 @@ TDD 三阶段：先让测试失败，再写代码让测试通过，再重构改�
 \end{quote}
 
 
-\subsubsection*{需求类型判定句}
+\subsection{需求类型}
 
 
 \begin{quote}
@@ -1189,12 +1355,14 @@ TDD 三阶段：先让测试失败，再写代码让测试通过，再重构改�
 \end{quote}
 
 
-\subsubsection*{图形题边界}
+\subsection{用例和图}
 
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
+Actor 在系统边界外，用例在系统边界内。
+场景是一条路径，用例是一组场景。
 概念类图只画问题域概念，不画 Controller、Service、Repository。
 系统顺序图把系统当黑盒。
 详细顺序图展开 Controller、Service、Repository、领域对象和外部接口。
@@ -1202,20 +1370,45 @@ TDD 三阶段：先让测试失败，再写代码让测试通过，再重构改�
 \end{quote}
 
 
-\subsubsection*{代码题改造句}
+\subsection{架构和详细设计}
 
 
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-命名表达业务含义。
-提取小方法。
-用枚举替代魔法数字。
-用 Strategy 或表驱动消除复杂分支。
-Service 依赖接口。
-用 guard clause 处理非法输入。
-返回结构化结果。
-补充单元测试和 Mock。
+体系结构关心部件、连接件、配置。
+详细设计关心类、方法、接口、职责和对象协作。
+架构风格是整体组织方式，设计模式是局部对象协作方案。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{模块化}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+低耦合看模块之间依赖少不少。
+高内聚看模块内部职责集中不集中。
+信息隐藏隐藏变化原因。
+封装用接口隔离实现细节。
+\end{verbatim}
+\end{quote}
+
+
+\subsection{测试}
+
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+黑盒测试按规格设计用例。
+白盒测试按程序结构设计用例。
+Stub 代替下层依赖。
+Driver 调用被测模块。
+Mock 既模拟依赖又验证交互。
+回归测试防止修改破坏旧功能。
 \end{verbatim}
 \end{quote}
 
