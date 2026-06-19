@@ -1,0 +1,362 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+
+\usepackage[a4paper,margin=2.0cm]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{parskip}
+\usepackage{array}
+
+\definecolor{TitleBlue}{HTML}{1F4E79}
+\definecolor{SoftGray}{HTML}{F4F6F8}
+\definecolor{TextGray}{HTML}{333333}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=TitleBlue,
+  urlcolor=TitleBlue
+}
+
+\setlength{\parindent}{0pt}
+\renewcommand{\baselinestretch}{1.12}
+\setlist[enumerate]{leftmargin=2em,itemsep=0.25em,topsep=0.25em}
+\setlist[itemize]{leftmargin=2em,itemsep=0.2em,topsep=0.2em}
+
+\newcommand{\paper}[1]{%
+  \clearpage
+  \section*{\color{TitleBlue}#1}
+  \addcontentsline{toc}{section}{#1}
+}
+
+\newcommand{\qtitle}[2]{%
+  \subsection*{#1}
+  {\small\color{TextGray}来源：#2}\par
+}
+
+\newenvironment{note}{%
+  \begin{quote}\small\color{TextGray}
+}{%
+  \end{quote}
+}
+
+\title{\textbf{软件工程与计算 II 往年原题预测套卷}}
+\author{}
+\date{2026-06-19}
+
+\begin{document}
+\pagestyle{plain}
+\maketitle
+
+\begin{note}
+本文件根据 \texttt{Review/试卷预测记录.md} 的 10 道大题结构整理。题序按预测试卷重排，题干来自 \texttt{Exam} 文件夹中的往年卷或回忆卷；每题都标注来源。原卷中依赖截图、类图或页面图片的题，本文件保留文字题干并注明原卷含图。
+\end{note}
+
+\tableofcontents
+
+\paper{套卷一：2016 原题整套}
+
+\qtitle{第一大题：名词解释/简答}{Exam/2016.pdf 第一大题}
+\begin{enumerate}
+  \item 什么是软件工程？
+  \item 简述演化模型及其优缺点。
+  \item 简述逆向工程与正向工程的区别，并各用一句话说明其关注点。
+\end{enumerate}
+
+\qtitle{第二大题：需求获取与用例}{Exam/2016.pdf 第二大题}
+阅读材料，回答问题：
+
+消费者可以使用支付宝“扫一扫”，输入金额和密码进行支付，也可以让商家扫描用户的付钱码进行支付。卡包内有优惠券、红包等可以在支付时用于抵现。（此处应有图，可参考手机支付宝 APP 的付款页面）
+
+解释用例图的四要素，并画出用例图。
+
+\qtitle{第三大题：需求分析与概念类图}{Exam/2016.pdf 第三大题}
+以下为活动“扫描商家的二维码进行付款”的用例的概念类的候选类：
+
+消费者，商家，蚂蚁积分，付款码，付款方式，花呗支付，余额支付，余额宝支付，银行卡支付。
+
+请识别概念类之间的关系（依赖、聚合、关联、组合、继承等），识别重要属性，画出概念类图。
+
+\qtitle{第四大题：体系结构设计}{Exam/2016.pdf 第四大题}
+\begin{enumerate}
+  \item 画出付款模块的物理包图（包括分层和跨网络）。（7 分）
+  \item 写出付款用例对应展示层和逻辑层交互的接口（登陆、填写支付金额、输入付款密码等），以及逻辑与数据层之间的接口（登陆账户查询、记录付款信息、更新积分信息）。（8 分）
+\end{enumerate}
+
+\qtitle{第五大题：详细设计}{Exam/2016.pdf 第五大题}
+用花呗支付后，用户积分也会发生改变。请画出详细设计中支付界面对象、支付功能逻辑对象、花呗逻辑对象、用户逻辑对象、支付数据对象、花呗数据对象和用户数据对象之间的关系。
+
+\qtitle{第六大题：代码结构分析与设计原则}{Exam/2016.pdf 第六大题}
+简述如何消除印记耦合。
+
+\qtitle{第七大题：策略模式}{Exam/2016.pdf 第七大题}
+现在支付宝中的会员等级分为 A、B、C 三等，如果现在要实现添加一个 S 级等级，并修改不同等级积分的计算方式（例如，A 等级为消费一元积 1 分，B 为二元积一分），应如何实现？请画出类图并解释你的实现方式（需要用到设计模式）。
+
+\qtitle{第八大题：软件构造与代码改进}{Exam/2016.pdf 第八大题}
+使用表驱动改写冗长的 if-else 结构体。
+
+\qtitle{第九大题：软件测试}{Exam/2016.pdf 第九大题}
+使用黑盒测试的方法，测试支付宝的“更改用户密码”功能，写出输入和预期输出。
+
+\qtitle{第十大题：人机交互界面分析}{Exam/2016.pdf 第十大题}
+观察下面两图，写出界面中体现了哪些人机交互的原则？（至少三点）
+
+图片内容描述：支付宝 APP 的两个界面，第一个界面为语言切换（中文，繁体，English），第二个界面为修改字体大小的界面。
+
+\paper{套卷二：2020 与 2022 原题组合}
+
+\qtitle{第一大题：名词解释/简答}{Exam/2020.pdf 第一大题}
+\begin{enumerate}
+  \item 什么是软件工程？（3 分）
+  \item 持续集成的好处和相关工具链。（3 分）
+  \item 简述软件生命周期的含义，并列举一种软件生命周期模型。（4 分）
+\end{enumerate}
+
+\qtitle{第二大题：需求获取与需求分类}{Exam/2020.pdf 第二大题}
+\begin{enumerate}
+  \item 采购补货模块中，可以由采购人员手工创建询价单，也可以通过仓库经理在先前的步骤中设置产品的再订货规则，库管员登录系统运行排程，系统会根据再订货规则和销售订单及库存情况自动生成采购询价单。该功能涉及几个用例？请写出用例的参与者和主要流程（简略点，注意参与者与系统的交互即可）。（6 分）
+  \item “在手工创建询价单时，当用户输入的补货数中含有非数字字符的时候，系统必须提示输入错误。”请问这是需求分类中的哪一种？（功能需求、数据需求、质量需求、性能需求、约束、对外接口）“用户输入的收入金额中不能含有非数字字符”，又属于哪一种？请解释原因。（4 分）
+\end{enumerate}
+
+\qtitle{第三大题：需求分析与概念类图}{Exam/2020.pdf 第三大题}
+仓库经理在先前的步骤中设置产品的再订货规则，库管员登录系统运行排程，系统会根据再订货规则（库存低于某个固定值订货）和销售订单及库存情况自动生成采购询价单。
+
+\begin{enumerate}
+  \item 通过名词分析法确定概念类。重点分析以上功能相关的类。（包括人员、排程、规则、库存、单据等）（3 分）
+  \item 识别概念类之间的关联。（包括继承、依赖、关联、聚合、组合）（4 分）
+  \item 识别重要属性，并画出完整的概念类图。（3 分）
+\end{enumerate}
+
+\qtitle{第四大题：体系结构设计}{Exam/2020.pdf 第四大题}
+\begin{enumerate}
+  \item 如果这个进销存是 Web 框架实现的，按照分层体系结构风格设计，画出能体现系统体系结构的具体的物理包图（包括所用分层，注意要体现系统所有功能模块，体现实现跨网络，浏览器（包含前端 html，css，js）位于客户端，逻辑层和数据层（后端）位于服务器端，网络通信采用 HTTP，基于 REST 风格 API 的接口）。（4 分）
+  \item 请设计采购补货模块中自动生成采购询价单功能中库管员运行排程这个用例对应的展示层和逻辑层交互的接口，以及其涉及的逻辑层与数据层交互的接口（写出接口声明的代码，不用实现）。每个接口都要写出其所属的包名。请考虑接口在包中的分布。（6 分）
+\end{enumerate}
+
+\qtitle{第五大题：详细设计}{Exam/2020.pdf 第五大题}
+旧的库存订货规则：库存低于某个固定值订货。
+
+新的仓库订货规则：
+\begin{itemize}
+  \item 供应商交货期 3 天以内，备货量 7 天销量；
+  \item 供应商交货期 7 天以内，备货 15 天销量；
+  \item 供应商交货期 10 天以内，备货 20 天销量；
+  \item 供应商交货期 15 天以内，备货 30 天销量；
+  \item 供应商交货期 20 天以上，备货 40 天销量。
+\end{itemize}
+
+\begin{enumerate}
+  \item 以后具体的天数和销量还会根据企业规模来变更。这是什么样的变更？需求变化后，之前的设计如何应对变更？（3 分）
+  \item 除此之外，库存订货规则还可能添加订货规则，考虑近期活动的需求，包含新的计算方式：备货量 = 活动备货量 $\times$ 活动规模基数 + 基础备货量。那么，在逻辑层应该如何去实现可以更好地应对这种变更。画出具体的类图（包括属性和方法的定义）。（4 分）
+  \item 画出考虑活动的计算备货量的对象（订货、规则、活动、销量、订货单）之间协作的顺序图。（3 分）
+\end{enumerate}
+
+\qtitle{第六大题：代码结构分析与设计原则}{Exam/2020.pdf 第六题}
+某同学写出如下代码：
+\begin{verbatim}
+void validate_request(input_form i){
+    if(!valid_string(i.name)){
+        error_message("Invalid name");
+    }
+    if(!valid_month(i.date)){
+        error_message("Invalid month");
+    }
+}
+int valid_month(date d){
+    return d.month >= 1 && d.month <= 12;
+}
+\end{verbatim}
+
+\begin{enumerate}
+  \item \verb|validate_request| 方法和 \verb|valid_month| 方法之间是哪种类型的耦合，如何修改？
+\end{enumerate}
+
+另一同学随后对前面代码做了下列修改：
+\begin{verbatim}
+void validate_request(input_form i){
+    if(!valid(i.name, STRING)){
+        error_message("Invalid name");
+    }
+    if(!valid(i.date, DATE)){
+        error_message("Invalid month");
+    }
+}
+int valid(String s, int type){
+    switch(type){
+        case STRING:
+            return strlen(s) < MAX_STRING_SIZE;
+        case DATE:
+            date d = parse_date(s);
+            return d.month >= 1 && d.month <= 12;
+    }
+}
+\end{verbatim}
+
+\begin{enumerate}[resume]
+  \item \verb|validate_request| 方法和 \verb|valid| 方法之间是哪种类型的耦合，如何修改？
+\end{enumerate}
+
+\qtitle{第七大题：策略模式}{Exam/2022.pdf 第七题第 2 问}
+用户有微信支付、支付宝支付，预计未来还会有更多的支付方式。使用哪种设计模式可以方便实现？这种设计模式有什么好处？使用了哪些类设计原则？画出这种设计模式的类图描述。
+
+\qtitle{第八大题：软件构造与代码改进}{Exam/2020.pdf 第八题}
+如果按照如下订货规则，并给出如下的代码实现。请结合代码设计、构造相关的知识列出并解释所给出实现代码存在的问题。最后请给出正确、易读、可靠的代码实现。
+
+仓库订货规则：
+\begin{itemize}
+  \item 供应商交货期 3 天以内，备货量 7 天销量；
+  \item 供应商交货期 7 天以内，备货 15 天销量；
+  \item 供应商交货期 10 天以内，备货 20 天销量；
+  \item 供应商交货期 15 天以内，备货 30 天销量；
+  \item 供应商交货期 20 天以上，备货 40 天销量。
+\end{itemize}
+
+\begin{verbatim}
+public int aa(int aa){
+    int bb = 0;
+    if(aa < 3) bb = 7;
+    if(aa < 7 && aa >= 3) bb = 15;
+    if(aa < 10 && aa >= 7) bb = 20;
+    if(aa < 15 && aa >= 10) bb = 30;
+    if(aa >= 20) bb = 40;
+    return bb;
+}
+\end{verbatim}
+
+\qtitle{第九大题：软件测试}{Exam/2020.pdf 第十题}
+由于需求界定不准确、设计不严密、程序书写手误等原因，对于这些数据范围边界的判断是软件极容易出错的地方。边界值测试的基本原理是在被测对象的边界及边界附近设计测试用例。请根据这一原理对如下仓库订货规则进行测试，其中供应商交货期天数为订货规则方法的输入参数，备货销量天数为返回值：
+
+\begin{itemize}
+  \item 供应商交货期 3 天以内，备货 7 天销量；
+  \item 供应商交货期 7 天以内，备货 15 天销量；
+  \item 供应商交货期 10 天以内，备货 20 天销量；
+  \item 供应商交货期 15 天以内，备货 30 天销量；
+  \item 供应商交货期 20 天以上，备货 40 天销量。
+\end{itemize}
+
+\qtitle{第十大题：人机交互界面分析}{Exam/2022.pdf 第九题}
+从人机交互的角度分析校园卡自助系统，说出好的地方；说出不好的地方并给出建议（至少三点）。
+
+\paper{套卷三：2022 与 2025 原题组合}
+
+\qtitle{第一大题：名词解释/简答}{Exam/2025.pdf 名词解释；Exam/2022.pdf 第一大题}
+\begin{enumerate}
+  \item 软件工程。
+  \item 再工程。
+  \item 增量迭代模型和演化模型的差别。
+\end{enumerate}
+
+\begin{note}
+同类原题：Exam/2022.pdf 第一大题包括“什么是软件工程”“配置管理中变更控制的过程”“迭代增量模型和演化模型的差异及优缺点”。
+\end{note}
+
+\qtitle{第二大题：需求获取与需求分类}{Exam/2022.pdf 第二题}
+校园卡自助系统。
+\begin{enumerate}
+  \item 写出校园卡自助系统的用例。
+  \item 针对充值功能，写出业务需求、用户需求、系统级需求。
+  \item 系统需要提供 API 供其他管理系统调用，属于什么需求？还有什么对外接口？
+\end{enumerate}
+
+\qtitle{第三大题：需求分析与概念类图}{Exam/2022.pdf 第三题}
+学校师生可以进行充值、查询余额、绑定银行卡、查询明细等操作。
+\begin{enumerate}
+  \item 分析名词，确定概念类。
+  \item 辨识概念类之间的联系（包括依赖、关联、聚合、组合、继承）。
+  \item 识别重要属性，画出概念类图。
+\end{enumerate}
+
+\qtitle{第四大题：体系结构设计}{Exam/2022.pdf 第四题}
+\begin{enumerate}
+  \item 画出整个校园卡自助系统的物理包图。分为客户端和服务器端，体现分层概念，包含所有模块。html 三包和展示层在客户端，逻辑层和数据层在服务器端，使用 http 通信和 rest api。
+  \item 针对充值服务（充值、查询充值记录）写出展示层和逻辑层间接口（代码）以及逻辑层和数据层间接口。注意写出接口所在包名。
+\end{enumerate}
+
+\qtitle{第五大题：详细设计}{Exam/2022.pdf 第五题}
+用户在充值时有不同的优惠券，同时可以用不同的充值方式（支付宝、微信等）。
+\begin{enumerate}
+  \item 画出 User、Card、多种 Coupon、ThirdPayment、PaymentRecord 类图。
+  \item 当添加新的优惠券（有数值折扣、比例折扣）时，系统如何实现变更。
+  \item 画出充值时对象交互的顺序图。
+\end{enumerate}
+
+\qtitle{第六大题：代码结构分析与设计原则}{Exam/2022.pdf 第六题}
+\begin{enumerate}
+  \item 用户包持有优惠券包中的优惠券，优惠券包又查询用户包信息以发放优惠券。违反了什么包原则？如何修改？画出修改后的包图和类图。
+  \item 阅读代码，回答问题：
+\end{enumerate}
+
+\begin{verbatim}
+void issueCoupon(List<User> users){
+    for(user : users){
+        addCoupon(user, user.getType());
+    }
+}
+
+void addCoupon(User u, int type){
+    switch(type){
+        case STUDENT:
+            u.addCoupon(new FiveYuanCoupon());
+            break;
+        case TEACHER:
+            u.addCoupon(new TenYuanCoupon());
+            break;
+        // ...
+    }
+}
+\end{verbatim}
+
+\begin{enumerate}
+  \item[(1)] 以上代码中 \verb|issueCoupon| 和 \verb|addCoupon| 是哪种耦合？可以接受吗？如何修改？
+  \item[(2)] \verb|addCoupon| 中多次调用 \verb|user.addCoupon|，如何优化？
+\end{enumerate}
+
+\qtitle{第七大题：策略模式}{Exam/2025.pdf 设计模式题}
+以检查课程冲突策略为情景：
+\begin{enumerate}
+  \item 使用策略模式，写出策略模式接口类的描述。
+  \item 写出教师冲突、教室冲突、学生选课冲突这三类检测策略的具体实现。
+  \item 写出 Context 类。
+  \item 评判该设计的优缺点。
+\end{enumerate}
+
+\qtitle{第八大题：软件构造与代码改进}{Exam/2022.pdf 第八题；Exam/2025.pdf 改坏代码题}
+从软件构造的角度分析以下代码的优缺点，并说明如何改进。
+
+\begin{verbatim}
+void doPost(HttpRequest rsq, HttpResponse resp)
+        throws ServletException, IOException {
+    String old = rsq.getParameter("old");
+    String new1 = rsq.getParameter("new1");
+    String new2 = rsq.getParameter("new2");
+    String username = rsq.getParameter("username");
+    boolean flag = false;
+    PrintWriter writer = resp.getWriter();
+    if(new1.indexOf(new2) != -1
+            && old.indexOf(new1) == -1
+            && new2.indexOf(new1) != -1
+            && new1.indexOf(old) == -1) {
+        if(dao.loginUser(username, old)) {
+            dao.rePassword(new1);
+            writer.print("yes");
+        } else {
+            writer.print("no");
+        }
+    } else {
+        writer.print("no");
+    }
+    writer.flush();
+    writer.close();
+}
+\end{verbatim}
+
+\begin{note}
+同类原题：Exam/2025.pdf 回忆版写为“一段 Java 代码，返回一个一堆条件 AND OR 后的布尔值，要求把坏代码改好”。
+\end{note}
+
+\qtitle{第九大题：软件测试}{Exam/2016.pdf 第九题}
+使用黑盒测试的方法，测试支付宝的“更改用户密码”功能，写出输入和预期输出。
+
+\qtitle{第十大题：人机交互界面分析}{Exam/2025.pdf 人机交互题}
+给定一张截图，从人机交互原则的角度分析界面设计的优缺点。
+
+\end{document}

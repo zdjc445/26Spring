@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>体系结构例题 - 薪酬管理系统</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --line: #cfd8e3;
+      --blue: #2563eb;
+      --blue-soft: #eaf1ff;
+      --green: #0f766e;
+      --green-soft: #e8f6f3;
+      --orange: #b45309;
+      --orange-soft: #fff3df;
+      --pink: #be185d;
+      --pink-soft: #fde8f2;
+      --gray: #f6f8fb;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #fbfcff;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 44px;
+    }
+
+    header {
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--line);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    section {
+      margin-top: 26px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      font-weight: 720;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .notice {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-left: 4px solid var(--blue);
+      background: var(--blue-soft);
+      color: #1f3f8c;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .score-box {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .score {
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 22px;
+      margin-right: 8px;
+    }
+
+    .diagram {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) 110px minmax(360px, 2fr);
+      gap: 14px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+
+    .zone {
+      background: var(--white);
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 100%;
+    }
+
+    .zone.client {
+      border-color: #93c5fd;
+      background: #f5f9ff;
+    }
+
+    .zone.server {
+      border-color: #99f6e4;
+      background: #f3fbf9;
+    }
+
+    .zone-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      font-weight: 760;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tag.blue {
+      color: #1d4ed8;
+      background: #dbeafe;
+    }
+
+    .tag.green {
+      color: #0f766e;
+      background: #ccfbf1;
+    }
+
+    .tag.orange {
+      color: #9a3412;
+      background: #ffedd5;
+    }
+
+    .tag.pink {
+      color: #be185d;
+      background: #fce7f3;
+    }
+
+    .pkg-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .pkg {
+      border: 1px solid var(--line);
+      background: var(--white);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .pkg strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .pkg code {
+      color: #0f3978;
+      font-size: 13px;
+    }
+
+    .pkg ul {
+      margin: 7px 0 0 18px;
+      padding: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .layers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .layer {
+      border-radius: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .layer.presentation {
+      background: var(--blue-soft);
+      border-color: #b7c8f8;
+    }
+
+    .layer.logic {
+      background: var(--orange-soft);
+      border-color: #f1c27d;
+    }
+
+    .layer.data {
+      background: var(--green-soft);
+      border-color: #8dd8ce;
+    }
+
+    .arrow {
+      display: grid;
+      place-items: center;
+      min-height: 220px;
+      color: var(--pink);
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .arrow .line {
+      width: 100%;
+      height: 4px;
+      background: var(--pink);
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .arrow .line::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      width: 12px;
+      height: 12px;
+      border-top: 4px solid var(--pink);
+      border-right: 4px solid var(--pink);
+      background: transparent;
+    }
+
+    .answer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      background: #111827;
+      color: #eef2ff;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+      tab-size: 2;
+    }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .check {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .check b {
+      color: var(--blue);
+    }
+
+    @media (max-width: 900px) {
+      .diagram,
+      .answer-grid,
+      .score-grid,
+      .checklist {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow {
+        min-height: 72px;
+      }
+
+      .arrow .line {
+        width: 4px;
+        height: 56px;
+        margin: 0 auto 8px;
+      }
+
+      .arrow .line::after {
+        right: auto;
+        left: 50%;
+        top: auto;
+        bottom: -2px;
+        transform: translateX(-50%) rotate(135deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>体系结构例题：薪酬管理系统</h1>
+      <p class="subtitle">按例题分值拆成两部分：4 分画物理包图，6 分写展示层-逻辑层、逻辑层-数据层接口。</p>
+      <div class="notice">
+        说明：题目没有给出薪酬管理系统的完整功能模块清单。本页中的“题干其他功能模块”是答题占位，考试时要替换为题干明确给出的全部功能模块。
+      </div>
+    </header>
+
+    <section>
+      <h2>题目拆解</h2>
+      <div class="score-grid">
+        <div class="score-box">
+          <h3><span class="score">4 分</span>物理包图</h3>
+          <p>体现分层、跨网络、浏览器端 HTML/CSS/JS、服务器端逻辑层和数据层、HTTP、REST API、系统功能模块。</p>
+        </div>
+        <div class="score-box">
+          <h3><span class="score">6 分</span>接口声明</h3>
+          <p>围绕“社会保险录入”页面，写展示层与逻辑层接口、逻辑层与数据层接口，并写清所属包名。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>第 1 问示范：物理包图</h2>
+      <div class="diagram" aria-label="薪酬管理系统分层物理包图示范">
+        <div class="zone client">
+          <div class="zone-title">
+            <span>客户端：浏览器</span>
+            <span class="tag blue">Browser</span>
+          </div>
+          <div class="pkg-stack">
+            <div class="pkg">
+              <strong>前端页面包</strong>
+              <code>/frontend/html</code>
+              <ul>
+                <li>SocialInsuranceEntry.html</li>
+                <li>题干其他页面</li>
+              </ul>
+            </div>
+            <div class="pkg">
+              <strong>样式包</strong>
+              <code>/frontend/css</code>
+              <ul>
+                <li>payroll.css</li>
+                <li>form.css</li>
+              </ul>
+            </div>
+            <div class="pkg">
+              <strong>脚本包</strong>
+              <code>/frontend/js</code>
+              <ul>
+                <li>socialInsuranceEntry.js</li>
+                <li>restClient.js</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="arrow">
+          <div>
+            <div class="line"></div>
+            <div>HTTP<br>REST API</div>
+          </div>
+        </div>
+
+        <div class="zone server">
+          <div class="zone-title">
+            <span>服务器端：后端应用服务器</span>
+            <span class="tag green">Server</span>
+          </div>
+
+          <div class="layers">
+            <div class="layer presentation">
+              <div class="zone-title">
+                <span>展示层 / Controller</span>
+                <span class="tag blue">Presentation</span>
+              </div>
+              <div class="pkg-stack">
+                <div class="pkg">
+                  <strong>REST 控制器包</strong>
+                  <code>com.payroll.web.controller</code>
+                  <ul>
+                    <li>SocialInsuranceController</li>
+                    <li>题干其他功能 Controller</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="layer logic">
+              <div class="zone-title">
+                <span>逻辑层 / Service</span>
+                <span class="tag orange">Business Logic</span>
+              </div>
+              <div class="pkg-stack">
+                <div class="pkg">
+                  <strong>业务服务接口包</strong>
+                  <code>com.payroll.service</code>
+                  <ul>
+                    <li>SocialInsuranceService</li>
+                    <li>题干其他功能 Service</li>
+                  </ul>
+                </div>
+                <div class="pkg">
+                  <strong>业务服务实现包</strong>
+                  <code>com.payroll.service.impl</code>
+                  <ul>
+                    <li>SocialInsuranceServiceImpl</li>
+                    <li>题干其他功能 ServiceImpl</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="layer data">
+              <div class="zone-title">
+                <span>数据层 / Repository + Entity</span>
+                <span class="tag green">Data Access</span>
+              </div>
+              <div class="pkg-stack">
+                <div class="pkg">
+                  <strong>数据访问接口包</strong>
+                  <code>com.payroll.repository</code>
+                  <ul>
+                    <li>SocialInsuranceRepository</li>
+                    <li>EmployeeRepository</li>
+                  </ul>
+                </div>
+                <div class="pkg">
+                  <strong>实体包</strong>
+                  <code>com.payroll.entity</code>
+                  <ul>
+                    <li>SocialInsuranceRecord</li>
+                    <li>Employee</li>
+                  </ul>
+                </div>
+                <div class="pkg">
+                  <strong>数据库</strong>
+                  <code>PayrollDB</code>
+                  <ul>
+                    <li>social_insurance_record</li>
+                    <li>employee</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>第 2 问示范：接口声明</h2>
+      <div class="notice">
+        下面是“接口声明”的写法示范。考试时方法名、参数和返回值要按题干给出的字段调整；这里重点展示接口放在哪个包、层间依赖怎么写。
+      </div>
+
+      <div class="answer-grid">
+        <div>
+          <h3>展示层与逻辑层交互接口</h3>
+          <pre><code>package com.payroll.service;
+
+import com.payroll.dto.SocialInsuranceEntryRequest;
+import com.payroll.dto.SocialInsuranceEntryView;
+import com.payroll.dto.SubmitResult;
+
+public interface SocialInsuranceService {
+    SocialInsuranceEntryView loadEntryPage(String employeeId);
+
+    SubmitResult submitSocialInsurance(
+        SocialInsuranceEntryRequest request
+    );
+}</code></pre>
+        </div>
+
+        <div>
+          <h3>逻辑层与数据层交互接口</h3>
+          <pre><code>package com.payroll.repository;
+
+import com.payroll.entity.SocialInsuranceRecord;
+
+public interface SocialInsuranceRepository {
+    SocialInsuranceRecord findByEmployeeId(String employeeId);
+
+    void save(SocialInsuranceRecord record);
+
+    void update(SocialInsuranceRecord record);
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="answer-grid">
+        <div>
+          <h3>页面控制器调用 Service</h3>
+          <pre><code>package com.payroll.web.controller;
+
+import com.payroll.dto.SocialInsuranceEntryRequest;
+import com.payroll.dto.SubmitResult;
+import com.payroll.service.SocialInsuranceService;
+
+public class SocialInsuranceController {
+    private final SocialInsuranceService service;
+
+    public SocialInsuranceController(
+        SocialInsuranceService service
+    ) {
+        this.service = service;
+    }
+
+    public SubmitResult submit(
+        SocialInsuranceEntryRequest request
+    ) {
+        return service.submitSocialInsurance(request);
+    }
+}</code></pre>
+        </div>
+
+        <div>
+          <h3>Service 涉及员工数据时的数据接口</h3>
+          <pre><code>package com.payroll.repository;
+
+import com.payroll.entity.Employee;
+
+public interface EmployeeRepository {
+    Employee findById(String employeeId);
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>答题检查点</h2>
+      <div class="checklist">
+        <div class="check"><b>1.</b> 图里有客户端和服务器端。</div>
+        <div class="check"><b>2.</b> 浏览器端写了 HTML、CSS、JS。</div>
+        <div class="check"><b>3.</b> 网络通信写了 HTTP / REST API。</div>
+        <div class="check"><b>4.</b> 后端有展示层、逻辑层、数据层。</div>
+        <div class="check"><b>5.</b> 题干所有功能模块都放进对应层。</div>
+        <div class="check"><b>6.</b> 接口写了所属包名。</div>
+        <div class="check"><b>7.</b> 接口只写声明，不写实现。</div>
+        <div class="check"><b>8.</b> 方法围绕“社会保险录入”业务。</div>
+        <div class="check"><b>9.</b> 依赖方向是 Controller -> Service -> Repository。</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
