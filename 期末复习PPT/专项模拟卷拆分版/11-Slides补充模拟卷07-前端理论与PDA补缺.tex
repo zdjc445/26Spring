@@ -1,6 +1,7 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
 \usepackage[a4paper,margin=1.85cm]{geometry}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage{verbatim}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
@@ -176,6 +177,11 @@ A -> c A | d
 \footnotesize
 \begin{verbatim}
 源程序
+
+\begin{center}
+\includegraphics[width=0.88\linewidth]{figures/compiler-pipeline-11.png}
+\end{center}
+
 -> 词法分析：① token 序列
 -> 语法分析：② AST
 -> 语义分析：③ 带类型 AST
@@ -278,6 +284,11 @@ Z={D,E}
 
 最小 DFA：
 
+\begin{center}
+\includegraphics[width=0.72\linewidth]{figures/dfa-min-11.png}
+\end{center}
+
+
 \begin{quote}
 \footnotesize
 \begin{verbatim}
@@ -351,6 +362,11 @@ L={a^n b^n | n>=0}
 \end{quote}
 
 PDA：
+
+\begin{center}
+\includegraphics[width=0.82\linewidth]{figures/pda-anbn.png}
+\end{center}
+
 
 \begin{quote}
 \footnotesize
@@ -459,6 +475,16 @@ FOLLOW(A)={$}
 \end{quote}
 
 预测分析表：
+
+预测分析表（表格形式）：
+\begin{center}\footnotesize
+\begin{tabular}{llllll}
+非终结符 & 输入 a & 输入 b & 输入 c & 输入 d & 输入 \$\\
+S & S -> aA & S -> b & error & error & error\\
+A & error & error & A -> cA & A -> d & error
+\end{tabular}
+\end{center}
+
 
 \begin{quote}
 \footnotesize

@@ -1,6 +1,7 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
 \usepackage[a4paper,margin=1.85cm]{geometry}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage{verbatim}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
@@ -248,7 +249,12 @@ B4:
 
 \paragraph*{（一）词法分析解析}
 
-采用如下 Thompson NFA，起始状态为 \texttt{q0}，接受状态为 \texttt{q9}：
+采用如下 Thompson NFA
+
+\begin{center}
+\includegraphics[width=0.88\linewidth]{figures/nfa-thompson-abstar-a.png}
+\end{center}
+，起始状态为 \texttt{q0}，接受状态为 \texttt{q9}：
 
 \begin{quote}
 \footnotesize
@@ -305,6 +311,23 @@ D2 --b--> D2
 
 DFA 状态表：
 
+\begin{center}
+\includegraphics[width=0.62\linewidth]{figures/dfa-subset-abstar-a.png}
+\end{center}
+
+
+DFA 状态表（表格形式）：
+\begin{center}\footnotesize
+
+esizebox{\textwidth}{!}{\begin{tabular}{ccccc}
+状态 & NFA 状态集合 & a & b & 接受\\
+D0 & \texttt{\{ q0,q1,q2,q4,q7,q8\}} & D1 & D2 & 否\\
+D1 & \texttt{\{ q1,q2,q3,q4,q6,q7,q8,q9\}} & D1 & D2 & 是\\
+D2 & \texttt{\{ q1,q2,q4,q5,q6,q7,q8\}} & D1 & D2 & 否
+\end{tabular}}
+\end{center}
+
+
 \begin{quote}
 \footnotesize
 \begin{verbatim}
@@ -331,7 +354,12 @@ F     F  N  是
 \end{verbatim}
 \end{quote}
 
-最小 DFA 识别所有以 \texttt{a} 结尾的 \texttt{\{a,b\}} 串。
+最小 DFA 识别所有以
+
+\begin{center}
+\includegraphics[width=0.62\linewidth]{figures/dfa-min-abstar-a.png}
+\end{center}
+ \texttt{a} 结尾的 \texttt{\{a,b\}} 串。
 
 \paragraph*{（二）LL(1) 分析解析}
 
@@ -372,6 +400,21 @@ FOLLOW(C)  = {$}
 \end{quote}
 
 预测分析表，空白处均为 error：
+
+预测分析表（表格形式）：
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+非终结符 & 输入符号 & 产生式\\
+A & r & A -> B C\\
+B & r & B -> r B'\\
+B' & p & B' -> p B'\\
+B' & t & B' -> epsilon\\
+B' & u & B' -> epsilon\\
+C & t & C -> t\\
+C & u & C -> u
+\end{tabular}
+\end{center}
+
 
 \begin{quote}
 \footnotesize
@@ -458,6 +501,21 @@ FOLLOW(C) = {c,d,$}
 \end{quote}
 
 SLR 表：
+
+SLR ACTION/GOTO 表（表格形式）：
+\begin{center}\footnotesize
+\begin{tabular}{cccccc}
+状态 & ACTION(c) & ACTION(d) & ACTION(\$) & GOTO(S) & GOTO(C)\\
+0 & s3 & s4 & error & 1 & 2\\
+1 & error & error & acc & error & error\\
+2 & s3 & s4 & error & error & 5\\
+3 & s3 & s4 & error & error & 6\\
+4 & r3 & r3 & r3 & error & error\\
+5 & error & error & r1 & error & error\\
+6 & r2 & r2 & r2 & error & error
+\end{tabular}
+\end{center}
+
 
 \begin{quote}
 \footnotesize
@@ -555,6 +613,11 @@ L6:
 \end{quote}
 
 基本块与 CFG：
+
+\begin{center}
+\includegraphics[width=0.88\linewidth]{figures/cfg-09-basic-blocks.png}
+\end{center}
+
 
 \begin{quote}
 \footnotesize

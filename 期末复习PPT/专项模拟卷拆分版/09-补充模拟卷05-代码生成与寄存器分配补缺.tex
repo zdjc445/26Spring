@@ -1,6 +1,7 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
 \usepackage[a4paper,margin=1.85cm]{geometry}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage{verbatim}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
@@ -304,6 +305,11 @@ B5=(11)
 
 CFG 边：
 
+\begin{center}
+\includegraphics[width=0.88\linewidth]{figures/cfg-09-basic-blocks.png}
+\end{center}
+
+
 \begin{quote}
 \footnotesize
 \begin{verbatim}
@@ -343,6 +349,19 @@ B4->B2 是回边，因为 B2 支配 B4；自然循环={B2,B3,B4}。
 \end{quote}
 
 活跃集合：
+
+活跃性表：
+\begin{center}\footnotesize
+\begin{tabular}{ll}
+位置 & 活跃变量集合\\
+语句 (4) 之后 & {a,b,c,d}\\
+语句 (4) 之前 & {b,c,d,t3}\\
+语句 (3) 之前 & {b,c,d,t2}\\
+语句 (2) 之前 & {b,c,d,t1}\\
+语句 (1) 之前 & {a,b,c,d}
+\end{tabular}
+\end{center}
+
 
 \begin{quote}
 \footnotesize
@@ -480,6 +499,22 @@ ST  d, R1
 \end{quote}
 
 寄存器内容变化：
+
+寄存器描述符变化表：
+\begin{center}\footnotesize
+
+esizebox{\textwidth}{!}{\begin{tabular}{lll}
+步骤 & R0 & R1\\
+初始 & \texttt{\{\}} & \texttt{\{\}}\\
+LD R0,a & \texttt{\{ a\}} & \texttt{\{\}}\\
+LD R1,b & \texttt{\{ a\}} & \texttt{\{ b\}}\\
+SUB & \texttt{\{ t1\}} & \texttt{\{ b\}}\\
+LD R1,t1 & \texttt{\{ t2\}} & \texttt{\{ t1\}}\\
+第二次 ADD & \texttt{\{ t2\}} & \texttt{\{ d\}}\\
+ST d,R1 & \texttt{\{ t2\}} & \texttt{\{ d\}}
+\end{tabular}}
+\end{center}
+
 
 \begin{quote}
 \footnotesize

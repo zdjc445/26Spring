@@ -136,6 +136,9 @@ WAW，Write After Write：两条都写，是复用同一存储位置产生的输
 
 RAW 边：
 
+![指令依赖图](figures/instruction-dependency-12.png)
+
+
 ```text
 I1 -> I2，R1
 I2 -> I5，R4
@@ -223,6 +226,19 @@ List Scheduling：
 周期 7：发射 F
 ```
 
+调度表：
+
+| 周期 | 发射指令 | 说明 |
+| --- | --- | --- |
+| 0 | A、B | A 延迟 2，B 延迟 1；满足每周期最多一条长延迟指令 |
+| 1 | D | C 仍在等待 A 的结果 |
+| 2 | C | A、B 均已完成 |
+| 3、4 | 无 | 无就绪指令 |
+| 5 | E | C 在周期 5 结果可用，D 早已完成 |
+| 6 | 无 | 无就绪指令 |
+| 7 | F | 发射 F |
+
+
 `F` 延迟为 1，因此在周期 8 完成，最终完成周期为 8。
 
 约束区别：
@@ -276,6 +292,9 @@ L5 -> L6，新的 i 用于循环条件
 
 ### 四、Dom、PostDom 与 Dominance Frontier 解析
 
+![Diamond CFG](figures/cfg-12-diamond.png)
+
+
 Dom 集：
 
 ```text
@@ -298,6 +317,9 @@ idom(Exit)=B4
 ```
 
 支配树：
+
+![支配树](figures/dom-tree-12-diamond.png)
+
 
 ```text
 Entry

@@ -119,6 +119,9 @@ t = *p;
 
 调用图：
 
+![调用图](figures/callgraph-14.png)
+
+
 ```text
 结点：main、f、g
 边：main -> f
@@ -310,6 +313,9 @@ Andersen 分析收集所有可能指向关系。
 
 ### 五、Andersen 图闭包推导答案
 
+![Andersen points-to 图](figures/andersen-points-to-14.png)
+
+
 初始边和集合：
 
 ```text
@@ -374,6 +380,20 @@ pts(t) = { b, c }
 pts(b) = {}
 pts(c) = {}
 ```
+
+最终 points-to 表：
+
+| 变量/对象 | points-to 集合 |
+| --- | --- |
+| p | {a} |
+| q | {b} |
+| r | {c} |
+| s | {a} |
+| a | {b,c} |
+| t | {b,c} |
+| b | {} |
+| c | {} |
+
 
 可能别名：
 

@@ -112,6 +112,9 @@ A -> c A | d
 ```text
 源程序
 -> 词法分析：① token 序列
+
+![编译前端流水线](figures/compiler-pipeline-11.png)
+
 -> 语法分析：② AST
 -> 语义分析：③ 带类型 AST
 -> 中间代码生成：④ 三地址码
@@ -189,6 +192,9 @@ Z={D,E}
 
 最小 DFA：
 
+![最小 DFA](figures/dfa-min-11.png)
+
+
 ```text
 状态  0  1  接受
 X     Y  X  否
@@ -242,6 +248,9 @@ L={a^n b^n | n>=0}
 ```
 
 PDA：
+
+![PDA for a^n b^n](figures/pda-anbn.png)
+
 
 ```text
 状态：q_push, q_pop, q_accept
@@ -331,6 +340,14 @@ FOLLOW(A)={$}
 S      S->aA    S->b    error    error   error
 A      error    error   A->cA    A->d    error
 ```
+
+预测分析表（表格形式）：
+
+| 非终结符 | 输入 a | 输入 b | 输入 c | 输入 d | 输入 $ |
+| --- | --- | --- | --- | --- | --- |
+| S | S -> aA | S -> b | error | error | error |
+| A | error | error | A -> cA | A -> d | error |
+
 
 同一表项没有多条产生式，因此文法是 LL(1)。
 

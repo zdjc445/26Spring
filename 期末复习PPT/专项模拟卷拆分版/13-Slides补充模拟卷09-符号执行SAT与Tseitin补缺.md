@@ -181,6 +181,14 @@ sigma0(x) = alpha
 该路径可满足。
 ```
 
+路径枚举表：
+
+| 路径 | 路径条件 | error 条件 | 可满足输入 |
+| --- | --- | --- | --- |
+| then | alpha > 0 | alpha + 1 == 2 | alpha = 1 |
+| else | alpha <= 0 | 1 - alpha == 2 | alpha = -1 |
+
+
 `error()` 可达：
 
 ```text
@@ -252,6 +260,16 @@ x3 <-> not x2
 x4 <-> (x1 and x3)
 最终要求 x4 为真。
 ```
+
+Tseitin 变量表：
+
+| 新变量 | 子公式 |
+| --- | --- |
+| x1 | a or b |
+| x2 | c and d |
+| x3 | not x2 |
+| x4 | x1 and x3 |
+
 
 等价约束转 CNF：
 

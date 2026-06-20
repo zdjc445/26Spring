@@ -3,6 +3,7 @@
 \usepackage{hyperref}
 \usepackage{verbatim}
 \usepackage{xcolor}
+\usepackage{graphicx}
 \usepackage{fancyhdr}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
@@ -140,6 +141,16 @@ while (i < n) {
 \subsection*{一、词法分析答案}
 \addcontentsline{toc}{subsection}{一、词法分析答案}
 
+本题图形化答案如下，三张图分别对应 Thompson NFA、子集构造 DFA 和最小 DFA。
+
+\begin{center}
+\includegraphics[width=\linewidth]{figures/nfa-thompson-abstar-abb.png}
+
+\includegraphics[width=0.88\linewidth]{figures/dfa-subset-abstar-abb.png}
+
+\includegraphics[width=0.88\linewidth]{figures/dfa-min-abstar-abb.png}
+\end{center}
+
 Thompson NFA 边表：
 
 \begin{quote}
@@ -203,6 +214,25 @@ D4 = {q1,q2,q3,q4,q6,q7,q8,q13}
   终态：是
 \end{verbatim}
 \end{quote}
+
+DFA 状态集合与转移表：
+
+\begin{center}
+\footnotesize
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lllll}
+\hline
+DFA 状态 & NFA 状态集合 & 输入 a & 输入 b & 终态 \\
+\hline
+D0 & \{q0,q1,q2,q4,q6,q8\} & D1 & D2 & 否 \\
+D1 & \{q1,q2,q3,q4,q5,q6,q8,q9,q10\} & D1 & D3 & 否 \\
+D2 & \{q1,q2,q3,q4,q6,q7,q8\} & D1 & D2 & 否 \\
+D3 & \{q1,q2,q3,q4,q6,q7,q8,q11,q12\} & D1 & D4 & 否 \\
+D4 & \{q1,q2,q3,q4,q6,q7,q8,q13\} & D1 & D2 & 是 \\
+\hline
+\end{tabular}
+}
+\end{center}
 
 最小化：
 
@@ -290,6 +320,7 @@ M[F, id ] = F -> id
 \end{verbatim}
 \end{quote}
 
+
 结论：
 
 \begin{quote}
@@ -298,6 +329,27 @@ M[F, id ] = F -> id
 预测分析表没有多重入口，因此消除左递归后的文法是 LL(1)。
 \end{verbatim}
 \end{quote}
+
+预测分析表（表格形式）：
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+非终结符 & 输入符号 & 产生式\\
+E & ( & E -> T E'\\
+E & id & E -> T E'\\
+E' & + & E' -> + T E'\\
+E' & ) & E' -> epsilon\\
+E' & \$ & E' -> epsilon\\
+T & ( & T -> F T'\\
+T & id & T -> F T'\\
+T' & * & T' -> * F T'\\
+T' & + & T' -> epsilon\\
+T' & ) & T' -> epsilon\\
+T' & \$ & T' -> epsilon\\
+F & ( & F -> ( E )\\
+F & id & F -> id
+\end{tabular}
+\end{center}
+
 
 \subsection*{三、LR(0)/SLR 答案}
 \addcontentsline{toc}{subsection}{三、LR(0)/SLR 答案}
@@ -398,6 +450,27 @@ ACTION[6,d] = r(C -> c C)
 ACTION[6,$] = r(C -> c C)
 \end{verbatim}
 \end{quote}
+
+SLR ACTION/GOTO 表：
+
+\begin{center}
+\footnotesize
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llllll}
+\hline
+状态 & ACTION c & ACTION d & ACTION \$ & GOTO S & GOTO C \\
+\hline
+0 & s3 & s4 & error & 1 & 2 \\
+1 & error & error & acc & error & error \\
+2 & s3 & s4 & error & error & 5 \\
+3 & s3 & s4 & error & error & 6 \\
+4 & r(C -> d) & r(C -> d) & r(C -> d) & error & error \\
+5 & error & error & r(S -> C C) & error & error \\
+6 & r(C -> c C) & r(C -> c C) & r(C -> c C) & error & error \\
+\hline
+\end{tabular}
+}
+\end{center}
 
 \subsection*{四、语义分析答案}
 \addcontentsline{toc}{subsection}{四、语义分析答案}

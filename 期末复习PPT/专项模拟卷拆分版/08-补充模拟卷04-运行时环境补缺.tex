@@ -1,6 +1,7 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
 \usepackage[a4paper,margin=1.85cm]{geometry}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage{verbatim}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
@@ -226,6 +227,11 @@ G     13        2
 
 调用顺序是活动树的前序遍历：
 
+\begin{center}
+\includegraphics[width=0.72\linewidth]{figures/activity-tree-main-f-g-h.png}
+\end{center}
+
+
 \begin{quote}
 \footnotesize
 \begin{verbatim}
@@ -285,6 +291,11 @@ sub  SP, 4      ; 为局部变量 c 分配 4 字节
 \end{quote}
 
 以 BP 为基准：
+
+\begin{center}
+\includegraphics[width=0.72\linewidth]{figures/stack-frame-fun.png}
+\end{center}
+
 
 \begin{quote}
 \footnotesize
@@ -408,6 +419,11 @@ Best-Fit 最终最大连续空闲块为 20。
 
 初始计数：
 
+\begin{center}
+\includegraphics[width=0.72\linewidth]{figures/rc-object-graph.png}
+\end{center}
+
+
 \begin{quote}
 \footnotesize
 \begin{verbatim}
@@ -452,6 +468,11 @@ RC(D): 1->0，回收 D。
 
 从根出发：
 
+\begin{center}
+\includegraphics[width=0.88\linewidth]{figures/trace-object-graph.png}
+\end{center}
+
+
 \begin{quote}
 \footnotesize
 \begin{verbatim}
@@ -473,6 +494,21 @@ R2 可达 F、G。
 \end{quote}
 
 压缩后地址：
+
+压缩后地址表：
+\begin{center}\footnotesize
+\begin{tabular}{cccc}
+对象 & 旧地址 & 新地址 & 大小\\
+A & 0 & 0 & 2\\
+B & 4 & 2 & 3\\
+C & 7 & 5 & 2\\
+D & 9 & 7 & 1\\
+E & 10 & 8 & 2\\
+F & 12 & 10 & 1\\
+G & 13 & 11 & 2
+\end{tabular}
+\end{center}
+
 
 \begin{quote}
 \footnotesize

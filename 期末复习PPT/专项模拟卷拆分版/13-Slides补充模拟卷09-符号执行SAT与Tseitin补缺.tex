@@ -1,6 +1,7 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
 \usepackage[a4paper,margin=1.85cm]{geometry}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage{verbatim}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
@@ -253,6 +254,16 @@ sigma0(x) = alpha
 
 路径二：进入 else 分支：
 
+路径枚举表：
+\begin{center}\footnotesize
+\begin{tabular}{llll}
+路径 & 路径条件 & error 条件 & 可满足输入\\
+then & alpha > 0 & alpha + 1 == 2 & alpha = 1\\
+else & alpha <= 0 & 1 - alpha == 2 & alpha = -1
+\end{tabular}
+\end{center}
+
+
 \begin{quote}
 \footnotesize
 \begin{verbatim}
@@ -355,6 +366,18 @@ not (a and b)
 
 
 引入变量：
+
+Tseitin 变量表：
+\begin{center}\footnotesize
+\begin{tabular}{ll}
+新变量 & 子公式\\
+x1 & a or b\\
+x2 & c and d\\
+x3 & not x2\\
+x4 & x1 and x3
+\end{tabular}
+\end{center}
+
 
 \begin{quote}
 \footnotesize

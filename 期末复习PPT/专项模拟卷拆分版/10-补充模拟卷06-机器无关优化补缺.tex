@@ -1,6 +1,7 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
 \usepackage[a4paper,margin=1.85cm]{geometry}
-\usepackage{hyperref}\usepackage{verbatim}\usepackage{xcolor}\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{graphicx}\usepackage{verbatim}\usepackage{xcolor}\usepackage{fancyhdr}
 \hypersetup{hidelinks}\setlength{\parindent}{0pt}\setlength{\parskip}{0.45em}\setlength{\headheight}{14.5pt}\emergencystretch=4em\sloppy
 \pagestyle{fancy}\fancyhf{}\lhead{编译原理完整模拟卷}\rhead{\thepage}
 \title{机器无关优化完整模拟卷 06（题目与完整解析）}\author{}\date{}
@@ -271,6 +272,18 @@ OUT[B4]={d3,d5,d6,d7}
 \end{verbatim}
 \end{quote}
 
+到达定值 OUT 表：
+\begin{center}\footnotesize
+\begin{tabular}{ll}
+基本块 & OUT\\
+B1 & \texttt{\{ d1,d2,d3\}}\\
+B2 & \texttt{\{ d3,d4,d5\}}\\
+B3 & \texttt{\{ d4,d5,d6\}}\\
+B4 & \texttt{\{ d3,d5,d6,d7\}}
+\end{tabular}
+\end{center}
+
+
 继续迭代到不动点：
 
 \begin{quote}
@@ -334,6 +347,19 @@ IN[B]=use[B] union (OUT[B]-def[B])
 \end{quote}
 
 不动点结果：
+
+活跃变量 IN/OUT 表：
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+基本块 & IN & OUT\\
+B1 & \texttt{\{\}} & \texttt{\{ x,y\}}\\
+B2 & \texttt{\{ x,y\}} & \texttt{\{ y,z\}}\\
+B3 & \texttt{\{ y,z\}} & \texttt{\{ x,y\}}\\
+B4 & \texttt{\{ z\}} & \texttt{\{\}}
+\end{tabular}
+\end{center}
+
+
 
 \begin{quote}
 \footnotesize
@@ -441,6 +467,11 @@ c*d 不可用，因为经过 B3 的路径没有计算 c*d。
 \end{quote}
 
 \subsection*{五、支配、后支配、回边与自然循环解析}
+
+\begin{center}
+\includegraphics[width=0.88\linewidth]{figures/cfg-10-loop.png}
+\end{center}
+
 \addcontentsline{toc}{subsection}{五、支配、后支配、回边与自然循环解析}
 
 
@@ -472,6 +503,11 @@ idom(Exit)=B4
 \end{quote}
 
 支配树：
+
+\begin{center}
+\includegraphics[width=0.62\linewidth]{figures/dom-tree-10.png}
+\end{center}
+
 
 \begin{quote}
 \footnotesize

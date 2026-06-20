@@ -1,6 +1,7 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
 \usepackage[a4paper,margin=1.85cm]{geometry}
 \usepackage{hyperref}
+\usepackage{graphicx}
 \usepackage{verbatim}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
@@ -205,6 +206,11 @@ WAW，Write After Write：两条都写，是复用同一存储位置产生的输
 
 RAW 边：
 
+\begin{center}
+\includegraphics[width=0.88\linewidth]{figures/instruction-dependency-12.png}
+\end{center}
+
+
 \begin{quote}
 \footnotesize
 \begin{verbatim}
@@ -294,6 +300,21 @@ priority(B)=1+6=7
 \end{quote}
 
 List Scheduling：
+
+调度表：
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+周期 & 发射指令 & 说明\\
+0 & A、B & A 延迟 2，B 延迟 1；满足每周期最多一条长延迟指令\\
+1 & D & C 仍在等待 A 的结果\\
+2 & C & A、B 均已完成\\
+3、4 & 无 & 无就绪指令\\
+5 & E & C 在周期 5 结果可用，D 早已完成\\
+6 & 无 & 无就绪指令\\
+7 & F & 发射 F
+\end{tabular}
+\end{center}
+
 
 \begin{quote}
 \footnotesize
@@ -390,6 +411,11 @@ L5 -> L6，新的 i 用于循环条件
 \end{quote}
 
 \subsection*{四、Dom、PostDom 与 Dominance Frontier 解析}
+
+\begin{center}
+\includegraphics[width=0.88\linewidth]{figures/cfg-12-diamond.png}
+\end{center}
+
 \addcontentsline{toc}{subsection}{四、Dom、PostDom 与 Dominance Frontier 解析}
 
 
@@ -421,6 +447,11 @@ idom(Exit)=B4
 \end{quote}
 
 支配树：
+
+\begin{center}
+\includegraphics[width=0.62\linewidth]{figures/dom-tree-12-diamond.png}
+\end{center}
+
 
 \begin{quote}
 \footnotesize
