@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#222"/>
+    </marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #111; }
+      .state { fill: #fff; stroke: #222; stroke-width: 3; }
+      .edge { fill: none; stroke: #222; stroke-width: 2.5; marker-end: url(#arrow); }
+      .label { font-size: 24px; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 7px; stroke-linejoin: round; }
+      .node-label { font-size: 25px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="620" fill="#fff"/>
+  <text x="600" y="42" font-size="30" text-anchor="middle">Subset-construction DFA for (a|b)*abb</text>
+
+  <path class="edge" d="M 25 305 L 105 305"/>
+  <text x="35" y="282" font-size="20">start</text>
+
+  <circle class="state" cx="150" cy="305" r="44"/>
+  <circle class="state" cx="390" cy="165" r="44"/>
+  <circle class="state" cx="390" cy="445" r="44"/>
+  <circle class="state" cx="680" cy="165" r="44"/>
+  <circle class="state" cx="980" cy="165" r="44"/>
+  <circle class="state" cx="980" cy="165" r="36"/>
+
+  <text class="node-label" x="150" y="305">D0</text>
+  <text class="node-label" x="390" y="165">D1</text>
+  <text class="node-label" x="390" y="445">D2</text>
+  <text class="node-label" x="680" y="165">D3</text>
+  <text class="node-label" x="980" y="165">D4</text>
+
+  <path class="edge" d="M 188 283 L 352 187"/>
+  <text class="label" x="270" y="218">a</text>
+  <path class="edge" d="M 188 327 L 352 423"/>
+  <text class="label" x="270" y="400">b</text>
+
+  <path class="edge" d="M 370 125 C 350 55, 430 55, 410 125"/>
+  <text class="label" x="390" y="66">a</text>
+  <path class="edge" d="M 434 165 L 636 165"/>
+  <text class="label" x="535" y="145">b</text>
+
+  <path class="edge" d="M 358 415 C 310 350, 310 260, 358 195"/>
+  <text class="label" x="305" y="305">a</text>
+  <path class="edge" d="M 370 485 C 350 555, 430 555, 410 485"/>
+  <text class="label" x="390" y="570">b</text>
+
+  <path class="edge" d="M 646 137 C 585 108, 485 108, 424 137"/>
+  <text class="label" x="535" y="108">a</text>
+  <path class="edge" d="M 724 165 L 936 165"/>
+  <text class="label" x="830" y="145">b</text>
+
+  <path class="edge" d="M 947 135 C 825 62, 550 62, 423 133"/>
+  <text class="label" x="710" y="65">a</text>
+  <path class="edge" d="M 956 202 C 860 410, 640 500, 434 455"/>
+  <text class="label" x="720" y="455">b</text>
+
+  <text x="600" y="606" font-size="19" text-anchor="middle">D4 is the only accepting state.</text>
+</svg>

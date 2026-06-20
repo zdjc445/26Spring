@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#222"/>
+    </marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #111; }
+      .state { fill: #fff; stroke: #222; stroke-width: 3; }
+      .edge { fill: none; stroke: #222; stroke-width: 2.5; marker-end: url(#arrow); }
+      .label { font-size: 24px; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 7px; stroke-linejoin: round; }
+      .node-label { font-size: 25px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="560" fill="#fff"/>
+  <text x="600" y="42" font-size="30" text-anchor="middle">Minimal DFA for strings ending in abb</text>
+
+  <path class="edge" d="M 25 290 L 105 290"/>
+  <text x="35" y="267" font-size="20">start</text>
+
+  <circle class="state" cx="150" cy="290" r="44"/>
+  <circle class="state" cx="420" cy="290" r="44"/>
+  <circle class="state" cx="700" cy="290" r="44"/>
+  <circle class="state" cx="980" cy="290" r="44"/>
+  <circle class="state" cx="980" cy="290" r="36"/>
+
+  <text class="node-label" x="150" y="290">G0</text>
+  <text class="node-label" x="420" y="290">G1</text>
+  <text class="node-label" x="700" y="290">G2</text>
+  <text class="node-label" x="980" y="290">G3</text>
+
+  <path class="edge" d="M 194 290 L 376 290"/>
+  <text class="label" x="285" y="268">a</text>
+  <path class="edge" d="M 130 250 C 105 170, 195 170, 170 250"/>
+  <text class="label" x="150" y="174">b</text>
+
+  <path class="edge" d="M 400 250 C 375 170, 465 170, 440 250"/>
+  <text class="label" x="420" y="174">a</text>
+  <path class="edge" d="M 464 290 L 656 290"/>
+  <text class="label" x="560" y="268">b</text>
+
+  <path class="edge" d="M 668 260 C 610 190, 510 190, 452 260"/>
+  <text class="label" x="560" y="198">a</text>
+  <path class="edge" d="M 744 290 L 936 290"/>
+  <text class="label" x="840" y="268">b</text>
+
+  <path class="edge" d="M 950 257 C 840 105, 575 105, 452 256"/>
+  <text class="label" x="700" y="116">a</text>
+  <path class="edge" d="M 950 323 C 760 500, 360 500, 181 323"/>
+  <text class="label" x="565" y="478">b</text>
+
+  <text x="600" y="540" font-size="19" text-anchor="middle">G0={D0,D2}, G1={D1}, G2={D3}, G3={D4}; G3 is accepting.</text>
+</svg>
