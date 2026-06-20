@@ -108,6 +108,14 @@ while (i < n) {
 
 ### 一、词法分析答案
 
+本题图形化答案如下，三张图分别对应 Thompson NFA、子集构造 DFA 和最小 DFA。
+
+![Thompson NFA for (a|b)*abb](nfa-thompson-abstar-abb.png)
+
+![子集构造 DFA for (a|b)*abb](dfa-subset-abstar-abb.png)
+
+![最小 DFA for (a|b)*abb](dfa-min-abstar-abb.png)
+
 Thompson NFA 边表：
 
 ```text
@@ -162,6 +170,16 @@ D4 = {q1,q2,q3,q4,q6,q7,q8,q13}
   on b -> D2
   终态：是
 ```
+
+DFA 状态集合与转移表：
+
+| DFA 状态 | NFA 状态集合 | 输入 a | 输入 b | 终态 |
+| --- | --- | --- | --- | --- |
+| D0 | {q0,q1,q2,q4,q6,q8} | D1 | D2 | 否 |
+| D1 | {q1,q2,q3,q4,q5,q6,q8,q9,q10} | D1 | D3 | 否 |
+| D2 | {q1,q2,q3,q4,q6,q7,q8} | D1 | D2 | 否 |
+| D3 | {q1,q2,q3,q4,q6,q7,q8,q11,q12} | D1 | D4 | 否 |
+| D4 | {q1,q2,q3,q4,q6,q7,q8,q13} | D1 | D2 | 是 |
 
 最小化：
 
@@ -238,6 +256,25 @@ M[F, id ] = F -> id
 ```text
 预测分析表没有多重入口，因此消除左递归后的文法是 LL(1)。
 ```
+
+预测分析表（表格形式）：
+
+| 非终结符 | 输入符号 | 产生式 |
+| --- | --- | --- |
+| E | ( | E -> T E' |
+| E | id | E -> T E' |
+| E' | + | E' -> + T E' |
+| E' | ) | E' -> epsilon |
+| E' | $ | E' -> epsilon |
+| T | ( | T -> F T' |
+| T | id | T -> F T' |
+| T' | * | T' -> * F T' |
+| T' | + | T' -> epsilon |
+| T' | ) | T' -> epsilon |
+| T' | $ | T' -> epsilon |
+| F | ( | F -> ( E ) |
+| F | id | F -> id |
+
 
 ### 三、LR(0)/SLR 答案
 
@@ -325,6 +362,19 @@ ACTION[6,c] = r(C -> c C)
 ACTION[6,d] = r(C -> c C)
 ACTION[6,$] = r(C -> c C)
 ```
+
+SLR ACTION/GOTO 表：
+
+| 状态 | ACTION c | ACTION d | ACTION $ | GOTO S | GOTO C |
+| --- | --- | --- | --- | --- | --- |
+| 0 | s3 | s4 | error | 1 | 2 |
+| 1 | error | error | acc | error | error |
+| 2 | s3 | s4 | error | error | 5 |
+| 3 | s3 | s4 | error | error | 6 |
+| 4 | r(C -> d) | r(C -> d) | r(C -> d) | error | error |
+| 5 | error | error | r(S -> C C) | error | error |
+| 6 | r(C -> c C) | r(C -> c C) | r(C -> c C) | error | error |
+
 
 ### 四、语义分析答案
 
@@ -749,6 +799,11 @@ a + b * c
 
 对 `3 + 4`，主要属性依赖：
 
+依赖图如下：
+
+![3 + 4 属性依赖图](figures/attr-dependency-3-plus-4.png)
+
+
 ```text
 T1.val 依赖 num(3).lexeme
 E1.val 依赖 T1.val
@@ -806,6 +861,9 @@ AST：
 ```
 
 `a + b * c` 的 AST：
+
+![a + b * c 的 AST](figures/ast-a-plus-b-times-c.png)
+
 
 ```text
       +
@@ -869,6 +927,18 @@ pop 外层符号表
 参数信息
 函数信息
 ```
+
+符号表记录项（表格形式）：
+
+| 字段 | 含义 |
+| --- | --- |
+| 名字 | 标识符名称 |
+| 类型 | 变量、函数或表达式类型 |
+| 作用域 | 标识符有效的作用域层级 |
+| 存储位置 | 栈帧偏移、静态区地址或堆对象引用等位置信息 |
+| 参数信息 | 函数或过程的形参信息 |
+| 函数信息 | 函数返回类型等信息 |
+
 
 AST 中标识符结点绑定符号表条目的原因：
 
@@ -971,6 +1041,17 @@ x = t4
 (=, t4, -, x)
 ```
 
+四元式表格形式：
+
+| 序号 | op | arg1 | arg2 | result |
+| --- | --- | --- | --- | --- |
+| 1 | + | a | b | t1 |
+| 2 | - | c | d | t2 |
+| 3 | * | t1 | t2 | t3 |
+| 4 | + | t3 | e | t4 |
+| 5 | = | t4 | - | x |
+
+
 三元式：
 
 ```text
@@ -980,6 +1061,17 @@ x = t4
 3: (+, (2), e)
 4: (=, (3), x)
 ```
+
+三元式表格形式：
+
+| 序号 | op | arg1 | arg2 |
+| --- | --- | --- | --- |
+| 0 | + | a | b |
+| 1 | - | c | d |
+| 2 | * | (0) | (1) |
+| 3 | + | (2) | e |
+| 4 | = | (3) | x |
+
 
 间接三元式：
 
@@ -1002,6 +1094,17 @@ p2 -> 2
 p3 -> 3
 p4 -> 4
 ```
+
+间接三元式指针表：
+
+| 指针项 | 指向三元式 |
+| --- | --- |
+| p0 | 0 |
+| p1 | 1 |
+| p2 | 2 |
+| p3 | 3 |
+| p4 | 4 |
+
 
 ### 二、函数调用与参数传递答案
 

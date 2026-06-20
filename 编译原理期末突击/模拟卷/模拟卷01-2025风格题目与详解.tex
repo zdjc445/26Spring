@@ -270,6 +270,14 @@ Thompson NFA：起点 q0，终点 q11。图中 q11 画双圈，下面转移表�
 }
 \end{center}
 
+子集构造 DFA 和最小 DFA 图如下。图后的状态集合与分组仍保留，便于核对。
+
+\begin{center}
+\includegraphics[width=0.88\linewidth]{figures/mock01-dfa.png}
+
+\includegraphics[width=0.88\linewidth]{figures/mock01-min-dfa.png}
+\end{center}
+
 \begin{verbatim}
 Thompson NFA 转移表：
 q4 --epsilon--> q5
@@ -373,6 +381,25 @@ M[C,u] = C -> u
 结论：表中无多重入口，消除左递归后的文法是 LL(1)。
 \end{verbatim}
 \end{quote}
+
+预测分析表（表格形式）：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{lll}
+\hline
+非终结符 & 输入符号 & 产生式 \\
+\hline
+A & r & A -> B C \\
+B & r & B -> r B' \\
+B' & P & B' -> P B' \\
+B' & t & B' -> epsilon \\
+B' & u & B' -> epsilon \\
+C & t & C -> t \\
+C & u & C -> u \\
+\hline
+\end{tabular}
+\end{center}
 
 
 

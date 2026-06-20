@@ -5,6 +5,7 @@
 \usepackage{longtable}
 \usepackage{verbatim}
 \usepackage{xcolor}
+\usepackage{graphicx}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
@@ -211,6 +212,15 @@ B4: y = x + 1
 
 \subsection{一、词法分析详解}
 
+本题图形化答案如下，三张图分别对应 Thompson NFA、子集构造 DFA 和最小 DFA。
+
+\begin{center}
+\includegraphics[width=\linewidth]{figures/mock03-nfa.png}
+
+\includegraphics[width=0.88\linewidth]{figures/mock03-dfa.png}
+
+\includegraphics[width=0.88\linewidth]{figures/mock03-min-dfa.png}
+\end{center}
 
 \begin{quote}
 \footnotesize
@@ -310,6 +320,25 @@ M[U,r] = U -> r
 结论：表中无多重入口，消除左递归后的文法是 LL(1)。
 \end{verbatim}
 \end{quote}
+
+预测分析表（表格形式）：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{lll}
+\hline
+非终结符 & 输入符号 & 产生式 \\
+\hline
+R & id & R -> T U \\
+T & id & T -> id T' \\
+T' & p & T' -> p T' \\
+T' & l & T' -> epsilon \\
+T' & r & T' -> epsilon \\
+U & l & U -> l \\
+U & r & U -> r \\
+\hline
+\end{tabular}
+\end{center}
 
 
 

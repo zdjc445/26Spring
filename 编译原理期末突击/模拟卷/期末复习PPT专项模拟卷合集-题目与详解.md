@@ -87,6 +87,10 @@ if (x < 100 || x > 200 && x != y) x = 0;
 
 ![Thompson NFA for (a|b)*abb](nfa-thompson-abstar-abb.png)
 
+![子集构造 DFA for (a|b)*abb](dfa-subset-abstar-abb.png)
+
+![最小 DFA for (a|b)*abb](dfa-min-abstar-abb.png)
+
 ```text
 正则表达式：(a|b)*abb
 
@@ -139,6 +143,16 @@ D4 = {q1,q2,q3,q4,q6,q7,q8,q13}
   on b -> D2
   终态：是
 ```
+
+DFA 状态集合与转移表：
+
+| DFA 状态 | NFA 状态集合 | 输入 a | 输入 b | 终态 |
+| --- | --- | --- | --- | --- |
+| D0 | {q0,q1,q2,q4,q6,q8} | D1 | D2 | 否 |
+| D1 | {q1,q2,q3,q4,q5,q6,q8,q9,q10} | D1 | D3 | 否 |
+| D2 | {q1,q2,q3,q4,q6,q7,q8} | D1 | D2 | 否 |
+| D3 | {q1,q2,q3,q4,q6,q7,q8,q11,q12} | D1 | D4 | 否 |
+| D4 | {q1,q2,q3,q4,q6,q7,q8,q13} | D1 | D2 | 是 |
 
 最小化：
 
@@ -238,6 +252,25 @@ M[F, id ] = F -> id
 ```
 
 结论：预测分析表没有多重入口，因此该文法是 LL(1)。
+
+预测分析表（表格形式）：
+
+| 非终结符 | 输入符号 | 产生式 |
+| --- | --- | --- |
+| E | ( | E -> T E' |
+| E | id | E -> T E' |
+| E' | + | E' -> + T E' |
+| E' | ) | E' -> epsilon |
+| E' | $ | E' -> epsilon |
+| T | ( | T -> F T' |
+| T | id | T -> F T' |
+| T' | * | T' -> * F T' |
+| T' | + | T' -> epsilon |
+| T' | ) | T' -> epsilon |
+| T' | $ | T' -> epsilon |
+| F | ( | F -> ( E ) |
+| F | id | F -> id |
+
 
 补充说明：
 

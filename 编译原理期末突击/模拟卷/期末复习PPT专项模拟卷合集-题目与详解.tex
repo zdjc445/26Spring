@@ -129,6 +129,10 @@ if (x < 100 || x > 200 && x != y) x = 0;
 
 \begin{center}
 \includegraphics[width=\textwidth]{nfa-thompson-abstar-abb.png}
+
+\includegraphics[width=0.88\textwidth]{dfa-subset-abstar-abb.png}
+
+\includegraphics[width=0.88\textwidth]{dfa-min-abstar-abb.png}
 \end{center}
 
 \begin{quote}
@@ -189,6 +193,25 @@ D4 = {q1,q2,q3,q4,q6,q7,q8,q13}
   终态：是
 \end{verbatim}
 \end{quote}
+
+DFA 状态集合与转移表：
+
+\begin{center}
+\footnotesize
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lllll}
+\hline
+DFA 状态 & NFA 状态集合 & 输入 a & 输入 b & 终态 \\
+\hline
+D0 & \{q0,q1,q2,q4,q6,q8\} & D1 & D2 & 否 \\
+D1 & \{q1,q2,q3,q4,q5,q6,q8,q9,q10\} & D1 & D3 & 否 \\
+D2 & \{q1,q2,q3,q4,q6,q7,q8\} & D1 & D2 & 否 \\
+D3 & \{q1,q2,q3,q4,q6,q7,q8,q11,q12\} & D1 & D4 & 否 \\
+D4 & \{q1,q2,q3,q4,q6,q7,q8,q13\} & D1 & D2 & 是 \\
+\hline
+\end{tabular}
+}
+\end{center}
 
 最小化：
 
@@ -306,6 +329,26 @@ M[F, id ] = F -> id
 \end{quote}
 
 结论：预测分析表没有多重入口，因此该文法是 LL(1)。
+
+预测分析表（表格形式）：
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+非终结符 & 输入符号 & 产生式\\
+E & ( & E -> T E'\\
+E & id & E -> T E'\\
+E' & + & E' -> + T E'\\
+E' & ) & E' -> epsilon\\
+E' & \$ & E' -> epsilon\\
+T & ( & T -> F T'\\
+T & id & T -> F T'\\
+T' & * & T' -> * F T'\\
+T' & + & T' -> epsilon\\
+T' & ) & T' -> epsilon\\
+T' & \$ & T' -> epsilon\\
+F & ( & F -> ( E )\\
+F & id & F -> id
+\end{tabular}
+\end{center}
 
 补充说明：
 
