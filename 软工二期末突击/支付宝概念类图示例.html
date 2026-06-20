@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>支付宝付款概念类图示例</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f6f8fb;
+      color: #172033;
+      font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 26px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+    section {
+      margin: 18px 0;
+      padding: 20px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #fff;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+    .stem {
+      margin: 0 0 18px;
+      padding: 12px 14px;
+      border-left: 4px solid #2563eb;
+      border-radius: 8px;
+      background: #fff;
+    }
+    code {
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: #eef2ff;
+      font-family: Consolas, monospace;
+    }
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #fff;
+    }
+    ul { margin: 8px 0 0; }
+    .note {
+      margin-top: 12px;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>支付宝“扫描商家二维码付款”概念类图</h1>
+  <p class="stem">题干给出的类名：消费者，商家，蚂蚁积分，付款码，付款方式，花呗支付，余额支付，余额宝支付，银行卡支付。</p>
+
+  <section>
+    <h2>先判断哪些是概念类</h2>
+    <ul>
+      <li><code>消费者</code>、<code>商家</code> 是参与业务的人或组织，可以作为概念类。</li>
+      <li><code>付款码</code> 是付款活动中的业务对象，可以作为概念类。</li>
+      <li><code>付款方式</code> 是抽象的支付方式，可以作为父类。</li>
+      <li><code>花呗支付</code>、<code>余额支付</code>、<code>余额宝支付</code>、<code>银行卡支付</code> 是具体付款方式，和 <code>付款方式</code> 是继承关系。</li>
+      <li><code>蚂蚁积分</code> 是消费者账户相关的积分对象，可以和 <code>消费者</code> 建立拥有关系。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>概念类图示例</h2>
+    <svg viewBox="0 0 1180 760" role="img" aria-label="支付宝付款概念类图">
+      <defs>
+        <marker id="tri" markerWidth="12" markerHeight="12" refX="11" refY="6" orient="auto">
+          <path d="M0,0 L12,6 L0,12 Z" fill="#fff" stroke="#0f766e" stroke-width="1.5"></path>
+        </marker>
+        <style>
+          .box{fill:#fff;stroke:#2563eb;stroke-width:2}
+          .head{fill:#dbeafe;stroke:#2563eb;stroke-width:2}
+          .abs{fill:#ecfdf5;stroke:#0f766e;stroke-width:2}
+          .absHead{fill:#ccfbf1;stroke:#0f766e;stroke-width:2}
+          .title{font:700 16px Microsoft YaHei;fill:#172033;text-anchor:middle}
+          .attr{font:14px Consolas,Microsoft YaHei;fill:#334155}
+          .line{stroke:#475569;stroke-width:2;fill:none}
+          .inherit{stroke:#0f766e;stroke-width:2;fill:none;marker-end:url(#tri)}
+          .diamond{fill:#fff;stroke:#475569;stroke-width:2}
+          .label{font:13px Microsoft YaHei;fill:#334155;text-anchor:middle}
+          .multi{font:13px Consolas,monospace;fill:#172033}
+        </style>
+      </defs>
+
+      <g transform="translate(60 72)">
+        <rect width="220" height="150" rx="7" class="box"></rect>
+        <rect width="220" height="38" rx="7" class="head"></rect>
+        <text x="110" y="25" class="title">消费者</text>
+        <text x="18" y="70" class="attr">用户编号</text>
+        <text x="18" y="96" class="attr">姓名</text>
+        <text x="18" y="122" class="attr">手机号</text>
+      </g>
+
+      <g transform="translate(60 325)">
+        <rect width="220" height="130" rx="7" class="box"></rect>
+        <rect width="220" height="38" rx="7" class="head"></rect>
+        <text x="110" y="25" class="title">蚂蚁积分</text>
+        <text x="18" y="70" class="attr">积分值</text>
+        <text x="18" y="96" class="attr">更新时间</text>
+      </g>
+
+      <g transform="translate(430 72)">
+        <rect width="230" height="150" rx="7" class="box"></rect>
+        <rect width="230" height="38" rx="7" class="head"></rect>
+        <text x="115" y="25" class="title">商家</text>
+        <text x="18" y="70" class="attr">商家编号</text>
+        <text x="18" y="96" class="attr">商家名称</text>
+        <text x="18" y="122" class="attr">收款账户</text>
+      </g>
+
+      <g transform="translate(430 325)">
+        <rect width="230" height="150" rx="7" class="box"></rect>
+        <rect width="230" height="38" rx="7" class="head"></rect>
+        <text x="115" y="25" class="title">付款码</text>
+        <text x="18" y="70" class="attr">码编号</text>
+        <text x="18" y="96" class="attr">金额</text>
+        <text x="18" y="122" class="attr">有效状态</text>
+      </g>
+
+      <g transform="translate(825 238)">
+        <rect width="240" height="150" rx="7" class="abs"></rect>
+        <rect width="240" height="38" rx="7" class="absHead"></rect>
+        <text x="120" y="25" class="title">付款方式</text>
+        <text x="18" y="70" class="attr">方式编号</text>
+        <text x="18" y="96" class="attr">名称</text>
+        <text x="18" y="122" class="attr">状态</text>
+      </g>
+
+      <g transform="translate(720 545)">
+        <rect width="190" height="120" rx="7" class="box"></rect>
+        <rect width="190" height="38" rx="7" class="head"></rect>
+        <text x="95" y="25" class="title">花呗支付</text>
+        <text x="18" y="70" class="attr">授信额度</text>
+        <text x="18" y="96" class="attr">可用额度</text>
+      </g>
+
+      <g transform="translate(930 545)">
+        <rect width="190" height="120" rx="7" class="box"></rect>
+        <rect width="190" height="38" rx="7" class="head"></rect>
+        <text x="95" y="25" class="title">余额支付</text>
+        <text x="18" y="70" class="attr">余额</text>
+      </g>
+
+      <g transform="translate(720 675)">
+        <rect width="190" height="70" rx="7" class="box"></rect>
+        <rect width="190" height="34" rx="7" class="head"></rect>
+        <text x="95" y="23" class="title">余额宝支付</text>
+      </g>
+
+      <g transform="translate(930 675)">
+        <rect width="190" height="70" rx="7" class="box"></rect>
+        <rect width="190" height="34" rx="7" class="head"></rect>
+        <text x="95" y="23" class="title">银行卡支付</text>
+      </g>
+
+      <line x1="280" y1="147" x2="430" y2="147" class="line"></line>
+      <text x="300" y="132" class="multi">0..*</text>
+      <text x="410" y="132" class="multi">1</text>
+      <text x="355" y="132" class="label">向商家付款</text>
+
+      <line x1="170" y1="222" x2="170" y2="325" class="line"></line>
+      <text x="184" y="248" class="multi">1</text>
+      <text x="184" y="314" class="multi">1</text>
+      <text x="222" y="282" class="label">拥有</text>
+
+      <path d="M660 147 L705 147 L705 400 L660 400" class="line"></path>
+      <polygon points="660,147 680,137 700,147 680,157" class="diamond"></polygon>
+      <text x="690" y="135" class="multi">1</text>
+      <text x="668" y="390" class="multi">0..*</text>
+      <text x="736" y="270" class="label">展示 / 拥有</text>
+
+      <line x1="280" y1="147" x2="430" y2="400" class="line"></line>
+      <text x="307" y="174" class="multi">1</text>
+      <text x="408" y="386" class="multi">0..*</text>
+      <text x="328" y="300" class="label">扫描</text>
+
+      <path d="M280 177 C450 255 600 285 825 310" class="line"></path>
+      <polygon points="280,177 301,166 320,177 301,188" class="diamond"></polygon>
+      <text x="312" y="202" class="multi">1</text>
+      <text x="796" y="300" class="multi">1..*</text>
+      <text x="555" y="250" class="label">持有 / 选择</text>
+
+      <path d="M815 545 L900 388" class="inherit"></path>
+      <path d="M1025 545 L980 388" class="inherit"></path>
+      <path d="M815 675 C825 590 855 455 910 388" class="inherit"></path>
+      <path d="M1025 675 C1010 590 1000 455 980 388" class="inherit"></path>
+    </svg>
+    <p class="note">这张图只写属性，不写方法。技术类如 Controller、Service、Repository 不属于概念类图，不画。</p>
+  </section>
+
+  <section>
+    <h2>卷面写法</h2>
+    <ul>
+      <li><strong>继承：</strong><code>花呗支付</code>、<code>余额支付</code>、<code>余额宝支付</code>、<code>银行卡支付</code> 继承 <code>付款方式</code>。</li>
+      <li><strong>聚合：</strong><code>消费者</code> 聚合多个 <code>付款方式</code>，付款时选择其中一种。</li>
+      <li><strong>组合：</strong><code>商家</code> 拥有或展示 <code>付款码</code>，付款码依附于商家收款场景。</li>
+      <li><strong>关联：</strong><code>消费者</code> 扫描 <code>付款码</code>，并向 <code>商家</code> 付款。</li>
+      <li><strong>关联：</strong><code>消费者</code> 拥有 <code>蚂蚁积分</code>，付款后积分值可能变化。</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
