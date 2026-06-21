@@ -11,7 +11,7 @@
 \setlength{\parskip}{0.45em}
 \emergencystretch=4em
 \sloppy
-\title{模拟卷03-2025风格题目与详解}
+\title{模拟卷03-2025风格题目与考试标准答案}
 \author{}
 \date{}
 \begin{document}
@@ -19,7 +19,7 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 \newpage
-\section{编译原理 2025 风格模拟卷03（题目与详解）}
+\section{编译原理 2025 风格模拟卷03（题目与考试标准答案）}
 
 
 \subsection{卷面说明}
@@ -207,10 +207,10 @@ B4: y = x + 1
 
 \end{enumerate}
 
-\section{B 详解}
+\section{B 按考试标准重写答案}
 
 
-\subsection{一、词法分析详解}
+\subsection{一、词法分析答案}
 
 本题图形化答案如下，三张图分别对应 Thompson NFA、子集构造 DFA 和最小 DFA。
 
@@ -277,9 +277,27 @@ D3:
 \end{verbatim}
 \end{quote}
 
+最小化推理过程：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{llll}
+\hline
+状态 & 输入 a 后 & 输入 b 后 & 结论 \\
+\hline
+D3 & D3 & D2 & 终态组单独保留 \\
+D0 & D1 & D2 & 与 D2 对目标组相同 \\
+D2 & D1 & D2 & D0、D2 可合并 \\
+D1 & D3 & D2 & 输入 a 后进入终态组，单独成组 \\
+\hline
+\end{tabular}
+\end{center}
+
+因此最终分组为 G2=\{D0,D2\}、G3=\{D1\}、G1=\{D3\}。其中 G2 是初态，G1 是终态。G2 表示当前串末尾不是 a，G3 表示末尾有一个 a，G1 表示末尾是 aa。
 
 
-\subsection{二、LL 语法分析详解}
+
+\subsection{二、LL 语法分析答案}
 
 
 \begin{quote}
@@ -340,9 +358,52 @@ U & r & U -> r \\
 \end{tabular}
 \end{center}
 
+填表推导过程：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+T -> T p | id 是直接左递归。
+按 A -> A alpha | beta 改写为：
+A  -> beta A'
+A' -> alpha A' | epsilon
+
+这里 alpha=p，beta=id，
+所以 T -> id T'，T' -> p T' | epsilon。
+
+FIRST(T)={id}
+FIRST(T')={p, epsilon}
+FIRST(U)={l,r}
+FIRST(R)=FIRST(T U)=FIRST(T)={id}
+
+FOLLOW(R)={$}
+由 R -> T U 得 FIRST(U) 加入 FOLLOW(T)，所以 FOLLOW(T)={l,r}
+由 T -> id T' 得 FOLLOW(T) 加入 FOLLOW(T')，所以 FOLLOW(T')={l,r}
+由 R -> T U 得 FOLLOW(R) 加入 FOLLOW(U)，所以 FOLLOW(U)={$}
+\end{verbatim}
+\end{quote}
+
+完整预测分析表，空白项为 error：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{llllll}
+\hline
+非终结符 & id & p & l & r & \$ \\
+\hline
+R & R -> T U & error & error & error & error \\
+T & T -> id T' & error & error & error & error \\
+T' & error & T' -> p T' & T' -> epsilon & T' -> epsilon & error \\
+U & error & error & U -> l & U -> r & error \\
+\hline
+\end{tabular}
+\end{center}
+
+每个表项最多只有一条产生式，因此消除左递归后的文法是 LL(1)。
 
 
-\subsection{三、指令调度详解}
+
+\subsection{三、指令调度答案}
 
 
 定义：
@@ -387,9 +448,52 @@ I1, I3, I4, I2, I5
 \end{verbatim}
 \end{quote}
 
+读写集合：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{lll}
+\hline
+指令 & 读寄存器 & 写寄存器 \\
+\hline
+I1 & R2, R3 & R1 \\
+I2 & R1, R5 & R4 \\
+I3 & R6, R7 & R2 \\
+I4 & R8, R9 & R1 \\
+I5 & R4, R1 & R10 \\
+\hline
+\end{tabular}
+\end{center}
+
+逐对检查依赖：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{llll}
+\hline
+依赖边 & 类型 & 寄存器 & 判断逻辑 \\
+\hline
+I1 -> I2 & RAW & R1 & I1 写 R1，I2 读 R1 \\
+I1 -> I3 & WAR & R2 & I1 读 R2，I3 后写 R2 \\
+I1 -> I4 & WAW & R1 & I1 写 R1，I4 后写 R1 \\
+I2 -> I4 & WAR & R1 & I2 读 R1，I4 后写 R1 \\
+I2 -> I5 & RAW & R4 & I2 写 R4，I5 读 R4 \\
+I4 -> I5 & RAW & R1 & I4 写 R1，I5 读 R1 \\
+\hline
+\end{tabular}
+\end{center}
+
+依赖图如下。实线是 RAW，虚线是 WAR/WAW：
+
+\begin{center}
+\includegraphics[width=0.9\linewidth]{figures/mock03-instruction-dependencies.png}
+\end{center}
+
+寄存器重命名后，I3 写 R2\_new，I4 写 R1\_new，I5 使用 R1\_new。此时 WAR/WAW 虚线约束被消除，仍需满足 I1 -> I2、I2 -> I5、I4 -> I5。序列 I1, I3, I4, I2, I5 满足这些 RAW 约束，所以是合法调度。
 
 
-\subsection{四、支配问题详解}
+
+\subsection{四、支配问题答案}
 
 
 定义：
@@ -449,9 +553,54 @@ SSA phi 放置：若变量在多个基本块中被定义，则在这些定义块
 \end{verbatim}
 \end{quote}
 
+CFG 图如下：
+
+\begin{center}
+\includegraphics[width=0.78\linewidth]{figures/mock03-branch-cfg.png}
+\end{center}
+
+Dom 集按方程 Dom(n)=\{n\} union intersection(Dom(p)) 逐点计算：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{llll}
+\hline
+节点 & 前驱 & 计算过程 & Dom 集 \\
+\hline
+Entry & 无 & 入口固定 & \{Entry\} \\
+A & Entry & \{A\} union Dom(Entry) & \{Entry,A\} \\
+B & A & \{B\} union Dom(A) & \{Entry,A,B\} \\
+C & A & \{C\} union Dom(A) & \{Entry,A,C\} \\
+D & B,C & \{D\} union (Dom(B) intersection Dom(C)) & \{Entry,A,D\} \\
+E & D & \{E\} union Dom(D) & \{Entry,A,D,E\} \\
+F & D & \{F\} union Dom(D) & \{Entry,A,D,F\} \\
+Exit & E,F & \{Exit\} union (Dom(E) intersection Dom(F)) & \{Entry,A,D,Exit\} \\
+\hline
+\end{tabular}
+\end{center}
+
+支配边界判断：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{lll}
+\hline
+节点 & 判断 & 支配边界 \\
+\hline
+B & B 支配 D 的前驱 B，但不严格支配 D & \{D\} \\
+C & C 支配 D 的前驱 C，但不严格支配 D & \{D\} \\
+E & E 支配 Exit 的前驱 E，但不严格支配 Exit & \{Exit\} \\
+F & F 支配 Exit 的前驱 F，但不严格支配 Exit & \{Exit\} \\
+Entry, A, D & 严格支配对应汇合点 & \{\} \\
+\hline
+\end{tabular}
+\end{center}
+
+因此若变量在 B、C 两个分支中分别定义，phi 放在 D；若变量在 E、F 两个分支中分别定义，phi 放在 Exit。
 
 
-\subsection{五、符号执行与 SAT 详解}
+
+\subsection{五、符号执行与 SAT 答案}
 
 
 \begin{quote}
@@ -481,9 +630,26 @@ F2 为真时，若某个 ai=true 令 c=false；若某个 bj=true 令 c=true，�
 \end{verbatim}
 \end{quote}
 
+Tseitin 转换的推导表：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{lll}
+\hline
+子公式 & 新变量 & 产生的 CNF 子句 \\
+\hline
+a3 and b3 & x31 & (not x31 or a3); (not x31 or b3); (x31 or not a3 or not b3) \\
+x31 or c3 & x32 & (x32 or not x31); (x32 or not c3); (not x32 or x31 or c3) \\
+根公式为真 & x32 & (x32) \\
+\hline
+\end{tabular}
+\end{center}
+
+同时可满足证明按两个方向写：F1 为真时，若 c=false，则第一项必须由某个 ai=true 保证；若 c=true，则第二项必须由某个 bj=true 保证，因此 F2 为真。反过来，F2 为真时，若有某个 ai=true，取 c=false；若有某个 bj=true，取 c=true，均可使 F1 为真。
 
 
-\subsection{六、Andersen 指针分析详解}
+
+\subsection{六、Andersen 指针分析答案}
 
 
 \begin{quote}
@@ -514,9 +680,45 @@ pts(r)={C}
 \end{verbatim}
 \end{quote}
 
+逐条语句生成约束：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{lll}
+\hline
+语句 & Andersen 约束 & 含义 \\
+\hline
+p = \&A & A in pts(p) & p 指向 A \\
+q = \&B & B in pts(q) & q 指向 B \\
+r = \&C & C in pts(r) & r 指向 C \\
+*p = q & 对 v in pts(p)，pts(q) subset pts(v) & q 的指向流入 p 所指对象 \\
+q = r & pts(r) subset pts(q) & r 的指向集合流入 q \\
+t = *p & 对 v in pts(p)，pts(v) subset pts(t) & p 所指对象内容流入 t \\
+\hline
+\end{tabular}
+\end{center}
+
+闭包计算过程：
+
+\begin{center}
+\footnotesize
+\begin{tabular}{lll}
+\hline
+轮次 & 新增事实 & 原因 \\
+\hline
+0 & pts(p)=\{A\}, pts(q)=\{B\}, pts(r)=\{C\} & 取地址语句 \\
+1 & pts(q) 加入 C & q = r \\
+2 & pts(A) 加入 B,C & *p = q，且 pts(p)=\{A\} \\
+3 & pts(t)=\{B,C\} & t = *p，且 pts(A)=\{B,C\} \\
+\hline
+\end{tabular}
+\end{center}
+
+最终 points-to 集合为：pts(p)=\{A\}，pts(q)=\{B,C\}，pts(r)=\{C\}，pts(t)=\{B,C\}，pts(A)=\{B,C\}。
 
 
-\subsection{七、PPT 新增重点详解}
+
+\subsection{七、PPT 新增重点答案}
 
 
 \begin{quote}
@@ -540,23 +742,26 @@ B4:
 \end{verbatim}
 \end{quote}
 
+SSA 与 phi 插入图如下：
 
+\begin{center}
+\includegraphics[width=0.82\linewidth]{figures/mock03-ssa-phi-cfg.png}
+\end{center}
 
-\section{C 复盘清单}
+推理过程：
 
-
-\begin{quote}
+\begin{center}
 \footnotesize
-\begin{verbatim}
-词法：Thompson、epsilon-closure、move、终态集合、最小化分组。
-LL：左递归、FIRST、FOLLOW、预测表、多重入口。
-IR/SSA：三地址码、基本块、支配边界、phi 插入与转出。
-数据流：方向、meet、transfer、gen/kill、worklist、IN/OUT。
-后端：目标代码、地址模式、冲突图、spill、指令调度。
-符号执行：敏感性、CNF、Tseitin 子句、同时可满足证明。
-过程间/指针：调用上下文、上下文敏感、Andersen 约束与闭包。
-\end{verbatim}
-\end{quote}
+\begin{tabular}{lll}
+\hline
+基本块 & SSA 改写 & 原因 \\
+\hline
+B2 & x1 = 1 & x 的一个定义改名为 x1 \\
+B3 & x2 = 2 & x 的另一个定义改名为 x2 \\
+B4 & x3 = phi(x1 from B2, x2 from B3); y1 = x3 + 1 & B4 汇合 B2、B3，x 的到达定义不同 \\
+\hline
+\end{tabular}
+\end{center}
 
-
+B2 和 B3 都定义 x，B4 是二者的控制流汇合点。在 B4 使用 x 时，运行时可能来自 B2 的 x1，也可能来自 B3 的 x2，因此 B4 必须先用 phi 合并两个定义。
 \end{document}

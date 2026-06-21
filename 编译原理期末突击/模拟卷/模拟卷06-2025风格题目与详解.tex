@@ -11,7 +11,7 @@
 \setlength{\parskip}{0.45em}
 \emergencystretch=4em
 \sloppy
-\title{模拟卷06-2025风格题目与详解}
+\title{模拟卷06-2025风格题目与考试标准答案}
 \author{}
 \date{}
 \begin{document}
@@ -19,7 +19,7 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 \newpage
-\section{编译原理 2025 风格模拟卷06（题目与详解）}
+\section{编译原理 2025 风格模拟卷06（题目与考试标准答案）}
 
 
 \subsection{卷面说明}
@@ -197,10 +197,10 @@ b = id(2);
 
 \end{enumerate}
 
-\section{B 详解}
+\section{B 按考试标准重写答案}
 
 
-\subsection{一、词法分析详解}
+\subsection{一、词法分析答案}
 
 本题图形化答案如下，三张图分别对应 Thompson NFA、子集构造 DFA 和最小 DFA。
 
@@ -291,7 +291,7 @@ D5:
 
 
 
-\subsection{二、LL 语法分析详解}
+\subsection{二、LL 语法分析答案}
 
 
 \begin{quote}
@@ -354,7 +354,7 @@ G & slash & G -> slash \\
 
 
 
-\subsection{三、指令调度详解}
+\subsection{三、指令调度答案}
 
 
 定义：
@@ -401,7 +401,7 @@ I1, I3, I4, I2, I5
 
 
 
-\subsection{四、支配问题详解}
+\subsection{四、支配问题答案}
 
 
 定义：
@@ -451,7 +451,7 @@ SSA phi 放置：若变量在多个基本块中被定义，则在这些定义块
 
 
 
-\subsection{五、符号执行与 SAT 详解}
+\subsection{五、符号执行与 SAT 答案}
 
 
 \begin{quote}
@@ -483,7 +483,7 @@ F2 为真时，若某个 ai=true 令 c=false；若某个 bj=true 令 c=true，�
 
 
 
-\subsection{六、Andersen 指针分析详解}
+\subsection{六、Andersen 指针分析答案}
 
 
 \begin{quote}
@@ -514,7 +514,7 @@ pts(z)={o1}
 
 
 
-\subsection{七、PPT 新增重点详解}
+\subsection{七、PPT 新增重点答案}
 
 
 \begin{quote}
@@ -534,24 +534,4 @@ a 可能为 {1,2}，b 可能为 {1,2}。
 因此 a={1}, b={2}。
 \end{verbatim}
 \end{quote}
-
-
-
-\section{C 复盘清单}
-
-
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-词法：Thompson、epsilon-closure、move、终态集合、最小化分组。
-LL：左递归、FIRST、FOLLOW、预测表、多重入口。
-IR/SSA：三地址码、基本块、支配边界、phi 插入与转出。
-数据流：方向、meet、transfer、gen/kill、worklist、IN/OUT。
-后端：目标代码、地址模式、冲突图、spill、指令调度。
-符号执行：敏感性、CNF、Tseitin 子句、同时可满足证明。
-过程间/指针：调用上下文、上下文敏感、Andersen 约束与闭包。
-\end{verbatim}
-\end{quote}
-
-
 \end{document}

@@ -19,7 +19,7 @@
 \begin{document}
 \clearpage
 \begin{center}
-{\zihao{3}\bfseries 期末复习 PPT 专项模拟卷合集（题目与详解）}
+{\zihao{3}\bfseries 期末复习 PPT 专项模拟卷合集（题目与考试标准答案）}
 \end{center}
 
 \section*{卷面说明}
@@ -123,9 +123,9 @@ if (x < 100 || x > 200 && x != y) x = 0;
 \end{verbatim}
 \end{quote}
 
-\section*{B 详解}
+\section*{B 按考试标准重写答案}
 
-\subsection*{一、词法分析详解}
+\subsection*{一、词法分析答案}
 
 \begin{center}
 \includegraphics[width=\textwidth]{nfa-thompson-abstar-abb.png}
@@ -262,7 +262,7 @@ G0 是初态，G3 是终态。
 \end{verbatim}
 \end{quote}
 
-\subsection*{二、LL(1) 详解}
+\subsection*{二、LL(1) 答案}
 
 消除左递归：
 
@@ -328,6 +328,48 @@ M[F, id ] = F -> id
 \end{verbatim}
 \end{quote}
 
+填表推导过程：
+
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+对 E -> T E'：
+FIRST(T E') = FIRST(T) = { (, id }
+所以 M[E, (] = E -> T E'，M[E, id] = E -> T E'。
+
+对 E' -> + T E'：
+FIRST(+ T E') = { + }
+所以 M[E', +] = E' -> + T E'。
+
+对 E' -> epsilon：
+epsilon 产生式要看 FOLLOW(E')。
+FOLLOW(E') = { ), $ }
+所以 M[E', )] = E' -> epsilon，M[E', $] = E' -> epsilon。
+
+对 T -> F T'：
+FIRST(F T') = FIRST(F) = { (, id }
+所以 M[T, (] = T -> F T'，M[T, id] = T -> F T'。
+
+对 T' -> * F T'：
+FIRST(* F T') = { * }
+所以 M[T', *] = T' -> * F T'。
+
+对 T' -> epsilon：
+epsilon 产生式要看 FOLLOW(T')。
+FOLLOW(T') = { +, ), $ }
+所以 M[T', +] = T' -> epsilon，
+M[T', )] = T' -> epsilon，M[T', $] = T' -> epsilon。
+
+对 F -> ( E )：
+FIRST(( E )) = { ( }
+所以 M[F, (] = F -> ( E )。
+
+对 F -> id：
+FIRST(id) = { id }
+所以 M[F, id] = F -> id。
+\end{verbatim}
+\end{quote}
+
 结论：预测分析表没有多重入口，因此该文法是 LL(1)。
 
 预测分析表（表格形式）：
@@ -365,7 +407,7 @@ F & id & F -> id
 \end{verbatim}
 \end{quote}
 
-\subsection*{三、LR(0)/SLR 详解}
+\subsection*{三、LR(0)/SLR 答案}
 
 初始项集：
 
@@ -449,7 +491,7 @@ SLR 只在 FOLLOW(E) 中的符号上放置 reduce E -> T。
 \end{verbatim}
 \end{quote}
 
-\subsection*{四、语义分析详解}
+\subsection*{四、语义分析答案}
 
 \begin{quote}
 \footnotesize
@@ -513,7 +555,7 @@ L'.in 来自父结点 L 或 L'。
 \end{verbatim}
 \end{quote}
 
-\subsection*{五、中间代码详解}
+\subsection*{五、中间代码答案}
 
 \begin{quote}
 \footnotesize
@@ -662,9 +704,9 @@ while (i < n) {
 \end{verbatim}
 \end{quote}
 
-\section*{B 详解}
+\section*{B 按考试标准重写答案}
 
-\subsection*{一、词法分析详解}
+\subsection*{一、词法分析答案}
 
 正则表达式：
 
@@ -694,7 +736,7 @@ abb
 \end{verbatim}
 \end{quote}
 
-\subsection*{二、NFA 到 DFA 详解}
+\subsection*{二、NFA 到 DFA 答案}
 
 \begin{quote}
 \footnotesize
@@ -754,7 +796,7 @@ D6 = {}
 \end{verbatim}
 \end{quote}
 
-\subsection*{三、LR(0)/SLR 详解}
+\subsection*{三、LR(0)/SLR 答案}
 
 规范 LR(0) 项集族：
 
@@ -853,7 +895,7 @@ ACTION[6,$] = r(C -> c C)
 \end{verbatim}
 \end{quote}
 
-\subsection*{四、语义分析详解}
+\subsection*{四、语义分析答案}
 
 S 属性 SDD：
 
@@ -908,7 +950,7 @@ E.code = 3 4 + 5 +
 \end{verbatim}
 \end{quote}
 
-\subsection*{五、中间代码详解}
+\subsection*{五、中间代码答案}
 
 \begin{quote}
 \footnotesize
@@ -1023,9 +1065,9 @@ while (i < n) {
 \end{verbatim}
 \end{quote}
 
-\section*{B 详解}
+\section*{B 按考试标准重写答案}
 
-\subsection*{一、FIRST/FOLLOW 与 LL(1) 表详解}
+\subsection*{一、FIRST/FOLLOW 与 LL(1) 表答案}
 
 FIRST：
 
@@ -1081,7 +1123,7 @@ M[Y, )] = Y -> epsilon
 \end{verbatim}
 \end{quote}
 
-\subsection*{二、LR(0) 与 SLR 详解}
+\subsection*{二、LR(0) 与 SLR 答案}
 
 \begin{quote}
 \footnotesize
@@ -1124,7 +1166,7 @@ FOLLOW(E) = { +, ), $ }
 
 因为 \texttt{*} 不在 \texttt{FOLLOW(E)} 中，所以 SLR 不在 \texttt{*} 上放置 \texttt{reduce E -> T}。因此 \texttt{*} 上只保留移进动作。
 
-\subsection*{三、语义分析详解}
+\subsection*{三、语义分析答案}
 
 属性分类：
 
@@ -1156,7 +1198,7 @@ L.in 是继承属性。
 \end{verbatim}
 \end{quote}
 
-\subsection*{四、布尔表达式回填详解}
+\subsection*{四、布尔表达式回填答案}
 
 表达式结构：
 
@@ -1197,7 +1239,7 @@ L.in 是继承属性。
 \end{verbatim}
 \end{quote}
 
-\subsection*{五、SSA 详解}
+\subsection*{五、SSA 答案}
 
 \begin{quote}
 \footnotesize
