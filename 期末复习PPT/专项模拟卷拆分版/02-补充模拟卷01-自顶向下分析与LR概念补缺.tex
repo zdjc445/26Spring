@@ -1,345 +1,484 @@
-\documentclass[UTF8,zihao=-4]{ctexart}
-\usepackage[a4paper,margin=1.85cm]{geometry}
-\usepackage{hyperref}
-\usepackage{verbatim}
+\documentclass[UTF8]{ctexart}
+\usepackage[a4paper,margin=1.8cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{array}
 \usepackage{xcolor}
-\usepackage{fancyhdr}
-\hypersetup{hidelinks}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
-\emergencystretch=4em
-\sloppy
-\pagestyle{fancy}
-\fancyhf{}
-\lhead{期末复习 PPT 专项模拟卷}
-\rhead{\thepage}
-\title{补充模拟卷 01：自顶向下分析与 LR 概念补缺}
-\author{}
-\date{}
 \begin{document}
-\maketitle
-\setcounter{tocdepth}{1}
-\tableofcontents
-\newpage
+\section*{补充模拟卷 01：自顶向下分析与 LR 概念补缺}
 
+\subsection*{A 卷题目}
 
-\section*{A 卷题目}
-\addcontentsline{toc}{section}{A 卷题目}
-
-\subsection*{一、递归下降、回溯与左公因子（20 分）}
-\addcontentsline{toc}{subsection}{一、递归下降、回溯与左公因子（20 分）}
+\subsubsection*{一、递归下降、回溯与左公因子（20 分）}
 
 文法：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 S -> a A | a B
 A -> c
 B -> d
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 说明该文法在递归下降分析中为什么可能需要回溯。\\
-\noindent 2. 提取左公因子。\\
-\noindent 3. 判断提取左公因子后的文法是否适合构造 LL(1) 预测分析表。\\
+1. 说明该文法在递归下降分析中为什么可能需要回溯。 2. 提取左公因子。 3. 判断提取左公因子后的文法是否适合构造 LL(1) 预测分析表。
 
-\subsection*{二、二义性文法与预测分析表（20 分）}
-\addcontentsline{toc}{subsection}{二、二义性文法与预测分析表（20 分）}
+\subsubsection*{二、二义性文法与预测分析表（20 分）}
 
 文法：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 E -> E + E | E * E | id
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 说明该文法为什么不适合直接构造 LL(1) 预测分析表。\\
-\noindent 2. 指出它至少存在的两个问题。\\
-\noindent 3. 简述通常需要怎样处理。\\
+1. 说明该文法为什么不适合直接构造 LL(1) 预测分析表。 2. 指出它至少存在的两个问题。 3. 简述通常需要怎样处理。
 
-\subsection*{三、句柄与归约序列（20 分）}
-\addcontentsline{toc}{subsection}{三、句柄与归约序列（20 分）}
+\subsubsection*{三、句柄与归约序列（20 分）}
 
 文法：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 S -> A B
 A -> a
 B -> b
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 对输入串：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 a b
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 写出自底向上的归约序列。\\
-\noindent 2. 说明该归约序列与最右推导的关系。\\
+1. 写出自底向上的归约序列。 2. 说明该归约序列与最右推导的关系。
 
-\subsection*{四、规约-规约冲突（20 分）}
-\addcontentsline{toc}{subsection}{四、规约-规约冲突（20 分）}
+\subsubsection*{四、规约-规约冲突（20 分）}
 
 某 LR(0) 状态中有：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 A -> id .
 B -> id .
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 说明为什么这是规约-规约冲突。\\
-\noindent 2. 若 \texttt{FOLLOW(A) = \{ ; \}}，\texttt{FOLLOW(B) = \{ ) \}}，说明 SLR 如何处理。\\
-\noindent 3. 若 \texttt{FOLLOW(A)} 和 \texttt{FOLLOW(B)} 有公共符号，会发生什么。\\
+1. 说明为什么这是规约-规约冲突。 2. 若 \texttt{FOLLOW(A) = \textbackslash{}\{ ; \textbackslash{}\}}，\texttt{FOLLOW(B) = \textbackslash{}\{ ) \textbackslash{}\}}，说明 SLR 如何处理。 3. 若 \texttt{FOLLOW(A)} 和 \texttt{FOLLOW(B)} 有公共符号，会发生什么。
 
-\subsection*{五、内核项、非内核项与 SLR 弱点（20 分）}
-\addcontentsline{toc}{subsection}{五、内核项、非内核项与 SLR 弱点（20 分）}
+\subsubsection*{五、内核项、非内核项与 SLR 弱点（20 分）}
 
 回答：
 
-\noindent 1. 什么是 LR(0) 项集中的内核项。\\
-\noindent 2. 什么是非内核项。\\
-\noindent 3. SLR 为什么比 LR(0) 强。\\
-\noindent 4. SLR 为什么仍然有弱点。\\
+1. 什么是 LR(0) 项集中的内核项。 2. 什么是非内核项。 3. SLR 为什么比 LR(0) 强。 4. SLR 为什么仍然有弱点。
 
-\section*{B 简明答案}
-\addcontentsline{toc}{section}{B 简明答案}
+\subsection*{B 按考试标准重写答案}
 
-\subsection*{一、递归下降、回溯与左公因子答案}
-\addcontentsline{toc}{subsection}{一、递归下降、回溯与左公因子答案}
+\subsubsection*{一、递归下降、回溯与左公因子答案}
 
-原文法：
+\paragraph*{1. 为什么可能需要回溯}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-S -> a A | a B
-\end{verbatim}
-\end{quote}
+原文法中 \texttt{S} 有两条产生式：
 
-两条 \texttt{S} 的产生式右部都以 \texttt{a} 开头。递归下降分析看到输入第一个符号 \texttt{a} 时，不能只根据这一个符号判断应该选择 \texttt{S -> a A} 还是 \texttt{S -> a B}，因此可能先选错再回溯。
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+S -> a A
+S -> a B
+\end{Verbatim}
 
-提取左公因子：
+递归下降分析在选择产生式时，通常先看当前输入符号。若输入串以 \texttt{a} 开头，则两条产生式的第一个终结符都是 \texttt{a}：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+产生式 & 可见的第一个输入符号 \\
+\hline
+\endfirsthead
+产生式 & 可见的第一个输入符号 \\
+\hline
+\endhead
+\texttt{S -> a A} & \texttt{a} \\
+\hline
+\texttt{S -> a B} & \texttt{a} \\
+\hline
+\end{longtable}
+
+因此只看 1 个输入符号时无法确定应选择哪条产生式。若分析器先选 \texttt{S -> a A}，但后续输入是 \texttt{a d}，则 \texttt{A -> c} 无法匹配 \texttt{d}，必须退回去改选 \texttt{S -> a B}。这就是回溯来源。
+
+\paragraph*{2. 提取左公因子}
+
+把公共前缀 \texttt{a} 提出来：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 S  -> a S'
 S' -> A | B
 A  -> c
 B  -> d
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-也可以直接写成：
+由于 \texttt{A -> c}、\texttt{B -> d}，也可以等价写成：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 S  -> a S'
 S' -> c | d
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-判断：
+\paragraph*{3. LL(1) 判断}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-FIRST(c) = { c }
-FIRST(d) = { d }
-\end{verbatim}
-\end{quote}
+对提取左公因子后的文法计算 FIRST：
 
-两条 \texttt{S'} 规则右部的 FIRST 集不相交，因此提取左公因子后可以构造 LL(1) 预测分析表。
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+非终结符或右部 & FIRST \\
+\hline
+\endfirsthead
+非终结符或右部 & FIRST \\
+\hline
+\endhead
+\texttt{c} & \texttt{\textbackslash{}\{ c \textbackslash{}\}} \\
+\hline
+\texttt{d} & \texttt{\textbackslash{}\{ d \textbackslash{}\}} \\
+\hline
+\texttt{S' -> c} & \texttt{\textbackslash{}\{ c \textbackslash{}\}} \\
+\hline
+\texttt{S' -> d} & \texttt{\textbackslash{}\{ d \textbackslash{}\}} \\
+\hline
+\texttt{S -> a S'} & \texttt{\textbackslash{}\{ a \textbackslash{}\}} \\
+\hline
+\end{longtable}
 
-\subsection*{二、二义性文法与预测分析表答案}
-\addcontentsline{toc}{subsection}{二、二义性文法与预测分析表答案}
+\texttt{S'} 的两条产生式 FIRST 集不相交：
 
-该文法：
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+FIRST(c) intersection FIRST(d) = empty
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+因此预测分析表中不会在同一表项填入两条产生式。对应表项为：
+
+\begin{longtable}{|p{0.19\linewidth}|p{0.19\linewidth}|p{0.19\linewidth}|p{0.19\linewidth}|p{0.19\linewidth}|}
+\hline
+非终结符 & 输入 a & 输入 c & 输入 d & 输入 \$ \\
+\hline
+\endfirsthead
+非终结符 & 输入 a & 输入 c & 输入 d & 输入 \$ \\
+\hline
+\endhead
+S & \texttt{S -> a S'} & error & error & error \\
+\hline
+S' & error & \texttt{S' -> c} & \texttt{S' -> d} & error \\
+\hline
+\end{longtable}
+
+所以提取左公因子后的文法适合构造 LL(1) 预测分析表。
+
+\subsubsection*{二、二义性文法与预测分析表答案}
+
+\paragraph*{1. 为什么不能直接构造 LL(1) 表}
+
+文法：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 E -> E + E | E * E | id
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-不适合直接构造 LL(1) 预测分析表，原因：
+不能直接构造 LL(1) 预测分析表，原因有两个层次。
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-1. 有直接左递归：E -> E + E 和 E -> E * E。
-2. 没有体现 + 和 * 的优先级与结合性，表达式可能有多棵语法树。
-\end{verbatim}
-\end{quote}
+第一，它有直接左递归：
 
-例如：
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+E -> E + E
+E -> E * E
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+递归下降分析 \texttt{E} 时会立即再次调用 \texttt{E}，可能无限递归。
+
+第二，它没有规定 \texttt{+}、\texttt{*} 的优先级和结合性，因此是二义性的。例如输入：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 id + id * id
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-可能先结合 \texttt{+}，也可能先结合 \texttt{*}。通常需要：
+可以有两种结构：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-1. 改写文法，消除二义性。
-2. 消除左递归。
-3. 必要时提取左公因子。
-4. 再计算 FIRST、FOLLOW 并构造预测分析表。
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+分析结构 & 含义 \\
+\hline
+\endfirsthead
+分析结构 & 含义 \\
+\hline
+\endhead
+\texttt{(id + id) * id} & 先算加法，再算乘法 \\
+\hline
+\texttt{id + (id * id)} & 先算乘法，再算加法 \\
+\hline
+\end{longtable}
 
-\subsection*{三、句柄与归约序列答案}
-\addcontentsline{toc}{subsection}{三、句柄与归约序列答案}
+同一个输入串有不同语法树，所以不适合直接做确定的预测分析。
 
-输入：
+\paragraph*{2. 至少存在的两个问题}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+问题 & 具体表现 & 对 LL(1) 的影响 \\
+\hline
+\endfirsthead
+问题 & 具体表现 & 对 LL(1) 的影响 \\
+\hline
+\endhead
+直接左递归 & \texttt{E -> E + E}、\texttt{E -> E * E} & 递归下降会无限递归 \\
+\hline
+二义性 & 没有体现优先级和结合性 & 同一个输入串有多种语法树 \\
+\hline
+FIRST 冲突 & 三条产生式都可能以 \texttt{id} 开始 & 预测分析表的同一格会出现多条产生式 \\
+\hline
+\end{longtable}
+
+考试中写出前两个问题即可完整回答第 2 问；写出 FIRST 冲突可以补强说明。
+
+\paragraph*{3. 通常处理方式}
+
+先改写成表达优先级和结合性的非二义文法，再消除左递归。常用改写为：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+E -> E + T | T
+T -> T * F | F
+F -> id
+\end{Verbatim}
+
+该文法体现了 \texttt{*} 的优先级高于 \texttt{+}。为了构造 LL(1) 表，再消除左递归：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+E  -> T E'
+E' -> + T E' | epsilon
+T  -> F T'
+T' -> * F T' | epsilon
+F  -> id
+\end{Verbatim}
+
+最后再计算 FIRST、FOLLOW 并填写预测分析表。
+
+\subsubsection*{三、句柄与归约序列答案}
+
+\paragraph*{1. 自底向上的归约序列}
+
+文法：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+S -> A B
+A -> a
+B -> b
+\end{Verbatim}
+
+输入串是：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 a b
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-自底向上归约：
+自底向上归约时，每一步选择当前句型中的句柄，即某个产生式右部，然后把它归约为产生式左部：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{longtable}{|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|}
+\hline
+当前句型 & 句柄 & 使用产生式 & 归约后 \\
+\hline
+\endfirsthead
+当前句型 & 句柄 & 使用产生式 & 归约后 \\
+\hline
+\endhead
+\texttt{a b} & \texttt{a} & \texttt{A -> a} & \texttt{A b} \\
+\hline
+\texttt{A b} & \texttt{b} & \texttt{B -> b} & \texttt{A B} \\
+\hline
+\texttt{A B} & \texttt{A B} & \texttt{S -> A B} & \texttt{S} \\
+\hline
+\end{longtable}
+
+所以归约序列为：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 a b
 => A b
 => A B
 => S
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-每一步都是把某个产生式右部归约为左部：
+\paragraph*{2. 与最右推导的关系}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-a => A
-b => B
-A B => S
-\end{verbatim}
-\end{quote}
+自底向上归约是最右推导的逆过程。上面归约序列反过来就是一个最右推导：
 
-自底向上分析的归约序列等价于某个最右推导的逆过程。
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+S
+=> A B
+=> A b
+=> a b
+\end{Verbatim}
 
-对应最右推导：
+检查“最右”的依据是：每次推导都替换当前句型中最右边的非终结符。
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-S => A B => A b => a b
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+推导步骤 & 被替换的最右非终结符 \\
+\hline
+\endfirsthead
+推导步骤 & 被替换的最右非终结符 \\
+\hline
+\endhead
+\texttt{S => A B} & \texttt{S} \\
+\hline
+\texttt{A B => A b} & \texttt{B} \\
+\hline
+\texttt{A b => a b} & \texttt{A} \\
+\hline
+\end{longtable}
 
-\subsection*{四、规约-规约冲突答案}
-\addcontentsline{toc}{subsection}{四、规约-规约冲突答案}
+因此题目中的归约序列确实是该最右推导的逆序。
 
-状态中有两个完成项：
+\subsubsection*{四、规约-规约冲突答案}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\paragraph*{1. 为什么是规约-规约冲突}
+
+某 LR(0) 状态中同时有两个完成项：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 A -> id .
 B -> id .
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-在 LR(0) 中，完成项会在所有终结符上放置规约动作，因此同一状态可能同时要求：
+点在产生式末尾表示已经识别出完整右部，可以规约。在 LR(0) 中，完成项不看向前输入符号，会尝试在所有可能输入上填规约动作。因此同一个状态会同时要求：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 reduce A -> id
 reduce B -> id
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-这就是规约-规约冲突。
+同一个 ACTION 表项不能同时放两个规约动作，所以这是规约-规约冲突。
 
-若：
+\paragraph*{2. SLR 如何处理给定 FOLLOW 集}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+SLR 的规则是：完成项 \texttt{A -> alpha .} 只在 \texttt{FOLLOW(A)} 中的终结符上填规约。
+
+题目给出：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 FOLLOW(A) = { ; }
 FOLLOW(B) = { ) }
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-SLR 只在 FOLLOW 集对应的终结符上填规约：
+因此填表为：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-ACTION[状态, ;] = r(A -> id)
-ACTION[状态, )] = r(B -> id)
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+输入符号 & ACTION \\
+\hline
+\endfirsthead
+输入符号 & ACTION \\
+\hline
+\endhead
+\texttt{;} & \texttt{r(A -> id)} \\
+\hline
+\texttt{)} & \texttt{r(B -> id)} \\
+\hline
+\end{longtable}
 
-如果 \texttt{FOLLOW(A)} 和 \texttt{FOLLOW(B)} 有公共符号，那么公共符号对应的 ACTION 表项仍然会同时出现两个规约动作，冲突仍然存在。
+因为 \texttt{\textbackslash{}\{ ; \textbackslash{}\}} 与 \texttt{\textbackslash{}\{ ) \textbackslash{}\}} 不相交，所以这两个规约动作不会落在同一个 ACTION 表项中，SLR 可以消除这个 LR(0) 状态中的冲突。
 
-\subsection*{五、内核项、非内核项与 SLR 弱点答案}
-\addcontentsline{toc}{subsection}{五、内核项、非内核项与 SLR 弱点答案}
+\paragraph*{3. FOLLOW 有公共符号时的结果}
 
-内核项：
+若存在某个终结符 \texttt{x}，使得：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-1. 初始项 S' -> . S。
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+x in FOLLOW(A)
+x in FOLLOW(B)
+\end{Verbatim}
+
+则 SLR 会同时填写：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+ACTION[状态, x] = r(A -> id)
+ACTION[状态, x] = r(B -> id)
+\end{Verbatim}
+
+同一表项仍有两个规约动作，规约-规约冲突仍然存在。
+
+\subsubsection*{五、内核项、非内核项与 SLR 弱点答案}
+
+\paragraph*{1. 内核项}
+
+LR(0) 项集中的内核项包括两类：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+1. 增广文法的初始项 S' -> . S。
 2. 所有点不在产生式最左端的 LR(0) 项。
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-非内核项：
+例子：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-除了 S' -> . S 之外，点在产生式最左端的项。
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+项 & 是否内核项 & 原因 \\
+\hline
+\endfirsthead
+项 & 是否内核项 & 原因 \\
+\hline
+\endhead
+\texttt{S' -> . S} & 是 & 初始项特例 \\
+\hline
+\texttt{A -> a . B} & 是 & 点不在最左端 \\
+\hline
+\texttt{A -> a B .} & 是 & 点不在最左端 \\
+\hline
+\end{longtable}
 
-SLR 比 LR(0) 强：
+\paragraph*{2. 非内核项}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-LR(0) 对完成项不看输入符号，容易在所有终结符上放置规约。
-SLR 使用 FOLLOW 集限制规约，只在 FOLLOW(A) 上对 A -> alpha . 规约。
-\end{verbatim}
-\end{quote}
+非内核项是除初始项以外，点在产生式最左端的项：
 
-SLR 的弱点：
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+项 & 是否非内核项 & 原因 \\
+\hline
+\endfirsthead
+项 & 是否非内核项 & 原因 \\
+\hline
+\endhead
+\texttt{A -> . a B} & 是 & 点在最左端，且不是 \texttt{S' -> . S} \\
+\hline
+\texttt{B -> . c} & 是 & 点在最左端 \\
+\hline
+\end{longtable}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-FOLLOW 集只和非终结符有关，不区分具体 LR 状态中的上下文。
-FOLLOW 集过大时，仍可能在不该规约的位置放置规约动作。
-因此有些冲突需要 LR(1) 或 LALR(1) 才能处理。
-\end{verbatim}
-\end{quote}
+这些项通常由 closure 运算自动补入。
+
+\paragraph*{3. SLR 为什么比 LR(0) 强}
+
+LR(0) 看到完成项 \texttt{A -> alpha .} 后，不使用向前输入符号，规约范围过大。SLR 增加 FOLLOW 集限制：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+LR(0): A -> alpha . 在所有终结符上规约
+SLR : A -> alpha . 只在 FOLLOW(A) 上规约
+\end{Verbatim}
+
+因此 SLR 可以消除一部分 LR(0) 中的移进-规约冲突和规约-规约冲突。
+
+\paragraph*{4. SLR 为什么仍有弱点}
+
+SLR 的 FOLLOW 集只与非终结符有关，不区分项目所在的具体 LR 状态和更精确的调用上下文。若 \texttt{FOLLOW(A)} 在全局范围内很大，SLR 会在某些当前状态不该规约的位置也填入规约动作。
+
+对比：
+
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+方法 & 规约依据 & 精确程度 \\
+\hline
+\endfirsthead
+方法 & 规约依据 & 精确程度 \\
+\hline
+\endhead
+LR(0) & 不看输入符号 & 最粗 \\
+\hline
+SLR & 看 FOLLOW(A) & 比 LR(0) 精细，但 FOLLOW 是全局集合 \\
+\hline
+LR(1) & 看项目自身携带的向前看符号 & 更精确 \\
+\hline
+\end{longtable}
+
+因此有些文法不是 SLR(1)，但可以是 LR(1) 或 LALR(1)。
 \end{document}

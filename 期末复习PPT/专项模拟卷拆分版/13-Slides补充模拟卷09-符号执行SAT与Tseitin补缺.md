@@ -96,9 +96,9 @@ F2 = (a0 or a1 or ... or an or b0 or b1 or ... or bm)
 4. 说明 equisatisfiable 和 equivalent 的区别。
 5. 说明该证明在 Tseitin 转换中的作用。
 
-## B 完整解析
+## B 按考试标准重写答案
 
-### 一、三种敏感性与符号状态解析
+### 一、三种敏感性与符号状态答案
 
 flow-sensitive：
 

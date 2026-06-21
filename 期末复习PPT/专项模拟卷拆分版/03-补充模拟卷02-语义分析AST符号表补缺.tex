@@ -1,40 +1,24 @@
-\documentclass[UTF8,zihao=-4]{ctexart}
-\usepackage[a4paper,margin=1.85cm]{geometry}
-\usepackage{hyperref}
+\documentclass[UTF8]{ctexart}
+\usepackage[a4paper,margin=1.8cm]{geometry}
 \usepackage{graphicx}
-\usepackage{verbatim}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{array}
 \usepackage{xcolor}
-\usepackage{fancyhdr}
-\hypersetup{hidelinks}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
-\emergencystretch=4em
-\sloppy
-\pagestyle{fancy}
-\fancyhf{}
-\lhead{期末复习 PPT 专项模拟卷}
-\rhead{\thepage}
-\title{补充模拟卷 02：语义分析、AST、符号表补缺}
-\author{}
-\date{}
 \begin{document}
-\maketitle
-\setcounter{tocdepth}{1}
-\tableofcontents
-\newpage
+\section*{补充模拟卷 02：语义分析、AST、符号表补缺}
 
+\subsection*{A 卷题目}
 
-\section*{A 卷题目}
-\addcontentsline{toc}{section}{A 卷题目}
-
-\subsection*{一、依赖图与拓扑求值顺序（20 分）}
-\addcontentsline{toc}{subsection}{一、依赖图与拓扑求值顺序（20 分）}
+\subsubsection*{一、依赖图与拓扑求值顺序（20 分）}
 
 考虑语义规则：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 E -> E1 + T
   E.val = E1.val + T.val
 
@@ -43,313 +27,446 @@ E -> T
 
 T -> num
   T.val = num.lexeme
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 对输入：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 3 + 4
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 写出主要属性依赖关系。\\
-\noindent 2. 写出一种合法的属性求值顺序。\\
-\noindent 3. 计算最终 \texttt{E.val}。\\
+1. 写出主要属性依赖关系。 2. 写出一种合法的属性求值顺序。 3. 计算最终 \texttt{E.val}。
 
-\subsection*{二、受控副作用（20 分）}
-\addcontentsline{toc}{subsection}{二、受控副作用（20 分）}
+\subsubsection*{二、受控副作用（20 分）}
 
 考虑声明翻译：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 D -> T id
 T -> int
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 语义动作：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 addType(id.name, T.type)
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 说明该语义动作的副作用是什么。\\
-\noindent 2. 为什么该动作必须在 \texttt{T.type} 已经确定之后执行。\\
-\noindent 3. 写出受控副作用应满足的基本要求。\\
+1. 说明该语义动作的副作用是什么。 2. 为什么该动作必须在 \texttt{T.type} 已经确定之后执行。 3. 写出受控副作用应满足的基本要求。
 
-\subsection*{三、CST 与 AST（20 分）}
-\addcontentsline{toc}{subsection}{三、CST 与 AST（20 分）}
+\subsubsection*{三、CST 与 AST（20 分）}
 
 表达式：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 a + b * c
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 说明 CST 和 AST 的区别。\\
-\noindent 2. 画出该表达式的 AST。\\
-\noindent 3. 说明为什么后续语义分析更常使用 AST。\\
+1. 说明 CST 和 AST 的区别。 2. 画出该表达式的 AST。 3. 说明为什么后续语义分析更常使用 AST。
 
-\subsection*{四、符号表与作用域（20 分）}
-\addcontentsline{toc}{subsection}{四、符号表与作用域（20 分）}
+\subsubsection*{四、符号表与作用域（20 分）}
 
 考虑程序片段：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 {
   int x;
   {
     float x;
   }
 }
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 说明进入和退出代码块时符号表栈如何变化。\\
-\noindent 2. 在内层代码块中查找 \texttt{x} 时应得到哪个声明。\\
-\noindent 3. 退出内层代码块后查找 \texttt{x} 时应得到哪个声明。\\
+1. 说明进入和退出代码块时符号表栈如何变化。 2. 在内层代码块中查找 \texttt{x} 时应得到哪个声明。 3. 退出内层代码块后查找 \texttt{x} 时应得到哪个声明。
 
-\subsection*{五、类型信息与标识符绑定（20 分）}
-\addcontentsline{toc}{subsection}{五、类型信息与标识符绑定（20 分）}
+\subsubsection*{五、类型信息与标识符绑定（20 分）}
 
 回答：
 
-\noindent 1. 符号表通常记录哪些信息。\\
-\noindent 2. AST 中的标识符结点为什么要绑定符号表条目。\\
-\noindent 3. 符号表对类型检查有什么作用。\\
+1. 符号表通常记录哪些信息。 2. AST 中的标识符结点为什么要绑定符号表条目。 3. 符号表对类型检查有什么作用。
 
-\section*{B 简明答案}
-\addcontentsline{toc}{section}{B 简明答案}
+\subsection*{B 按考试标准重写答案}
 
-\subsection*{一、依赖图与拓扑求值顺序答案}
-\addcontentsline{toc}{subsection}{一、依赖图与拓扑求值顺序答案}
+\subsubsection*{一、依赖图与拓扑求值顺序答案}
 
-对 \texttt{3 + 4}，主要属性依赖：
+\paragraph*{1. 主要属性依赖关系}
 
-\begin{center}
-\includegraphics[width=0.88\linewidth]{figures/attr-dependency-3-plus-4.png}
-\end{center}
+对输入 \texttt{3 + 4}，按左递归表达式文法可理解为：
 
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+E -> E1 + T2
+E1 -> T1
+T1 -> num(3)
+T2 -> num(4)
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-T1.val 依赖 num(3).lexeme
-E1.val 依赖 T1.val
-T2.val 依赖 num(4).lexeme
-E.val  依赖 E1.val 和 T2.val
-\end{verbatim}
-\end{quote}
+每条语义规则给出一条或多条依赖边：
 
-一种合法求值顺序：
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+语义规则 & 依赖边 & 说明 \\
+\hline
+\endfirsthead
+语义规则 & 依赖边 & 说明 \\
+\hline
+\endhead
+\texttt{T1.val = num(3).lexeme} & \texttt{num(3).lexeme -> T1.val} & 叶子词素值决定 T1 的值 \\
+\hline
+\texttt{E1.val = T1.val} & \texttt{T1.val -> E1.val} & \texttt{E -> T} 传递属性值 \\
+\hline
+\texttt{T2.val = num(4).lexeme} & \texttt{num(4).lexeme -> T2.val} & 叶子词素值决定 T2 的值 \\
+\hline
+\texttt{E.val = E1.val + T2.val} & \texttt{E1.val -> E.val}，\texttt{T2.val -> E.val} & 加法结点依赖左右操作数 \\
+\hline
+\end{longtable}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-1. T1.val = 3
-2. E1.val = T1.val = 3
-3. T2.val = 4
-4. E.val = E1.val + T2.val = 3 + 4 = 7
-\end{verbatim}
-\end{quote}
+依赖图如下：
 
-最终：
+\begin{figure}[H]\centering
+\includegraphics[width=0.82\linewidth]{figures/attr-dependency-3-plus-4.png}
+\par{\small 3 + 4 属性依赖图}
+\end{figure}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+用文字表示为：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+num(3).lexeme -> T1.val -> E1.val -> E.val
+num(4).lexeme -> T2.val ----------^
+\end{Verbatim}
+
+\paragraph*{2. 一种合法拓扑求值顺序}
+
+属性求值顺序必须满足：一个属性被计算前，它依赖的属性已经计算完成。
+
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+顺序 & 计算 & 结果 \\
+\hline
+\endfirsthead
+顺序 & 计算 & 结果 \\
+\hline
+\endhead
+1 & \texttt{T1.val = num(3).lexeme} & \texttt{T1.val = 3} \\
+\hline
+2 & \texttt{E1.val = T1.val} & \texttt{E1.val = 3} \\
+\hline
+3 & \texttt{T2.val = num(4).lexeme} & \texttt{T2.val = 4} \\
+\hline
+4 & \texttt{E.val = E1.val + T2.val} & \texttt{E.val = 3 + 4 = 7} \\
+\hline
+\end{longtable}
+
+\texttt{T2.val} 也可以在第 1 步或第 2 步之前计算，只要它在 \texttt{E.val} 之前完成即可。
+
+\paragraph*{3. 最终结果}
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 E.val = 7
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\subsection*{二、受控副作用答案}
-\addcontentsline{toc}{subsection}{二、受控副作用答案}
+\subsubsection*{二、受控副作用答案}
 
-副作用：
+\paragraph*{1. 副作用是什么}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-addType(id.name, T.type) 会修改符号表。
-\end{verbatim}
-\end{quote}
+语义动作：
 
-必须在 \texttt{T.type} 确定后执行，因为符号表中需要记录标识符的正确类型。如果 \texttt{T.type} 尚未计算，就无法把正确类型写入符号表。
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+addType(id.name, T.type)
+\end{Verbatim}
 
-受控副作用要求：
+会修改符号表，把标识符名称和类型写入当前作用域的符号表条目。因此它的副作用是“改变编译器维护的外部状态”，不是单纯计算某个属性值。
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-1. 执行位置明确。
-2. 执行顺序确定。
-3. 不破坏属性依赖关系。
-4. 不引入依赖环。
-5. 不导致重复插入或错误类型绑定。
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+动作输入 & 被修改的数据结构 & 修改内容 \\
+\hline
+\endfirsthead
+动作输入 & 被修改的数据结构 & 修改内容 \\
+\hline
+\endhead
+\texttt{id.name} & 当前符号表 & 新增或更新标识符名字 \\
+\hline
+\texttt{T.type} & 当前符号表 & 记录该标识符的类型 \\
+\hline
+\end{longtable}
 
-\subsection*{三、CST 与 AST 答案}
-\addcontentsline{toc}{subsection}{三、CST 与 AST 答案}
+\paragraph*{2. 为什么必须在 `T.type` 确定之后执行}
 
-CST：
+产生式是：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-具体语法树，完整反映文法推导过程，包含括号、辅助非终结符等语法细节。
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+D -> T id
+T -> int
+\end{Verbatim}
 
-AST：
+\texttt{id} 的类型来自 \texttt{T.type}。若 \texttt{T.type} 尚未确定就执行 \texttt{addType}，符号表会出现类型缺失或类型错误。
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-抽象语法树，去掉冗余语法细节，保留表达式和语句的核心结构。
-\end{verbatim}
-\end{quote}
+正确执行顺序为：
 
-\texttt{a + b * c} 的 AST：
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+步骤 & 操作 & 得到的信息 \\
+\hline
+\endfirsthead
+步骤 & 操作 & 得到的信息 \\
+\hline
+\endhead
+1 & 识别并归约 \texttt{T -> int} & \texttt{T.type = int} \\
+\hline
+2 & 读到 \texttt{id.name} & 得到标识符名称 \\
+\hline
+3 & 执行 \texttt{addType(id.name, T.type)} & 插入 \texttt{id.name : int} \\
+\hline
+\end{longtable}
 
-\begin{center}
-\includegraphics[width=0.62\linewidth]{figures/ast-a-plus-b-times-c.png}
-\end{center}
+所以动作必须排在 \texttt{T.type} 之后。
 
+\paragraph*{3. 受控副作用的基本要求}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+考试答题时要强调“可预测、可重复、与依赖关系一致”：
+
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+要求 & 具体含义 \\
+\hline
+\endfirsthead
+要求 & 具体含义 \\
+\hline
+\endhead
+执行位置明确 & 语义动作放在固定产生式位置，不能随意提前或延后 \\
+\hline
+执行顺序确定 & 多个动作之间有清晰先后顺序 \\
+\hline
+依赖已满足 & 动作使用的属性值必须已经计算完成 \\
+\hline
+不引入依赖环 & 不能让属性求值互相等待 \\
+\hline
+不重复执行 & 不能因为回溯或错误恢复造成重复插入 \\
+\hline
+错误可处理 & 遇到重复声明或类型错误时能报告并保持符号表一致 \\
+\hline
+\end{longtable}
+
+\subsubsection*{三、CST 与 AST 答案}
+
+\paragraph*{1. CST 和 AST 的区别}
+
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+对比项 & CST & AST \\
+\hline
+\endfirsthead
+对比项 & CST & AST \\
+\hline
+\endhead
+全称 & Concrete Syntax Tree，具体语法树 & Abstract Syntax Tree，抽象语法树 \\
+\hline
+主要用途 & 展示完整语法推导 & 表示程序语义结构 \\
+\hline
+是否保留语法细节 & 保留括号、辅助非终结符、分隔符等 & 去掉冗余语法细节 \\
+\hline
+结点内容 & 接近文法产生式 & 接近运算、声明、语句等语义结构 \\
+\hline
+\end{longtable}
+
+\paragraph*{2. `a + b * c` 的 AST}
+
+乘法优先级高于加法，因此根结点是 \texttt{+}，右子树是 \texttt{b * c}：
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.82\linewidth]{figures/ast-a-plus-b-times-c.png}
+\par{\small a + b * c 的 AST}
+\end{figure}
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
       +
      / \
     a   *
        / \
       b   c
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-后续语义分析更常使用 AST，因为 AST 更直接表示程序语义结构，便于类型检查、符号绑定、优化和代码生成。
+对应结构为：
 
-\subsection*{四、符号表与作用域答案}
-\addcontentsline{toc}{subsection}{四、符号表与作用域答案}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+(+ a (* b c))
+\end{Verbatim}
 
-进入外层代码块：
+\paragraph*{3. 为什么后续语义分析更常使用 AST}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-push 外层符号表
-插入 x : int
-\end{verbatim}
-\end{quote}
+AST 保留的是语义分析真正需要的信息：
 
-进入内层代码块：
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+后续任务 & AST 的作用 \\
+\hline
+\endfirsthead
+后续任务 & AST 的作用 \\
+\hline
+\endhead
+类型检查 & 直接检查运算符左右操作数类型 \\
+\hline
+标识符绑定 & 在标识符结点绑定符号表条目 \\
+\hline
+中间代码生成 & 按表达式和语句结构生成 IR \\
+\hline
+优化 & 直接识别表达式、常量和控制结构 \\
+\hline
+\end{longtable}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-push 内层符号表
-插入 x : float
-\end{verbatim}
-\end{quote}
+CST 中大量括号、辅助非终结符和推导细节会增加遍历复杂度；AST 更紧凑，更适合后续阶段。
 
-内层代码块中查找 \texttt{x}：
+\subsubsection*{四、符号表与作用域答案}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-先查内层符号表，得到 x : float
-\end{verbatim}
-\end{quote}
+\paragraph*{1. 进入和退出代码块时符号表栈变化}
 
-退出内层代码块：
+程序片段：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-pop 内层符号表
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+{
+  int x;
+  {
+    float x;
+  }
+}
+\end{Verbatim}
 
-此后查找 \texttt{x}：
+符号表栈按“进入块 push，退出块 pop”的规则变化：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-得到外层的 x : int
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+时刻 & 操作 & 符号表栈从底到顶 \\
+\hline
+\endfirsthead
+时刻 & 操作 & 符号表栈从底到顶 \\
+\hline
+\endhead
+进入外层 \texttt{\textbackslash{}\{} & push 外层作用域 & \texttt{[outer]} \\
+\hline
+读到 \texttt{int x;} & 在 outer 插入 \texttt{x:int} & \texttt{[outer\textbackslash{}\{x:int\textbackslash{}\}]} \\
+\hline
+进入内层 \texttt{\textbackslash{}\{} & push 内层作用域 & \texttt{[outer\textbackslash{}\{x:int\textbackslash{}\}, inner]} \\
+\hline
+读到 \texttt{float x;} & 在 inner 插入 \texttt{x:float} & \texttt{[outer\textbackslash{}\{x:int\textbackslash{}\}, inner\textbackslash{}\{x:float\textbackslash{}\}]} \\
+\hline
+退出内层 \texttt{\textbackslash{}\}} & pop inner & \texttt{[outer\textbackslash{}\{x:int\textbackslash{}\}]} \\
+\hline
+退出外层 \texttt{\textbackslash{}\}} & pop outer & \texttt{[]} \\
+\hline
+\end{longtable}
 
-退出外层代码块：
+\paragraph*{2. 内层代码块中查找 `x`}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-pop 外层符号表
-\end{verbatim}
-\end{quote}
+查找标识符时从栈顶向栈底查找。内层块中栈顶是：
 
-\subsection*{五、类型信息与标识符绑定答案}
-\addcontentsline{toc}{subsection}{五、类型信息与标识符绑定答案}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+inner{x:float}
+\end{Verbatim}
 
-符号表通常记录：
+因此内层代码块中查找 \texttt{x} 得到：
 
-符号表记录项（表格形式）：
-\begin{center}\footnotesize
-\begin{tabular}{ll}
-字段 & 含义\\
-名字 & 标识符名称\\
-类型 & 变量、函数或表达式类型\\
-作用域 & 标识符有效的作用域层级\\
-存储位置 & 栈帧偏移、静态区地址或堆对象引用等位置信息\\
-参数信息 & 函数或过程的形参信息\\
-函数信息 & 函数返回类型等信息
-\end{tabular}
-\end{center}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+x : float
+\end{Verbatim}
 
+这说明内层声明遮蔽了外层同名声明。
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-名字
-类型
-作用域
-存储位置
-参数信息
-函数信息
-\end{verbatim}
-\end{quote}
+\paragraph*{3. 退出内层后查找 `x`}
 
-AST 中标识符结点绑定符号表条目的原因：
+退出内层后，\texttt{inner\textbackslash{}\{x:float\textbackslash{}\}} 被弹出，栈中只剩：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-同名标识符可能出现在不同作用域中。
-绑定后可以明确该标识符对应哪一个声明。
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+outer{x:int}
+\end{Verbatim}
 
-符号表对类型检查的作用：
+此时查找 \texttt{x} 得到：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-通过符号表查出变量、函数、表达式的类型，
-判断赋值、运算、函数调用等是否类型匹配。
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+x : int
+\end{Verbatim}
+
+\subsubsection*{五、类型信息与标识符绑定答案}
+
+\paragraph*{1. 符号表通常记录的信息}
+
+符号表条目通常至少包含名称、类型、作用域和存储相关信息。可按表回答：
+
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+字段 & 含义 \\
+\hline
+\endfirsthead
+字段 & 含义 \\
+\hline
+\endhead
+名字 & 标识符文本，例如 \texttt{x}、\texttt{f} \\
+\hline
+种类 & 变量、函数、类型名、常量等 \\
+\hline
+类型 & \texttt{int}、\texttt{float}、函数类型、数组类型等 \\
+\hline
+作用域层级 & 标识符在哪个块或函数内有效 \\
+\hline
+存储位置 & 栈帧偏移、全局地址、寄存器或对象位置 \\
+\hline
+参数信息 & 函数形参个数、类型和顺序 \\
+\hline
+返回类型 & 函数返回值类型 \\
+\hline
+其他属性 & 是否已定义、是否可修改、声明位置等 \\
+\hline
+\end{longtable}
+
+\paragraph*{2. AST 中标识符结点为什么要绑定符号表条目}
+
+同名标识符可以出现在不同作用域中：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+int x;
+{
+  float x;
+}
+\end{Verbatim}
+
+如果 AST 结点只保存文本 \texttt{x}，后续阶段无法直接知道它对应哪个声明。绑定符号表条目后，AST 中每个 \texttt{x} 都指向确定的声明。
+
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+不绑定 & 绑定后 \\
+\hline
+\endfirsthead
+不绑定 & 绑定后 \\
+\hline
+\endhead
+只能看到名字文本 & 能找到声明、类型、作用域和存储位置 \\
+\hline
+每次使用都要重新查表 & 后续类型检查和代码生成可直接使用绑定结果 \\
+\hline
+同名变量容易混淆 & 内外层同名变量被区分 \\
+\hline
+\end{longtable}
+
+\paragraph*{3. 符号表对类型检查的作用}
+
+类型检查需要从符号表读取标识符和函数的类型信息：
+
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+检查场景 & 符号表提供的信息 & 判断内容 \\
+\hline
+\endfirsthead
+检查场景 & 符号表提供的信息 & 判断内容 \\
+\hline
+\endhead
+赋值 \texttt{x = e} & \texttt{x} 的声明类型 & \texttt{e} 的类型是否可赋给 \texttt{x} \\
+\hline
+表达式 \texttt{x + y} & \texttt{x}、\texttt{y} 的类型 & 运算符是否支持这些操作数 \\
+\hline
+函数调用 \texttt{f(a,b)} & \texttt{f} 的参数类型和返回类型 & 实参个数和类型是否匹配 \\
+\hline
+标识符使用 & 标识符是否有可见声明 & 是否未声明或越界使用 \\
+\hline
+\end{longtable}
+
+因此符号表是标识符绑定和类型检查的共同基础。
 \end{document}

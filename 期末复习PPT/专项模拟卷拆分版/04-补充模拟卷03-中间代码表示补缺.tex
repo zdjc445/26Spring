@@ -1,303 +1,379 @@
-\documentclass[UTF8,zihao=-4]{ctexart}
-\usepackage[a4paper,margin=1.85cm]{geometry}
-\usepackage{hyperref}
+\documentclass[UTF8]{ctexart}
+\usepackage[a4paper,margin=1.8cm]{geometry}
 \usepackage{graphicx}
-\usepackage{verbatim}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{array}
 \usepackage{xcolor}
-\usepackage{fancyhdr}
-\hypersetup{hidelinks}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
-\emergencystretch=4em
-\sloppy
-\pagestyle{fancy}
-\fancyhf{}
-\lhead{期末复习 PPT 专项模拟卷}
-\rhead{\thepage}
-\title{补充模拟卷 03：中间代码表示补缺}
-\author{}
-\date{}
 \begin{document}
-\maketitle
-\setcounter{tocdepth}{1}
-\tableofcontents
-\newpage
+\section*{补充模拟卷 03：中间代码表示补缺}
 
+\subsection*{A 卷题目}
 
-\section*{A 卷题目}
-\addcontentsline{toc}{section}{A 卷题目}
-
-\subsection*{一、四元式、三元式、间接三元式（25 分）}
-\addcontentsline{toc}{subsection}{一、四元式、三元式、间接三元式（25 分）}
+\subsubsection*{一、四元式、三元式、间接三元式（25 分）}
 
 将表达式：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 x = (a + b) * (c - d) + e
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 翻译为：
 
-\noindent 1. 普通三地址码。\\
-\noindent 2. 四元式。\\
-\noindent 3. 三元式。\\
-\noindent 4. 间接三元式。\\
+1. 普通三地址码。 2. 四元式。 3. 三元式。 4. 间接三元式。
 
-\subsection*{二、函数调用与参数传递（15 分）}
-\addcontentsline{toc}{subsection}{二、函数调用与参数传递（15 分）}
+\subsubsection*{二、函数调用与参数传递（15 分）}
 
 将下面语句翻译为三地址码：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 y = f(a, b + c)
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 要求体现 \texttt{param} 和 \texttt{call}。
 
-\subsection*{三、数组访问与地址计算（20 分）}
-\addcontentsline{toc}{subsection}{三、数组访问与地址计算（20 分）}
+\subsubsection*{三、数组访问与地址计算（20 分）}
 
 假设 \texttt{int} 宽度为 4，将下面语句翻译为三地址码：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 val = a[i]
 a[i] = y
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 要求体现下标地址计算。
 
-\subsection*{四、fall-through 与减少冗余跳转（20 分）}
-\addcontentsline{toc}{subsection}{四、fall-through 与减少冗余跳转（20 分）}
+\subsubsection*{四、fall-through 与减少冗余跳转（20 分）}
 
 为下面语句生成三地址码，尽量利用顺序执行减少冗余 \texttt{goto}：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 if (x < 100 || x > 200 && x != y)
   x = 0;
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 说明 \texttt{fall-through} 的含义。
 
-\subsection*{五、do-while、break、continue（20 分）}
-\addcontentsline{toc}{subsection}{五、do-while、break、continue（20 分）}
+\subsubsection*{五、do-while、break、continue（20 分）}
 
-\noindent 1. 为下面语句生成三地址码：\\
+1. 为下面语句生成三地址码：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 do {
   a = a + 1;
 } while (a < 10 && b > 0);
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 2. 说明 \texttt{break} 和 \texttt{continue} 在循环中的跳转目标。\\
+2. 说明 \texttt{break} 和 \texttt{continue} 在循环中的跳转目标。
 
-\section*{B 简明答案}
-\addcontentsline{toc}{section}{B 简明答案}
+\subsection*{B 按考试标准重写答案}
 
-\subsection*{一、四元式、三元式、间接三元式答案}
-\addcontentsline{toc}{subsection}{一、四元式、三元式、间接三元式答案}
+\subsubsection*{一、四元式、三元式、间接三元式答案}
 
-普通三地址码：
+\paragraph*{1. 普通三地址码}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+表达式：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+x = (a + b) * (c - d) + e
+\end{Verbatim}
+
+先计算括号内的两个子表达式，再乘法，再加 \texttt{e}，最后赋给 \texttt{x}：
+
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+步骤 & 子表达式 & 临时变量 \\
+\hline
+\endfirsthead
+步骤 & 子表达式 & 临时变量 \\
+\hline
+\endhead
+1 & \texttt{a + b} & \texttt{t1} \\
+\hline
+2 & \texttt{c - d} & \texttt{t2} \\
+\hline
+3 & \texttt{t1 * t2} & \texttt{t3} \\
+\hline
+4 & \texttt{t3 + e} & \texttt{t4} \\
+\hline
+5 & 赋值给 \texttt{x} & \texttt{x} \\
+\hline
+\end{longtable}
+
+三地址码：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 t1 = a + b
 t2 = c - d
 t3 = t1 * t2
 t4 = t3 + e
 x = t4
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-四元式：
+\paragraph*{2. 四元式}
 
-四元式表格形式：
-\begin{center}\footnotesize
-\begin{tabular}{ccccc}
-序号 & op & arg1 & arg2 & result\\
-1 & + & a & b & t1\\
-2 & - & c & d & t2\\
-3 & * & t1 & t2 & t3\\
-4 & + & t3 & e & t4\\
-5 & = & t4 & - & x
-\end{tabular}
-\end{center}
+四元式格式为：
 
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+(op, arg1, arg2, result)
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-(+, a, b, t1)
-(-, c, d, t2)
-(*, t1, t2, t3)
-(+, t3, e, t4)
-(=, t4, -, x)
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.19\linewidth}|p{0.19\linewidth}|p{0.19\linewidth}|p{0.19\linewidth}|p{0.19\linewidth}|}
+\hline
+序号 & op & arg1 & arg2 & result \\
+\hline
+\endfirsthead
+序号 & op & arg1 & arg2 & result \\
+\hline
+\endhead
+1 & \texttt{+} & \texttt{a} & \texttt{b} & \texttt{t1} \\
+\hline
+2 & \texttt{-} & \texttt{c} & \texttt{d} & \texttt{t2} \\
+\hline
+3 & \texttt{*} & \texttt{t1} & \texttt{t2} & \texttt{t3} \\
+\hline
+4 & \texttt{+} & \texttt{t3} & \texttt{e} & \texttt{t4} \\
+\hline
+5 & \texttt{=} & \texttt{t4} & \texttt{\textbackslash{}\_} & \texttt{x} \\
+\hline
+\end{longtable}
 
-三元式：
+\paragraph*{3. 三元式}
 
-三元式表格形式：
-\begin{center}\footnotesize
-\begin{tabular}{cccc}
-序号 & op & arg1 & arg2\\
-0 & + & a & b\\
-1 & - & c & d\\
-2 & * & (0) & (1)\\
-3 & + & (2) & e\\
-4 & = & (3) & x
-\end{tabular}
-\end{center}
+三元式格式为：
 
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+(op, arg1, arg2)
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+结果不再显式命名为 \texttt{t1}、\texttt{t2}，而是用三元式序号引用。
+
+\begin{longtable}{|p{0.19\linewidth}|p{0.19\linewidth}|p{0.19\linewidth}|p{0.19\linewidth}|p{0.19\linewidth}|}
+\hline
+序号 & op & arg1 & arg2 & 含义 \\
+\hline
+\endfirsthead
+序号 & op & arg1 & arg2 & 含义 \\
+\hline
+\endhead
+0 & \texttt{+} & \texttt{a} & \texttt{b} & \texttt{(a+b)} \\
+\hline
+1 & \texttt{-} & \texttt{c} & \texttt{d} & \texttt{(c-d)} \\
+\hline
+2 & \texttt{*} & \texttt{(0)} & \texttt{(1)} & \texttt{(a+b)*(c-d)} \\
+\hline
+3 & \texttt{+} & \texttt{(2)} & \texttt{e} & \texttt{(a+b)*(c-d)+e} \\
+\hline
+4 & \texttt{=} & \texttt{(3)} & \texttt{x} & \texttt{x=(3)} \\
+\hline
+\end{longtable}
+
+写成列表：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 0: (+, a, b)
 1: (-, c, d)
 2: (*, (0), (1))
 3: (+, (2), e)
 4: (=, (3), x)
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-间接三元式：
+\paragraph*{4. 间接三元式}
 
-三元式表：
+间接三元式由“三元式表”和“指针表”组成。三元式表保持不变：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-0: (+, a, b)
-1: (-, c, d)
-2: (*, (0), (1))
-3: (+, (2), e)
-4: (=, (3), x)
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|}
+\hline
+三元式序号 & op & arg1 & arg2 \\
+\hline
+\endfirsthead
+三元式序号 & op & arg1 & arg2 \\
+\hline
+\endhead
+0 & \texttt{+} & \texttt{a} & \texttt{b} \\
+\hline
+1 & \texttt{-} & \texttt{c} & \texttt{d} \\
+\hline
+2 & \texttt{*} & \texttt{(0)} & \texttt{(1)} \\
+\hline
+3 & \texttt{+} & \texttt{(2)} & \texttt{e} \\
+\hline
+4 & \texttt{=} & \texttt{(3)} & \texttt{x} \\
+\hline
+\end{longtable}
 
-指针表：
+指针表决定实际执行顺序：
 
-间接三元式指针表：
-\begin{center}\footnotesize
-\begin{tabular}{cc}
-指针项 & 指向三元式\\
-p0 & 0\\
-p1 & 1\\
-p2 & 2\\
-p3 & 3\\
-p4 & 4
-\end{tabular}
-\end{center}
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+指针项 & 指向三元式 & 当前执行内容 \\
+\hline
+\endfirsthead
+指针项 & 指向三元式 & 当前执行内容 \\
+\hline
+\endhead
+p0 & 0 & \texttt{a+b} \\
+\hline
+p1 & 1 & \texttt{c-d} \\
+\hline
+p2 & 2 & \texttt{(0)*(1)} \\
+\hline
+p3 & 3 & \texttt{(2)+e} \\
+\hline
+p4 & 4 & \texttt{x=(3)} \\
+\hline
+\end{longtable}
 
+间接三元式的优点是：优化时若要调整执行顺序，可主要调整指针表，而不必移动三元式本身。
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-p0 -> 0
-p1 -> 1
-p2 -> 2
-p3 -> 3
-p4 -> 4
-\end{verbatim}
-\end{quote}
+\subsubsection*{二、函数调用与参数传递答案}
 
-\subsection*{二、函数调用与参数传递答案}
-\addcontentsline{toc}{subsection}{二、函数调用与参数传递答案}
+语句：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+y = f(a, b + c)
+\end{Verbatim}
+
+先计算非简单实参 \texttt{b + c}，再传参并调用函数。三地址码为：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 t1 = b + c
 param a
 param t1
 t2 = call f, 2
 y = t2
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-说明：
+逐行说明：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-先计算实参表达式 b + c。
-再依次传递参数。
-call f, 2 表示调用 f，参数个数为 2。
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+行 & 作用 \\
+\hline
+\endfirsthead
+行 & 作用 \\
+\hline
+\endhead
+\texttt{t1 = b + c} & 先求第二个实参表达式 \\
+\hline
+\texttt{param a} & 传入第一个实参 \\
+\hline
+\texttt{param t1} & 传入第二个实参 \\
+\hline
+\texttt{t2 = call f, 2} & 调用 \texttt{f}，实参数量为 2，返回值放入 \texttt{t2} \\
+\hline
+\texttt{y = t2} & 把返回值赋给 \texttt{y} \\
+\hline
+\end{longtable}
 
-\subsection*{三、数组访问与地址计算答案}
-\addcontentsline{toc}{subsection}{三、数组访问与地址计算答案}
+若课堂约定参数从右向左压栈，则 \texttt{param} 顺序可按约定调整；本答案采用题面常见的从左到右传参写法。
 
-\texttt{val = a[i]}：
+\subsubsection*{三、数组访问与地址计算答案}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+题目给定 \texttt{int} 宽度为 4。若数组 \texttt{a} 的基地址记为 \texttt{a}，则：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+a[i] 的地址 = a + i * 4
+\end{Verbatim}
+
+\paragraph*{1. `val = a[i]`}
+
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+步骤 & 计算内容 & 三地址码 \\
+\hline
+\endfirsthead
+步骤 & 计算内容 & 三地址码 \\
+\hline
+\endhead
+1 & 计算字节偏移 & \texttt{t1 = i * 4} \\
+\hline
+2 & 计算元素地址 & \texttt{t2 = a + t1} \\
+\hline
+3 & 从地址取值 & \texttt{val = *t2} \\
+\hline
+\end{longtable}
+
+完整代码：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 t1 = i * 4
 t2 = a + t1
 val = *t2
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\texttt{a[i] = y}：
+\paragraph*{2. `a[i] = y`}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+步骤 & 计算内容 & 三地址码 \\
+\hline
+\endfirsthead
+步骤 & 计算内容 & 三地址码 \\
+\hline
+\endhead
+1 & 计算字节偏移 & \texttt{t3 = i * 4} \\
+\hline
+2 & 计算元素地址 & \texttt{t4 = a + t3} \\
+\hline
+3 & 写入地址 & \texttt{*t4 = y} \\
+\hline
+\end{longtable}
+
+完整代码：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 t3 = i * 4
 t4 = a + t3
 *t4 = y
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-说明：
+注意：\texttt{val = a[i]} 是取右值，需要从地址读；\texttt{a[i] = y} 是写左值，需要先算出地址再写入。
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-i * 4 计算偏移量。
-a + 偏移量得到元素地址。
-*地址 表示访问该地址中的值。
-\end{verbatim}
-\end{quote}
+\subsubsection*{四、fall-through 与减少冗余跳转答案}
 
-\subsection*{四、fall-through 与减少冗余跳转答案}
-\addcontentsline{toc}{subsection}{四、fall-through 与减少冗余跳转答案}
+\paragraph*{1. 条件结构分析}
 
-由于 \texttt{\&\&} 优先级高于 \texttt{||}，条件按：
+语句：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-x < 100 || (x > 200 && x != y)
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+if (x < 100 || x > 200 && x != y)
+  x = 0;
+\end{Verbatim}
 
-处理。
+\texttt{\textbackslash{}\&\textbackslash{}\&} 优先级高于 \texttt{||}，所以条件等价于：
 
-一种三地址码：
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+(x < 100) || ((x > 200) && (x != y))
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+短路逻辑如下：
+
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+子条件 & 为真时 & 为假时 \\
+\hline
+\endfirsthead
+子条件 & 为真时 & 为假时 \\
+\hline
+\endhead
+\texttt{x < 100} & 整体为真，执行 then & 继续判断 \texttt{x > 200} \\
+\hline
+\texttt{x > 200} & 继续判断 \texttt{x != y} & 整体为假，跳到出口 \\
+\hline
+\texttt{x != y} & 整体为真，执行 then & 整体为假，跳到出口 \\
+\hline
+\end{longtable}
+
+\paragraph*{2. 利用 fall-through 的三地址码}
+
+把 then 分支放在条件判断之后，让最后一个真路径自然落入 then 分支：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 if x < 100 goto L_then
 if x <= 200 goto L_next
 if x == y goto L_next
@@ -306,93 +382,120 @@ L_then:
 x = 0
 
 L_next:
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-说明：
+逐行解释：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-x < 100 为真时直接进入 then。
-x < 100 为假时继续检查 x > 200 && x != y。
-若 x <= 200，则 x > 200 为假，直接到 L_next。
-若 x == y，则 x != y 为假，直接到 L_next。
-其余情况顺序落入 L_then。
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|}
+\hline
+代码 & 说明 &  &  \\
+\hline
+\endfirsthead
+代码 & 说明 &  &  \\
+\hline
+\endhead
+\texttt{if x < 100 goto L\textbackslash{}\_then} & 左侧 ` &  & ` 为真，直接执行 then \\
+\hline
+\texttt{if x <= 200 goto L\textbackslash{}\_next} & \texttt{x > 200} 为假，整体条件为假 &  &  \\
+\hline
+\texttt{if x == y goto L\textbackslash{}\_next} & \texttt{x != y} 为假，整体条件为假 &  &  \\
+\hline
+顺序落入 \texttt{L\textbackslash{}\_then} & 说明 \texttt{x > 200} 且 \texttt{x != y} 都为真 &  &  \\
+\hline
+\end{longtable}
 
-\texttt{fall-through} 的含义：
+\paragraph*{3. fall-through 含义}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-不显式生成 goto，而是让控制流自然顺序执行到下一条指令。
-\end{verbatim}
-\end{quote}
+\texttt{fall-through} 指“不生成显式跳转指令，而让控制流按代码顺序自然进入下一条指令”。本题中第三个判断之后没有写：
 
-\subsection*{五、do-while、break、continue 答案}
-\addcontentsline{toc}{subsection}{五、do-while、break、continue 答案}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+goto L_then
+\end{Verbatim}
+
+而是让满足条件的路径直接顺序执行到 \texttt{L\textbackslash{}\_then}，减少了一条冗余跳转。
+
+\subsubsection*{五、do-while、break、continue 答案}
+
+\paragraph*{1. do-while 三地址码}
+
+源程序：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+do {
+  a = a + 1;
+} while (a < 10 && b > 0);
+\end{Verbatim}
+
+\texttt{do-while} 是后测试循环，循环体至少执行一次。条件是：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+(a < 10) && (b > 0)
+\end{Verbatim}
+
+\texttt{\textbackslash{}\&\textbackslash{}\&} 的短路规则是：第一个条件为假时，不再检查第二个条件，直接退出循环。
 
 三地址码：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 L_body:
 t1 = a + 1
 a = t1
 
-if a < 10 goto L_check2
+L_test:
+if a < 10 goto L_check_b
 goto L_exit
 
-L_check2:
+L_check_b:
 if b > 0 goto L_body
 goto L_exit
 
 L_exit:
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-说明：
+流程说明：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-do-while 是后测试循环，循环体至少执行一次。
-a < 10 为假时退出。
-a < 10 为真时才检查 b > 0。
-b > 0 为真时回到循环体，否则退出。
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+标签 & 作用 \\
+\hline
+\endfirsthead
+标签 & 作用 \\
+\hline
+\endhead
+\texttt{L\textbackslash{}\_body} & 循环体开始位置 \\
+\hline
+\texttt{L\textbackslash{}\_test} & do-while 底部条件检查位置 \\
+\hline
+\texttt{L\textbackslash{}\_check\textbackslash{}\_b} & 只有 \texttt{a < 10} 为真时才检查 \texttt{b > 0} \\
+\hline
+\texttt{L\textbackslash{}\_exit} & 循环出口 \\
+\hline
+\end{longtable}
 
-\texttt{break} 和 \texttt{continue}：
+\paragraph*{2. `break` 和 `continue` 的跳转目标}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-break 跳到循环出口。
-continue 跳到本轮循环结束后的下一次条件检查位置。
-\end{verbatim}
-\end{quote}
+在循环翻译中，\texttt{break} 和 \texttt{continue} 不是普通顺序执行语句，它们直接改变控制流：
 
-对 \texttt{while}：
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+语句 & while 循环中的目标 & do-while 循环中的目标 \\
+\hline
+\endfirsthead
+语句 & while 循环中的目标 & do-while 循环中的目标 \\
+\hline
+\endhead
+\texttt{break} & 跳到循环出口 & 跳到循环出口 \\
+\hline
+\texttt{continue} & 跳到循环头的条件判断 & 跳到底部条件判断 \\
+\hline
+\end{longtable}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-continue 通常跳到循环头条件判断处。
-break 跳到循环后的出口标签。
-\end{verbatim}
-\end{quote}
+对应本题的 \texttt{do-while}：
 
-对 \texttt{do-while}：
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+break    -> goto L_exit
+continue -> goto L_test
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-continue 跳到循环底部的条件判断处。
-break 跳到循环后的出口标签。
-\end{verbatim}
-\end{quote}
+原因是 \texttt{continue} 表示结束本轮循环并进入下一轮判断；对 \texttt{do-while}，下一轮判断发生在循环体之后的测试位置。
 \end{document}

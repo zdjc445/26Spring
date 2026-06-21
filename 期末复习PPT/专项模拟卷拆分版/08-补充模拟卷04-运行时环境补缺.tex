@@ -1,79 +1,47 @@
-\documentclass[UTF8,zihao=-4]{ctexart}
-\usepackage[a4paper,margin=1.85cm]{geometry}
-\usepackage{hyperref}
+\documentclass[UTF8]{ctexart}
+\usepackage[a4paper,margin=1.8cm]{geometry}
 \usepackage{graphicx}
-\usepackage{verbatim}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{array}
 \usepackage{xcolor}
-\usepackage{fancyhdr}
-\hypersetup{hidelinks}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
-\setlength{\headheight}{14.5pt}
-\emergencystretch=4em
-\sloppy
-\pagestyle{fancy}
-\fancyhf{}
-\lhead{编译原理完整模拟卷}
-\rhead{\thepage}
-\title{运行时环境完整模拟卷 04（题目与完整解析）}
-\author{}
-\date{}
 \begin{document}
-\maketitle
-\setcounter{tocdepth}{1}
-\tableofcontents
-\newpage
+\section*{运行时环境完整模拟卷 04（题目与完整解析）}
 
-\section*{卷面说明}
-\addcontentsline{toc}{section}{卷面说明}
+\subsection*{卷面说明}
 
-
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 考试时间：120 分钟
 总分：100 分
 说明：本卷独立覆盖存储分配、活动树、栈帧、堆管理、引用计数和跟踪式垃圾回收。
 所有调用约定、对象图和内存数据均在题面中给出。
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\section*{A 卷题目}
-\addcontentsline{toc}{section}{A 卷题目}
+\subsection*{A 卷题目}
 
-
-\subsection*{一、存储区、活动树与控制栈（20 分）}
-\addcontentsline{toc}{subsection}{一、存储区、活动树与控制栈（20 分）}
-
+\subsubsection*{一、存储区、活动树与控制栈（20 分）}
 
 某程序的一次执行产生如下动态调用关系，子结点从左到右表示实际调用顺序：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 main
 ├─ f(1)
 │  ├─ g(1)
 │  └─ g(2)
 └─ h()
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 静态区、栈区、堆区分别存放什么数据，各举一个例子。\\
-\noindent 2. 写出本次执行的过程调用顺序。\\
-\noindent 3. 写出过程返回顺序。\\
-\noindent 4. 当控制流位于 \texttt{g(2)} 内部时，哪些活动尚未结束；控制栈从栈底到栈顶有哪些活动记录。\\
-\noindent 5. 说明活动树的前序/后序遍历与调用/返回顺序的关系。\\
+1. 静态区、栈区、堆区分别存放什么数据，各举一个例子。 2. 写出本次执行的过程调用顺序。 3. 写出过程返回顺序。 4. 当控制流位于 \texttt{g(2)} 内部时，哪些活动尚未结束；控制栈从栈底到栈顶有哪些活动记录。 5. 说明活动树的前序/后序遍历与调用/返回顺序的关系。
 
-\subsection*{二、栈帧布局与调用/返回（20 分）}
-\addcontentsline{toc}{subsection}{二、栈帧布局与调用/返回（20 分）}
-
+\subsubsection*{二、栈帧布局与调用/返回（20 分）}
 
 程序：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 int fun(int a, int b) {
     int c = a - b;
     return c;
@@ -85,93 +53,60 @@ int main() {
     int m = fun(i, j);
     return m;
 }
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 采用如下明确约定：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 机器字长 4 字节；栈向低地址增长。
 调用者按从右到左顺序压入参数。
 call 指令把返回地址压栈。
 被调用者执行 push BP；BP=SP；再为局部变量分配 4 字节。
 函数返回值放入寄存器 R0。
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 写出调用 \texttt{fun(i,j)} 时，从压入第一个参数到完成函数序言的指令顺序。\\
-\noindent 2. 以 BP 为基准，写出 \texttt{c、旧BP、返回地址、a、b} 的地址偏移。\\
-\noindent 3. 写出执行 \texttt{c=a-b} 和设置返回值的伪汇编。\\
-\noindent 4. 写出函数尾声和返回过程。\\
-\noindent 5. 说明返回后 \texttt{main} 如何得到 \texttt{m=80}。\\
+1. 写出调用 \texttt{fun(i,j)} 时，从压入第一个参数到完成函数序言的指令顺序。 2. 以 BP 为基准，写出 \texttt{c、旧BP、返回地址、a、b} 的地址偏移。 3. 写出执行 \texttt{c=a-b} 和设置返回值的伪汇编。 4. 写出函数尾声和返回过程。 5. 说明返回后 \texttt{main} 如何得到 \texttt{m=80}。
 
-\subsection*{三、堆分配、碎片与分配策略（20 分）}
-\addcontentsline{toc}{subsection}{三、堆分配、碎片与分配策略（20 分）}
-
+\subsubsection*{三、堆分配、碎片与分配策略（20 分）}
 
 堆中空闲块按地址从低到高排列，初始大小为：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 [6, 14, 8, 20]
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 依次发出三个分配请求：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 7, 5, 12
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 分配时从选中空闲块的低地址端切出所需空间，不考虑对齐和块头开销。
 
-\noindent 1. 使用 First-Fit，写出每次选中的块及最终空闲块大小。\\
-\noindent 2. 使用 Best-Fit，写出每次选中的块及最终空闲块大小。\\
-\noindent 3. 比较两种策略最终最大连续空闲块。\\
-\noindent 4. 区分内部碎片和外部碎片。\\
-\noindent 5. 写出存储管理器的空间效率、程序效率和低开销三个评价维度。\\
+1. 使用 First-Fit，写出每次选中的块及最终空闲块大小。 2. 使用 Best-Fit，写出每次选中的块及最终空闲块大小。 3. 比较两种策略最终最大连续空闲块。 4. 区分内部碎片和外部碎片。 5. 写出存储管理器的空间效率、程序效率和低开销三个评价维度。
 
-\subsection*{四、引用计数与不可达环（20 分）}
-\addcontentsline{toc}{subsection}{四、引用计数与不可达环（20 分）}
-
+\subsubsection*{四、引用计数与不可达环（20 分）}
 
 根和对象引用关系如下：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 r1 -> A
 r2 -> D
 A  -> B
 B  -> C
 C  -> B
 D  -> C
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 引用计数只统计根引用和对象字段引用。
 
-\noindent 1. 写出初始时 A、B、C、D 的引用计数。\\
-\noindent 2. 执行 \texttt{r1=null} 后，按引用计数规则写出回收过程和新计数。\\
-\noindent 3. 再执行 \texttt{r2=null} 后，写出回收过程和新计数。\\
-\noindent 4. 指出此时哪些对象不可达但不能被引用计数回收。\\
-\noindent 5. 说明跟踪式垃圾回收为什么能回收它们。\\
+1. 写出初始时 A、B、C、D 的引用计数。 2. 执行 \texttt{r1=null} 后，按引用计数规则写出回收过程和新计数。 3. 再执行 \texttt{r2=null} 后，写出回收过程和新计数。 4. 指出此时哪些对象不可达但不能被引用计数回收。 5. 说明跟踪式垃圾回收为什么能回收它们。
 
-\subsection*{五、标记-清扫、压缩、拷贝与分代（20 分）}
-\addcontentsline{toc}{subsection}{五、标记-清扫、压缩、拷贝与分代（20 分）}
-
+\subsubsection*{五、标记-清扫、压缩、拷贝与分代（20 分）}
 
 根和对象图：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 R1 -> A        R2 -> F
 A -> B, C
 B -> D
@@ -179,14 +114,11 @@ C -> D, E
 D -> B
 F -> G
 H 无入边
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
 对象在堆中按地址排列：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
 对象  起始地址  大小
 A     0         2
 H     2         2
@@ -196,358 +128,578 @@ D     9         1
 E     10        2
 F     12        1
 G     13        2
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-\noindent 1. 从根集出发列出全部可达对象和垃圾对象。\\
-\noindent 2. 写出标记-清扫两个阶段及清扫结果。\\
-\noindent 3. 按对象原有顺序向低地址压缩，写出每个存活对象的新起始地址。\\
-\noindent 4. 说明半空间拷贝回收的 From/To 过程及空间代价。\\
-\noindent 5. 说明分代回收依据的经验规律，以及记忆集的作用。\\
+1. 从根集出发列出全部可达对象和垃圾对象。 2. 写出标记-清扫两个阶段及清扫结果。 3. 按对象原有顺序向低地址压缩，写出每个存活对象的新起始地址。 4. 说明半空间拷贝回收的 From/To 过程及空间代价。 5. 说明分代回收依据的经验规律，以及记忆集的作用。
 
-\newpage
-\section*{B 完整解析}
-\addcontentsline{toc}{section}{B 完整解析}
+\subsection*{B 按考试标准重写答案}
 
+\subsubsection*{一、存储区、活动树与控制栈答案}
 
-\subsection*{一、存储区、活动树与控制栈解析}
-\addcontentsline{toc}{subsection}{一、存储区、活动树与控制栈解析}
+\paragraph*{1. 静态区、栈区、堆区}
 
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+存储区 & 存放内容 & 例子 \\
+\hline
+\endfirsthead
+存储区 & 存放内容 & 例子 \\
+\hline
+\endhead
+静态区 & 编译期可确定大小、生命周期贯穿程序运行的数据和代码 & 全局变量、静态变量、常量、目标代码 \\
+\hline
+栈区 & 随过程调用创建、随过程返回销毁的活动记录 & 参数、返回地址、局部变量、保存的 BP \\
+\hline
+堆区 & 生命周期不严格服从调用嵌套关系的动态对象 & \texttt{malloc} 或 \texttt{new} 分配的对象 \\
+\hline
+\end{longtable}
 
-存储区：
+\paragraph*{2. 过程调用顺序}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-静态区：保存编译期可确定大小和生存期覆盖整个程序的数据，例如全局变量、静态变量、常量和目标代码。
-栈区：保存随过程调用建立、随返回撤销的活动记录，例如参数、返回地址和局部变量。
-堆区：保存生命周期不能由调用嵌套确定的动态对象，例如 malloc/new 分配的对象。
-\end{verbatim}
-\end{quote}
+活动树如下：
 
-调用顺序是活动树的前序遍历：
+\begin{figure}[H]\centering
+\includegraphics[width=0.82\linewidth]{figures/activity-tree-main-f-g-h.png}
+\par{\small 活动树}
+\end{figure}
 
-\begin{center}
-\includegraphics[width=0.72\linewidth]{figures/activity-tree-main-f-g-h.png}
-\end{center}
+子结点从左到右就是实际调用顺序。调用发生在进入过程时，所以调用顺序是活动树的前序遍历：
 
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+main -> f(1) -> g(1) -> g(2) -> h()
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-main, f(1), g(1), g(2), h()
-\end{verbatim}
-\end{quote}
+\paragraph*{3. 过程返回顺序}
 
-返回顺序是活动树的后序遍历：
+一个过程必须等它调用的子过程全部返回后才能返回，所以返回顺序是后序遍历：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-g(1), g(2), f(1), h(), main
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+g(1) -> g(2) -> f(1) -> h() -> main
+\end{Verbatim}
 
-位于 \texttt{g(2)} 时：
+\paragraph*{4. 位于 `g(2)` 内部时的控制栈}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-尚未结束的活动：main、f(1)、g(2)。
-控制栈从栈底到栈顶：AR(main)、AR(f(1))、AR(g(2))。
-g(1) 已经返回，其活动记录已从栈中移除；h() 尚未调用。
-\end{verbatim}
-\end{quote}
+执行到 \texttt{g(2)} 时，\texttt{g(1)} 已经返回，\texttt{h()} 尚未调用。
 
-关系：
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+活动 & 状态 \\
+\hline
+\endfirsthead
+活动 & 状态 \\
+\hline
+\endhead
+main & 已调用，尚未结束 \\
+\hline
+f(1) & 已调用，尚未结束 \\
+\hline
+g(1) & 已返回 \\
+\hline
+g(2) & 当前正在执行 \\
+\hline
+h() & 尚未调用 \\
+\hline
+\end{longtable}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-每个调用在进入子活动前发生，所以调用序列对应前序遍历。
-一个活动只有在所有子活动返回后才返回，所以返回序列对应后序遍历。
-当前控制栈正好对应活动树中从根到当前活动结点的路径。
-\end{verbatim}
-\end{quote}
+因此尚未结束的活动是：
 
-\subsection*{二、栈帧布局与调用/返回解析}
-\addcontentsline{toc}{subsection}{二、栈帧布局与调用/返回解析}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+main, f(1), g(2)
+\end{Verbatim}
 
+控制栈从栈底到栈顶为：
 
-调用和序言：
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+AR(main), AR(f(1)), AR(g(2))
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-push j          ; 参数 b=20，先压右侧参数
-push i          ; 参数 a=100
-call fun        ; 压入返回地址，跳到 fun
+\paragraph*{5. 活动树遍历与调用/返回顺序}
+
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+遍历 & 对应含义 \\
+\hline
+\endfirsthead
+遍历 & 对应含义 \\
+\hline
+\endhead
+前序遍历 & 先访问当前结点，再访问子结点；对应过程调用顺序 \\
+\hline
+后序遍历 & 先访问子结点，再访问当前结点；对应过程返回顺序 \\
+\hline
+\end{longtable}
+
+当前控制栈对应活动树中“根结点到当前活动结点”的路径。
+
+\subsubsection*{二、栈帧布局与调用/返回答案}
+
+\paragraph*{1. 从压入参数到完成函数序言的指令顺序}
+
+题目约定参数从右到左压栈。调用 \texttt{fun(i,j)} 时，右侧参数 \texttt{j} 对应形参 \texttt{b}，左侧参数 \texttt{i} 对应形参 \texttt{a}。
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+push j          ; 压入参数 b=20
+push i          ; 压入参数 a=100
+call fun        ; 压入返回地址，并跳转到 fun
 
 fun:
-push BP         ; 保存调用者 BP
-mov  BP, SP     ; 建立当前栈帧基址
+push BP         ; 保存 main 的旧 BP
+mov  BP, SP     ; 令 BP 指向刚压入的旧 BP
 sub  SP, 4      ; 为局部变量 c 分配 4 字节
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-以 BP 为基准：
+执行 \texttt{push BP} 后，栈顶位置保存的是旧 BP；随后 \texttt{BP=SP}，所以旧 BP 位于 \texttt{[BP+0]}。
 
-\begin{center}
-\includegraphics[width=0.72\linewidth]{figures/stack-frame-fun.png}
-\end{center}
+\paragraph*{2. 以 BP 为基准的偏移}
 
+题目约定机器字长 4 字节，栈向低地址增长。完成函数序言后布局如下：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-[BP-4]   c
-[BP+0]   旧 BP
-[BP+4]   返回地址
-[BP+8]   参数 a=100
-[BP+12]  参数 b=20
-\end{verbatim}
-\end{quote}
+\begin{figure}[H]\centering
+\includegraphics[width=0.82\linewidth]{figures/stack-frame-fun.png}
+\par{\small fun(i,j) 栈帧布局}
+\end{figure}
 
-函数体：
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+位置 & 内容 & 原因 \\
+\hline
+\endfirsthead
+位置 & 内容 & 原因 \\
+\hline
+\endhead
+\texttt{[BP-4]} & 局部变量 \texttt{c} & \texttt{sub SP,4} 在 BP 下方分配 4 字节 \\
+\hline
+\texttt{[BP+0]} & 旧 BP & \texttt{push BP} 后立刻 \texttt{BP=SP} \\
+\hline
+\texttt{[BP+4]} & 返回地址 & \texttt{call fun} 压入 \\
+\hline
+\texttt{[BP+8]} & 参数 \texttt{a=100} & 调用者后压入 \texttt{i}，离返回地址更近 \\
+\hline
+\texttt{[BP+12]} & 参数 \texttt{b=20} & 调用者先压入 \texttt{j}，位置更高 \\
+\hline
+\end{longtable}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-LD   R0, [BP+8]       ; R0=a
-SUB  R0, [BP+12]      ; R0=a-b=80
-ST   [BP-4], R0       ; c=80
+\paragraph*{3. `c=a-b` 和设置返回值}
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+LD   R0, [BP+8]       ; R0 = a = 100
+SUB  R0, [BP+12]      ; R0 = a - b = 80
+ST   [BP-4], R0       ; c = 80
 LD   R0, [BP-4]       ; 返回值放入 R0
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-函数尾声：
+也可以在 \texttt{SUB} 后直接把 \texttt{R0} 作为返回值；这里按题目中的局部变量 \texttt{c} 明确写出存储和读取。
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-mov  SP, BP           ; 释放局部变量
+\paragraph*{4. 函数尾声和返回过程}
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+mov  SP, BP           ; 释放局部变量 c
 pop  BP               ; 恢复调用者 BP
 ret                   ; 弹出返回地址并跳回 main
-\end{verbatim}
-\end{quote}
+\end{Verbatim}
 
-调用者清理两个参数后，把 \texttt{R0=80} 保存到 \texttt{m}：
+解释：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-add SP, 8
-ST  m, R0
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+指令 & 作用 \\
+\hline
+\endfirsthead
+指令 & 作用 \\
+\hline
+\endhead
+\texttt{mov SP,BP} & SP 回到旧 BP 所在位置，局部变量空间失效 \\
+\hline
+\texttt{pop BP} & 取出旧 BP，恢复 main 的栈帧基址 \\
+\hline
+\texttt{ret} & 取出返回地址，跳回调用点之后 \\
+\hline
+\end{longtable}
 
-\subsection*{三、堆分配、碎片与分配策略解析}
-\addcontentsline{toc}{subsection}{三、堆分配、碎片与分配策略解析}
+\paragraph*{5. `main` 如何得到 `m=80`}
 
+\texttt{fun} 返回时，返回值已经放在 \texttt{R0}。回到 \texttt{main} 后，调用者清理参数并保存返回值：
 
-First-Fit：
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+add SP, 8             ; 清理两个 4 字节参数
+ST  m, R0             ; m = 80
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-初始：[6,14,8,20]
+因此 \texttt{main} 中的 \texttt{m} 得到 \texttt{80}。
 
-请求 7：第一个可容纳的是 14，剩余 7
-       [6,7,8,20]
+\subsubsection*{三、堆分配、碎片与分配策略答案}
 
-请求 5：第一个可容纳的是 6，剩余 1
-       [1,7,8,20]
+\paragraph*{1. First-Fit}
 
-请求 12：第一个可容纳的是 20，剩余 8
-        [1,7,8,8]
-\end{verbatim}
-\end{quote}
+First-Fit 从低地址到高地址扫描，选择第一个能满足请求的空闲块。
 
-Best-Fit：
+初始：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-初始：[6,14,8,20]
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+[6, 14, 8, 20]
+\end{Verbatim}
 
-请求 7：最小可容纳块是 8，剩余 1
-       [6,14,1,20]
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+请求 & 扫描选择 & 分配后空闲块 \\
+\hline
+\endfirsthead
+请求 & 扫描选择 & 分配后空闲块 \\
+\hline
+\endhead
+7 & 6 不够，14 够，从 14 中切出 7 & \texttt{[6, 7, 8, 20]} \\
+\hline
+5 & 第一个块 6 够，从 6 中切出 5 & \texttt{[1, 7, 8, 20]} \\
+\hline
+12 & 1、7、8 不够，20 够，从 20 中切出 12 & \texttt{[1, 7, 8, 8]} \\
+\hline
+\end{longtable}
 
-请求 5：最小可容纳块是 6，剩余 1
-       [1,14,1,20]
+最终空闲块大小：
 
-请求 12：最小可容纳块是 14，剩余 2
-        [1,2,1,20]
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+[1, 7, 8, 8]
+\end{Verbatim}
 
-比较：
+\paragraph*{2. Best-Fit}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-First-Fit 最终最大连续空闲块为 8。
-Best-Fit 最终最大连续空闲块为 20。
-本组请求下 Best-Fit 保留了最大的 20 单位块；这不代表所有请求序列中 Best-Fit 都更优。
-\end{verbatim}
-\end{quote}
+Best-Fit 选择所有可满足请求的块中最小的那个。
 
-碎片：
+\begin{longtable}{|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|}
+\hline
+请求 & 可选块 & 选择 & 分配后空闲块 \\
+\hline
+\endfirsthead
+请求 & 可选块 & 选择 & 分配后空闲块 \\
+\hline
+\endhead
+7 & 14, 8, 20 & 8 & \texttt{[6, 14, 1, 20]} \\
+\hline
+5 & 6, 14, 20 & 6 & \texttt{[1, 14, 1, 20]} \\
+\hline
+12 & 14, 20 & 14 & \texttt{[1, 2, 1, 20]} \\
+\hline
+\end{longtable}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-内部碎片：已分配块内部因对齐、固定大小类别等原因没有被请求实际使用的空间。
-外部碎片：空闲总量足够，但被分散成多个不连续小块，无法满足较大的连续请求。
-\end{verbatim}
-\end{quote}
+最终空闲块大小：
 
-评价维度：
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+[1, 2, 1, 20]
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-空间效率：减少总堆占用和碎片。
-程序效率：利用缓存和局部性，降低对象访问成本。
-低开销：分配和回收算法本身耗时、元数据和暂停尽量小。
-\end{verbatim}
-\end{quote}
+\paragraph*{3. 最大连续空闲块比较}
 
-\subsection*{四、引用计数与不可达环解析}
-\addcontentsline{toc}{subsection}{四、引用计数与不可达环解析}
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+策略 & 最终空闲块 & 最大连续空闲块 \\
+\hline
+\endfirsthead
+策略 & 最终空闲块 & 最大连续空闲块 \\
+\hline
+\endhead
+First-Fit & \texttt{[1,7,8,8]} & 8 \\
+\hline
+Best-Fit & \texttt{[1,2,1,20]} & 20 \\
+\hline
+\end{longtable}
 
+本题给定请求序列下，Best-Fit 最终留下的最大连续空闲块更大。
 
-初始计数：
+\paragraph*{4. 内部碎片和外部碎片}
 
-\begin{center}
-\includegraphics[width=0.72\linewidth]{figures/rc-object-graph.png}
-\end{center}
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+碎片类型 & 定义 & 例子 \\
+\hline
+\endfirsthead
+碎片类型 & 定义 & 例子 \\
+\hline
+\endhead
+内部碎片 & 已分配块内部没有被实际使用的空间 & 请求 13，但按 16 字节块分配，浪费 3 \\
+\hline
+外部碎片 & 空闲空间总量足够，但分散成多个不连续小块 & 空闲 5+5+5，总量 15，但无法满足连续 12 的请求 \\
+\hline
+\end{longtable}
 
+\paragraph*{5. 存储管理器评价维度}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-RC(A)=1，来自 r1。
-RC(B)=2，来自 A 和 C。
-RC(C)=2，来自 B 和 D。
-RC(D)=1，来自 r2。
-\end{verbatim}
-\end{quote}
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+维度 & 含义 \\
+\hline
+\endfirsthead
+维度 & 含义 \\
+\hline
+\endhead
+空间效率 & 降低碎片和总堆占用 \\
+\hline
+程序效率 & 分配布局有利于访问局部性和缓存 \\
+\hline
+低开销 & 分配、释放、回收、维护元数据的成本低 \\
+\hline
+\end{longtable}
 
-执行 \texttt{r1=null}：
+\subsubsection*{四、引用计数与不可达环答案}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-RC(A): 1->0，回收 A。
-回收 A 前删除 A->B，使 RC(B): 2->1。
+对象图如下：
 
-剩余：RC(B)=1，RC(C)=2，RC(D)=1。
-\end{verbatim}
-\end{quote}
+\begin{figure}[H]\centering
+\includegraphics[width=0.82\linewidth]{figures/rc-object-graph.png}
+\par{\small 引用计数对象图}
+\end{figure}
 
-再执行 \texttt{r2=null}：
+\paragraph*{1. 初始引用计数}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-RC(D): 1->0，回收 D。
-回收 D 前删除 D->C，使 RC(C): 2->1。
+引用来源：
 
-剩余：RC(B)=1，RC(C)=1。
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+r1 -> A
+r2 -> D
+A  -> B
+B  -> C
+C  -> B
+D  -> C
+\end{Verbatim}
 
-此时根集为空，B、C 均不可达，但 \texttt{B->C} 和 \texttt{C->B} 使二者计数都为 1，引用计数不能触发回收。
+\begin{longtable}{|p{0.31\linewidth}|p{0.31\linewidth}|p{0.31\linewidth}|}
+\hline
+对象 & 入边来源 & 初始 RC \\
+\hline
+\endfirsthead
+对象 & 入边来源 & 初始 RC \\
+\hline
+\endhead
+A & r1 & 1 \\
+\hline
+B & A, C & 2 \\
+\hline
+C & B, D & 2 \\
+\hline
+D & r2 & 1 \\
+\hline
+\end{longtable}
 
-跟踪式回收从根集出发标记对象。根集为空时 B、C 都不会被标记，清扫阶段会把二者回收，因此能处理不可达环。
+\paragraph*{2. 执行 `r1=null`}
 
-\subsection*{五、标记-清扫、压缩、拷贝与分代解析}
-\addcontentsline{toc}{subsection}{五、标记-清扫、压缩、拷贝与分代解析}
+\texttt{r1} 不再指向 A：
 
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+RC(A): 1 -> 0
+\end{Verbatim}
+
+A 被回收。回收 A 时删除 A 的出边 \texttt{A -> B}：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+RC(B): 2 -> 1
+\end{Verbatim}
+
+此时：
+
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+对象 & RC \\
+\hline
+\endfirsthead
+对象 & RC \\
+\hline
+\endhead
+B & 1 \\
+\hline
+C & 2 \\
+\hline
+D & 1 \\
+\hline
+\end{longtable}
+
+\paragraph*{3. 再执行 `r2=null`}
+
+\texttt{r2} 不再指向 D：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+RC(D): 1 -> 0
+\end{Verbatim}
+
+D 被回收。回收 D 时删除 D 的出边 \texttt{D -> C}：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+RC(C): 2 -> 1
+\end{Verbatim}
+
+此时：
+
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+对象 & RC \\
+\hline
+\endfirsthead
+对象 & RC \\
+\hline
+\endhead
+B & 1 \\
+\hline
+C & 1 \\
+\hline
+\end{longtable}
+
+\paragraph*{4. 不可达但不能被引用计数回收的对象}
+
+根 \texttt{r1}、\texttt{r2} 都为 null 后，根集已经无法到达 B 和 C。但 B 和 C 互相引用：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+B -> C
+C -> B
+\end{Verbatim}
+
+所以：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+RC(B)=1
+RC(C)=1
+\end{Verbatim}
+
+它们都不是 0，引用计数不会触发回收。不可达但不能被引用计数回收的对象是：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+B, C
+\end{Verbatim}
+
+\paragraph*{5. 跟踪式垃圾回收为什么能回收}
+
+跟踪式 GC 从根集出发，只标记从根可达的对象。此时根集为空或不指向 B/C，因此 B、C 不会被标记。清扫阶段回收所有未标记对象，所以能回收不可达环。
+
+\subsubsection*{五、标记-清扫、压缩、拷贝与分代答案}
+
+对象图如下：
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.82\linewidth]{figures/trace-object-graph.png}
+\par{\small 标记-清扫对象图}
+\end{figure}
+
+\paragraph*{1. 可达对象和垃圾对象}
 
 从根出发：
 
-\begin{center}
-\includegraphics[width=0.88\linewidth]{figures/trace-object-graph.png}
-\end{center}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+R1 -> A -> B -> D
+R1 -> A -> C -> D
+R1 -> A -> C -> E
+R2 -> F -> G
+\end{Verbatim}
 
+可达集合：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-R1 可达 A、B、C、D、E。
-R2 可达 F、G。
-可达集合={A,B,C,D,E,F,G}。
-垃圾集合={H}。
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+{A, B, C, D, E, F, G}
+\end{Verbatim}
 
-标记-清扫：
+垃圾对象：
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-标记阶段：从 R1、R2 出发遍历引用图，标记 A、B、C、D、E、F、G。
-清扫阶段：线性扫描堆，释放未标记的 H，并把 H 的 2 单位空间加入空闲表。
-\end{verbatim}
-\end{quote}
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+{H}
+\end{Verbatim}
 
-压缩后地址：
+\paragraph*{2. 标记-清扫过程}
 
-压缩后地址表：
-\begin{center}\footnotesize
-\begin{tabular}{cccc}
-对象 & 旧地址 & 新地址 & 大小\\
-A & 0 & 0 & 2\\
-B & 4 & 2 & 3\\
-C & 7 & 5 & 2\\
-D & 9 & 7 & 1\\
-E & 10 & 8 & 2\\
-F & 12 & 10 & 1\\
-G & 13 & 11 & 2
-\end{tabular}
-\end{center}
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+阶段 & 操作 \\
+\hline
+\endfirsthead
+阶段 & 操作 \\
+\hline
+\endhead
+标记 & 从 R1、R2 出发遍历引用图，标记 A、B、C、D、E、F、G \\
+\hline
+清扫 & 线性扫描堆，发现 H 未标记，释放 H 的空间 \\
+\hline
+\end{longtable}
 
+清扫后 H 的地址区间 \texttt{[2,4)} 成为空闲块。
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-对象  旧地址  新地址  大小
-A     0       0       2
-B     4       2       3
-C     7       5       2
-D     9       7       1
-E     10      8       2
-F     12      10      1
-G     13      11      2
+\paragraph*{3. 压缩后的新地址}
 
-压缩后连续已用区间为 [0,13)，地址 13 之后为空闲空间。
-所有根和对象字段中的地址都必须更新为新地址。
-\end{verbatim}
-\end{quote}
+按原有地址顺序保留存活对象，并向低地址压缩。H 被删除，后面的存活对象前移。
 
-半空间拷贝：
+\begin{longtable}{|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|}
+\hline
+对象 & 旧起始地址 & 大小 & 新起始地址 \\
+\hline
+\endfirsthead
+对象 & 旧起始地址 & 大小 & 新起始地址 \\
+\hline
+\endhead
+A & 0 & 2 & 0 \\
+\hline
+B & 4 & 3 & 2 \\
+\hline
+C & 7 & 2 & 5 \\
+\hline
+D & 9 & 1 & 7 \\
+\hline
+E & 10 & 2 & 8 \\
+\hline
+F & 12 & 1 & 10 \\
+\hline
+G & 13 & 2 & 11 \\
+\hline
+\end{longtable}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-堆分成同样大小的 From 和 To 半空间，正常时只在 From 中分配。
-回收时从根出发把可达对象复制到 To，并用转发地址更新引用。
-完成后交换 From/To；旧 From 中未复制对象自然成为垃圾。
-代价是通常只有约一半堆空间可用于当前分配。
-\end{verbatim}
-\end{quote}
+压缩后存活对象占用连续区间：
 
-分代回收：
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+[0, 13)
+\end{Verbatim}
 
-\begin{quote}
-\footnotesize
-\begin{verbatim}
-依据“多数对象朝生夕死”的经验规律，新生代容量较小且回收频繁，存活对象晋升到老年代。
-老年代回收频率较低。
-记忆集记录老年代指向新生代的引用；回收新生代时把这些引用作为额外根，避免扫描整个老年代。
-\end{verbatim}
-\end{quote}
+所有根和对象字段中的旧地址都必须更新为新地址。
 
+\paragraph*{4. 半空间拷贝回收}
+
+半空间拷贝把堆分成 From 和 To 两个半空间：
+
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+阶段 & 动作 \\
+\hline
+\endfirsthead
+阶段 & 动作 \\
+\hline
+\endhead
+正常分配 & 只在 From 空间中顺序分配 \\
+\hline
+回收开始 & 从根出发，把可达对象复制到 To 空间 \\
+\hline
+更新引用 & 用复制后的新地址更新根和对象字段 \\
+\hline
+回收结束 & 交换 From 和 To；旧 From 中未复制对象自然被丢弃 \\
+\hline
+\end{longtable}
+
+空间代价：同一时刻通常只有一半堆空间用于分配，因为另一半要作为 To 空间。
+
+\paragraph*{5. 分代回收与记忆集}
+
+分代回收依据经验规律：
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+多数对象很快死亡，少数对象存活很久。
+\end{Verbatim}
+
+因此把堆分为新生代和老年代：
+
+\begin{longtable}{|p{0.47\linewidth}|p{0.47\linewidth}|}
+\hline
+区域 & 回收特点 \\
+\hline
+\endfirsthead
+区域 & 回收特点 \\
+\hline
+\endhead
+新生代 & 容量较小，回收频繁 \\
+\hline
+老年代 & 存活时间长，回收频率低 \\
+\hline
+\end{longtable}
+
+记忆集记录“老年代对象指向新生代对象”的引用。回收新生代时，除了栈和全局变量等根，还要把记忆集中的引用当作额外根，这样不用扫描整个老年代。
 \end{document}
