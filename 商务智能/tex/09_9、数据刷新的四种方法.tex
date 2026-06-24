@@ -1,0 +1,29 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{9、数据刷新的四种方法}
+\author{}
+\date{}
+\maketitle
+
+时间戳、DELTA 文件、建立映象文件、日志文件\par
+
+数据刷新主要有四种方法：时间戳、DELTA 文件、建立映象文件和日志文件。时间戳依赖记录中的修改时间；DELTA 文件记录应用修改操作；映象文件通过两次快照比较差异；日志文件利用 OLTP 数据库日志进行增量刷新。四种方法可以在同一数据仓库系统中结合使用，以适应不同数据源。\par
+
+\end{document}

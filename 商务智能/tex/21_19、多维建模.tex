@@ -1,0 +1,181 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{19、多维建模}
+\author{}
+\date{}
+\maketitle
+
+多维建模的基本概念包括：事实表、维度表、事实与维度的融合、星型模型、雪花模型、数据立方体。\par
+
+1. 事实表\par
+
+事实表是维度建模的核心和基本表。每一事实表都对应一个或若干个度量值，度量值是事实表的核心，也是趋势分析的对象。事实表用来记录维度值与度量值之间的关系。\par
+
+事实表的特点：\par
+
+\begin{tabularx}{\linewidth}{|*{2}{>{\RaggedRight\arraybackslash}X|}}
+\hline
+特点 & 说明 \\
+\hline
+核心表 & 维度建模的中心 \\
+\hline
+保存度量值 & 如销售量、销售额、成本额、毛利润 \\
+\hline
+保存外键 & 通过外键连接维表 \\
+\hline
+粒度一致 & 事实表中的所有度量值必须具有相同粒度 \\
+\hline
+主键 & 通常可由多个外键组合构成 \\
+\hline
+\end{tabularx}
+
+每个事实表都有两个或两个以上外关键字，通过外关键字建立事实表与维表之间的联系。\par
+
+事实表的粒度模型\par
+
+事实表粒度划分模型包括：\par
+
+\begin{tabularx}{\linewidth}{|*{2}{>{\RaggedRight\arraybackslash}X|}}
+\hline
+粒度模型 & 说明 \\
+\hline
+事务事实表 & 每个业务事务一行 \\
+\hline
+周期快照事实表 & 按固定周期记录状态 \\
+\hline
+累积快照事实表 & 跟踪一个过程从开始到结束的多个阶段 \\
+\hline
+\end{tabularx}
+
+库存管理课件中也具体举例：库存事实表可以有库存周期快照、库存事务、库存累积快照三种互补模型。\par
+
+2. 度量值\par
+
+事实表中的度量值通常是数值类型，是可以连续取值的量，很少采用文本形式。度量值分为三类：\par
+
+\begin{tabularx}{\linewidth}{|*{3}{>{\RaggedRight\arraybackslash}X|}}
+\hline
+类型 & 含义 & 例子 \\
+\hline
+可做加法运算 & 可以沿所有维度汇总 & 销售额、销售量 \\
+\hline
+可沿某些维度做加法运算 & 只能在部分维度上加总 & 库存量、账户余额 \\
+\hline
+不能做加法运算 & 不能直接求和 & 单价、毛利润率 \\
+\hline
+\end{tabularx}
+
+
+3. 维度表\par
+
+维度表是事实表的入口，为用户提供使用数据仓库的接口。维度表中的属性通常用于定义事实表上的查询条件，也可以作为报表和统计查询的列。\par
+
+维度表特点：\par
+
+\begin{tabularx}{\linewidth}{|*{2}{>{\RaggedRight\arraybackslash}X|}}
+\hline
+特点 & 说明 \\
+\hline
+事实表入口 & 用户通过维度属性访问事实表 \\
+\hline
+描述性强 & 保存文本型、离散型属性 \\
+\hline
+列多行少 & 相对于事实表，维表通常列多、行少 \\
+\hline
+用于查询条件 & 如时间、产品、商场、促销等 \\
+\hline
+\end{tabularx}
+
+度量值属性有许多取值可能，并参与统计运算；维度属性通常是离散的、取值可能不多、很少变化、不参与统计计算但常用作查询条件。\par
+
+4. 事实与维度的融合\par
+
+多维建模的核心结构是：事实表通过关键字与相关维表连接。以日销售情况事实表为例：事实表中包含日期关键字、产品关键字、商场关键字等外键，并通过这些外键连接日期维度、产品维度和商场维度。\par
+
+可以理解为：\par
+
+日期维度\par
+\hspace*{1em}|\par
+产品维度 —— 销售事实表 —— 商场维度\par
+
+用户通过维表中的属性过滤、分组和观察事实表中的度量值。\par
+
+5. 多维建模的设计过程\par
+
+\begin{tabularx}{\linewidth}{|*{2}{>{\RaggedRight\arraybackslash}X|}}
+\hline
+步骤 & 内容 \\
+\hline
+第一步 & 选取要建模的业务处理过程 \\
+\hline
+第二步 & 定义业务处理的粒度 \\
+\hline
+第三步 & 选择事实表中的维度 \\
+\hline
+第四步 & 选择事实表中的度量值 \\
+\hline
+\end{tabularx}
+
+在零售营销案例中，用 POS 事务说明：\par
+
+业务处理：商品销售；\par
+粒度：POS 事务的单个商品条目；\par
+维度：日期、商场、产品、促销；\par
+事实：销售量、销售额、成本额、毛利润等。\par
+
+6. 典型维度设计\par
+
+日期维度是每个数据仓库必须具备的维度。\par
+
+日期维度表可以事先建立，可以预先建立 5 到 10 年的日期维度值。\par
+
+常见维度包括：\par
+
+\begin{tabularx}{\linewidth}{|*{2}{>{\RaggedRight\arraybackslash}X|}}
+\hline
+维度 & 典型属性 \\
+\hline
+日期维度 & 日、周、月、季度、年、财政月、财政季度、节假日标志 \\
+\hline
+产品维度 & 产品描述、SKU 编号、小类、大类、部门、包装类型 \\
+\hline
+商场维度 & 商场名称、编号、地址、地区、销售面积 \\
+\hline
+促销维度 & 促销名称、促销媒体类型、促销起止日期 \\
+\hline
+顾客维度 & 顾客姓名、地址、分类属性等 \\
+\hline
+\end{tabularx}
+
+7. 退化维度\par
+
+\hspace*{1em}POS 事务编号时提出退化维度：维度表为空，具体维度值直接存放在事实表中。\par
+
+例子包括：\par
+
+事务编号\par
+订单编号\par
+发票编号\par
+提货单编号\par
+
+零售模型中，POS 事务编号就是退化维度。\par
+
+多维建模是数据仓库中面向分析的数据组织方法，其基本概念包括事实表、维度表、星型模型、雪花模型和数据立方体。事实表是维度建模的核心，保存度量值和连接维表的外键，事实表中的所有度量值必须具有相同粒度；维度表是事实表的入口，保存描述性属性，用于查询条件、报表列和分组分析。多维建模的设计过程包括选择业务处理过程、定义粒度、选择维度和选择度量值。典型事实表粒度模型包括事务、周期快照和累积快照。\par
+\end{document}

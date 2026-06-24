@@ -1,0 +1,181 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{14、星型模型和雪花模型}
+\author{}
+\date{}
+\maketitle
+
+一、星型模型\par
+
+星型模型是 ROLAP 中最典型、最常用的数据模型。\par
+
+星型模式是一种多维表结构，它一般由事实表和维表组成。事实表存放多维表中的主要事实，也就是度量值；维表存放维成员的取值。一个 n 维的多维表通常有 n 个维表和一个事实表，它们构成一个星形结构，所以称为星型模式。\par
+
+1. 星型模型的组成\par
+
+星型模型由两类表组成：\par
+
+\begin{tabularx}{\linewidth}{|*{2}{>{\RaggedRight\arraybackslash}X|}}
+\hline
+表类型 & 作用 \\
+\hline
+事实表 Fact Table & 存放度量值，以及连接各维表的外键 \\
+\hline
+维表 Dimension Table & 存放维度成员及其描述属性 \\
+\hline
+\end{tabularx}
+
+2. 事实表\par
+
+事实表是星型模型的中心。\par
+
+它通常包括：\par
+
+各个维度的外键；\par
+一个或多个度量值。\par
+
+例如销售表可以表示为：\par
+
+销售表（产品标识符，商店标识符，日期标识符，销售额）\par
+
+其中：\par
+
+产品标识符、商店标识符、日期标识符是外键；\par
+销售额是度量值。\par
+
+3. 维表\par
+
+维表围绕事实表展开，用来描述分析角度。\par
+
+产品表（产品标识符，类别，大类别）\par
+商店表（商店标识符，市名，省名，国名，洲名）\par
+时间表（时间标识符，日期，月份，季度，年份）\par
+
+这些维表分别提供：\par
+
+产品维度\par
+地域 / 商店维度\par
+时间维度\par
+
+4. 星型模型结构示意\par
+
+可以这样理解：\par
+
+\hspace*{1em}产品维表\par
+\hspace*{1em}|\par
+\hspace*{1em}|\par
+时间维表 —— 销售事实表 —— 商店维表\par
+
+中心是事实表，周围是维表，结构像星星，所以叫星型模型。\par
+
+5. 星型模型的特点\par
+
+\begin{tabularx}{\linewidth}{|*{2}{>{\RaggedRight\arraybackslash}X|}}
+\hline
+特点 & 说明 \\
+\hline
+结构简单 & 一个事实表直接连接多个维表 \\
+\hline
+查询效率较高 & 连接路径短，适合 OLAP 查询 \\
+\hline
+面向分析 & 用户可以从不同维度观察事实 \\
+\hline
+维表通常反规范化 & 维表中会保留层次属性，存在一定冗余 \\
+\hline
+易于理解 & 结构直观，适合报表和多维分析 \\
+\hline
+\end{tabularx}
+
+星型模型由一个中心事实表和多个维表组成。事实表保存度量值和维度外键，维表保存维成员及其描述属性。事实表与各维表通过公共关键字连接，形成星形结构。星型模型结构简单、查询连接少、分析效率高，是 ROLAP 中常用的数据模型。\par
+
+三、雪花模型\par
+
+雪花模型是星型模型的扩展。\par
+
+雪花模型对星型模型的维表进一步层次化，原有的各维表可能被扩展为小的事实表或多个层次表，形成一些局部的“层次”区域。\par
+
+简单说，雪花模型就是把星型模型中的维表继续拆分，使维表更加规范化。\par
+
+1. 雪花模型的形成\par
+
+在星型模型中，产品维表可能是：\par
+
+产品表（产品标识符，类别，大类别）\par
+
+如果进一步规范化，可以拆成：\par
+
+产品表（产品标识符，类别编号）\par
+类别表（类别编号，大类别编号）\par
+大类别表（大类别编号，大类别名称）\par
+
+这样产品维度就不再是一张宽表，而是被拆分成多个有层次关系的小表。\par
+
+2. 雪花模型例子\par
+
+销售事实表（产品no，商店no，日期no，销售额）\par
+
+产品（产品no，类别no，供应商no，顾客no）\par
+类别（类别no，层1，层2，……）\par
+顾客（顾客no，年龄层次，职业类型）\par
+年龄层次（名称）\par
+职业类型（名称）\par
+供应商（供应商no，供应商类别，……）\par
+
+可以看到，产品维表被拆成类别、顾客、供应商等更细的维度层次表。\par
+
+3. 雪花模型结构示意\par
+\hspace*{1em}类别表\par
+\hspace*{1em}|\par
+产品维主表 —— 销售事实表 —— 商店维表\par
+\hspace*{1em}|\par
+\hspace*{1em}供应商表\par
+\hspace*{1em}|\par
+\hspace*{1em}供应商类别表\par
+
+整体结构不像星星那么简单，而是分叉更多，像雪花一样。\par
+
+4. 雪花模型的优点\par
+
+雪花模型的优点是：\par
+
+使维表尽可能规范化，最大限度地减少维表的数据存储量。\par
+
+也就是\par
+
+减少数据冗余；\par
+节省存储空间；\par
+层次结构更清楚；\par
+适合维度层次复杂的场景。\par
+
+5. 雪花模型的缺点\par
+
+执行查询时需要更多连接操作，可能影响查询性能。\par
+
+也就是\par
+
+表更多；\par
+Join 更多；\par
+查询路径更长；\par
+用户理解成本更高；\par
+OLAP 查询效率可能低于星型模型。\par
+
+雪花模型是星型模型的扩展，它将星型模型中的维表进一步层次化和规范化，把一个维表拆分为多个具有层次关系的小表。其优点是减少维表冗余、节省存储空间；缺点是查询时连接操作增加，可能降低查询性能。\par
+
+\end{document}

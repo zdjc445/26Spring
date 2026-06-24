@@ -1,0 +1,53 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{6、操作型/分析型数据对比}
+\author{}
+\date{}
+\maketitle
+
+\begin{tabularx}{\linewidth}{|*{3}{>{\RaggedRight\arraybackslash}X|}}
+\hline
+特性 & 操作型数据（DB） & 分析型数据（DW） \\
+\hline
+定位 & 面向应用的事务处理 & 面向主题的数据分析 \\
+\hline
+DB设计 & E-R模型 & 星型/雪花模型，数据立方体 \\
+\hline
+数据 & 当前的、最新的 & 历史的，具有时间跨度 \\
+\hline
+汇总 & 原始的，细节的 & 集成的，一致的 \\
+\hline
+视图 & 详细的，关系的 & 总体的，多维的 \\
+\hline
+操作类型 & 读/写（可变的） & 读（稳定的） \\
+\hline
+存取请求 & 可预知的 & 事先未知的 \\
+\hline
+访问记录 & 一次操作少量记录 & 一次操作大量记录 \\
+\hline
+DB规模 & 100MB \textasciitilde{} GB & TB \\
+\hline
+工作单位 & 短的，简单事务 & 复杂查询 \\
+\hline
+性能要求 & 对性能要求高 & 对性能要求较宽松 \\
+\hline
+\end{tabularx}
+
+\end{document}

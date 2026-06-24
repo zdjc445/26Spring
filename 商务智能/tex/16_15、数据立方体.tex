@@ -1,0 +1,66 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{15、数据立方体}
+\author{}
+\date{}
+\maketitle
+
+数据立方体来源于物化视图思想。PPT 中说，数据仓库的数据模式可以看成定义在多个数据源上的数据视图，其中分析型数据通常是统计得到的综合数据。如果每次都用统计函数临时计算，时间开销太大，因此可以预先计算统计信息并存入数据仓库，这就是物化视图；存放物化视图的三维数据模型叫数据立方体。\par
+
+基本理解\par
+
+以销售事实表为例，可以有三个维度：\par
+
+产品 Product\par
+商店 Store\par
+日期 Date\par
+
+可以构造：\par
+
+PSD 视图\par
+PS、PD、SD 视图\par
+P、S、D 视图\par
+ALL 视图\par
+
+其中 ALL 视图表示不分组，统计全部销售总额。\par
+
+数据超立方体\par
+
+当分析对象超过三维时，就构成 n 维应用，无法用普通三维立方体表示，只能通过虚拟 n 维空间建立 n 维立方体，即数据超立方体。\par
+
+方体格\par
+
+n 维方体称为基本方体\par
+0 维方体代表最高层次抽象，称为顶点方体\par
+方体格构成数据立方体\par
+10.4 数据立方体的物化\par
+
+几种物化方式：\par
+
+不进行物化\par
+全物化\par
+部分物化\par
+冰山方体\par
+利用查询处理时物化的方体\par
+在装入和刷新时有效更新物化方体\par
+
+数据立方体是为了提高综合统计查询速度而预先计算并保存多维统计结果的数据结构，本质上是物化视图在多维数据分析中的组织形式。它可以包含基本方体、低维方体和顶点方体，并可采用不物化、全物化、部分物化和冰山方体等方式进行存储优化。\par
+
+\end{document}

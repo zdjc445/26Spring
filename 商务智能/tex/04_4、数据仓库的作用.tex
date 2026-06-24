@@ -1,0 +1,47 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{4、数据仓库的作用}
+\author{}
+\date{}
+\maketitle
+
+数据仓库是一个面向主题的、集成的、非易失的、时变的数据集合，用于支持经营管理过程中的决策制定。\par
+
+数据仓库的作用可以从几个方面理解：\par
+
+1. 为 BI 提供统一、集成的数据基础\par
+
+企业数据往往来自多个系统、多个部门、多个平台，格式也可能不同。数据仓库把这些分散数据集成起来，形成一个统一的数据环境。\par
+
+2. 支持分析型处理和决策支持\par
+
+数据仓库不是为了替代传统数据库，而是为了适应市场竞争加剧后企业对分析型处理的需要。数据仓库技术正在成为企业信息集成和辅助决策应用的关键技术之一。\par
+
+3. 把分析型环境和事务型环境分离\par
+
+为了提高分析处理和决策支持的效率与有效性，必须把分析型处理及其所需的综合性分析数据，从传统事务型处理和细节性操作数据中分离出来，并按分析型处理需要重新组织，建立单独的分析处理环境。数据仓库正是为建立这种新环境而出现的数据存储和组织技术。\par
+
+4. 支持数据访问、OLAP 和数据挖掘\par
+
+数据仓库还需要支持多种访问方式和分析展示工具，包括查询与报表、桌面 OLAP、关系 OLAP、多维 OLAP、数据挖掘、仪表盘和客户决策支持界面等。\par
+
+数据仓库的作用是为商务智能提供统一、集成、稳定、面向主题、具有历史时间跨度的数据基础。它通过对多源数据进行集成、清洗、聚集和预计算，把事务型数据转化为适合分析型处理的数据环境，从而支持 OLAP、报表查询、数据挖掘和经营管理决策。\par
+
+\end{document}

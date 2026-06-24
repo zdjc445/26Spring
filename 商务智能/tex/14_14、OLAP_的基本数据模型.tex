@@ -1,0 +1,66 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{14、OLAP 的基本数据模型}
+\author{}
+\date{}
+\maketitle
+
+主要分为两类：\par
+MOLAP：多维联机分析处理\par
+ROLAP：关系联机分析处理\par
+
+1. MOLAP：多维数据库模型\par
+
+MOLAP 全称是 Multi-Dimensional OLAP，即多维联机分析处理。\par
+MOLAP 使用专门的多维数据库管理系统管理数据。多维数据库采用的基本数据模式是多维数组。\par
+
+例如一个销售分析可以表示为：\par
+
+（时间，商品，商店，销售额）\par
+
+其中：\par
+
+时间、商品、商店是维度；\par
+销售额是度量值；\par
+每一个维度取一个值，就可以定位到一个具体的数据单元。\par
+
+例如：\par
+
+（2024年1月，电视机，南京店，50000元）\par
+
+这就是一个多维数据单元。\par
+
+MOLAP 使用专门的多维数据库存储数据，将事实表表示成多维数组，把维属性值映射为数组下标，把度量值存储在数据单元中。其优点是查询和综合速度快，缺点是预计算可能造成数据爆炸，维数和动态扩展能力受到限制。\par
+
+2. ROLAP：关系数据库模型\par
+
+ROLAP 全称是 Relational OLAP，即关系联机分析处理。\par
+
+ROLAP 用传统的关系数据库管理系统 RDBMS 管理数据，将星型模型或雪花模型用二维表形式存储，表之间通过关键字连接，形成一个关系模式。ROLAP 不专门使用多维数据库，而是用关系数据库中的表来模拟多维结构。\par
+
+例如销售分析可以设计为：\par
+
+销售事实表 + 时间维表 + 产品维表 + 商店维表\par
+
+用户在 ROLAP 上的查询操作，会被改写成关系数据库中的 SQL 查询来执行。\par
+
+ROLAP 使用关系数据库管理 OLAP 数据，把星型或雪花模式用二维关系表存储，表之间通过关键字连接。用户的多维查询会被转换为关系数据库查询执行。其优点是适合大规模数据和维度较多的情况，缺点是查询性能通常不如 MOLAP。\par
+
+\end{document}

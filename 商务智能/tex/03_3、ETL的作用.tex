@@ -1,0 +1,44 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{3、ETL的作用}
+\author{}
+\date{}
+\maketitle
+
+ETL是抽取、转换、装载\par
+
+1. 辨识与主题相关的原始数据\par
+也就是从多个数据源中找出对分析主题有用的数据。\par
+
+2. 开发数据抽取策略\par
+解决从哪里抽、抽哪些、什么时候抽、怎么抽的问题。\par
+
+3. 保证数据正确和完整\par
+数据进入仓库前，需要处理错误、缺失、不一致等问题。\par
+
+4. 将原始数据转换为目标规格\par
+包括格式转换、编码转换、单位统一、字段重命名、关键字转换、数据清洗、数据合并、数据汇总等。\par
+
+5. 将数据加载到预定目标区域\par
+目标可以包括原子层和集成数据、数据集市、ODS、缓冲区等。\par
+
+ETL 的作用是把来自不同数据源的原始数据抽取出来，经过清洗、转换、集成、汇总等处理，使其变成正确、完整、一致、符合目标规格的数据，并装载到数据仓库、数据集市、ODS 或缓冲区中，为后续 OLAP、报表查询和数据挖掘提供可靠的数据基础。\par
+
+\end{document}

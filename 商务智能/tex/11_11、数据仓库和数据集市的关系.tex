@@ -1,0 +1,66 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{11、数据仓库和数据集市的关系}
+\author{}
+\date{}
+\maketitle
+
+数据仓库与数据集市的关系类似于传统关系数据库系统中“基表”和“视图”的关系。\par
+
+四种数据仓库与数据集市的结构关系：\par
+
+自顶向下的结构\par
+自底向上的结构\par
+总线结构的数据集市\par
+企业级数据集市结构\par
+
+1. 自顶向下结构先构建企业数据仓库，再基于企业数据仓库构建数据集市，优点是数据整合统一，缺点是成本高、见效慢\par
+
+操作型数据 / 外部数据\par
+\hspace*{1em}↓\par
+企业数据仓库 Enterprise Warehouse\par
+\hspace*{1em}↓\par
+局部数据集市 Local Data Mart\par
+\hspace*{1em}↓\par
+部门或应用分析\par
+
+2. 自底向上结构先构建局部数据集市，再合并为企业数据仓库，优点是见效快、启动资金少，缺点是容易造成蜘蛛网和数据不一致\par
+
+局部操作型数据\par
+\hspace*{1em}↓\par
+局部数据集市 Local Data Mart\par
+\hspace*{1em}↓\par
+多个数据集市合并\par
+\hspace*{1em}↓\par
+企业数据仓库 Enterprise Warehouse\par
+
+3. 总线结构不先建立中心数据仓库，而是通过共享维表和事实表把多个数据集市连接起来，优点是支持共享和增量建设，缺点是主要适用于 OLAP 且结构稳定性较差\par
+
+数据源\par
+\hspace*{1em}↓        ↓        ↓\par
+数据集市A — 共享维表/事实表 — 数据集市B — 数据集市C\par
+
+4. 企业级数据集市结构则强调从企业范围统一规划多个数据集市。\par
+
+6. 数据仓库的间接访问\par
+
+PPT 中强调，有时存在从数据仓库环境到操作型环境的数据回流，但操作型环境中采用 SQL 等方式直接访问数据仓库的“回流”是不正常的。直接访问有响应时间、数据量、技术一致性、格式化等限制，因此直接访问很少。\par
+
+\end{document}

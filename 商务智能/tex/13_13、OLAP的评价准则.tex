@@ -1,0 +1,57 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setCJKmainfont{Noto Serif SC}
+\setCJKsansfont{Noto Sans SC}
+\setmainfont{Noto Serif SC}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{商务智能}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\begin{document}
+\title{13、OLAP的评价准则}
+\author{}
+\date{}
+\maketitle
+
+Codd 准则：\par
+1. 多维概念视图\par
+OLAP 必须能从多个维度考察对象。\par
+2. 透明性准则\par
+OLAP 在体系结构中的位置和数据源对用户透明。\par
+3. 存取能力准则\par
+能把 OLAP 概念视图映射到异质数据存储上，并提供单一、完整、连续的用户视图。\par
+4. 稳定的报表功能\par
+当维数和综合层次增加时，报表能力和响应速度不应明显下降。\par
+5. 客户 / 服务器体系结构\par
+服务器负责统一概念模式、逻辑模式和物理模式；客户端负责应用逻辑和界面。\par
+6. 维的同等性原则\par
+每一数据维在数据结构和操作能力上都是等同的。\par
+7. 动态稀疏矩阵处理准则\par
+OLAP 工具应适应特定模型的数据分布，尤其要处理稀疏数据。\par
+8. 多用户支持能力准则\par
+支持并发访问、数据完整性和安全性机制。\par
+9. 非受限的跨维操作\par
+对维之间固有层次关系可以自动推导；其他计算需要提供计算完备的语言。\par
+10. 直观的数据操作\par
+11. 灵活的报表生成\par
+12. 不受限维与聚集层次\par
+维数不应小于 15，并支持任意聚集层次。\par
+
+FASMI 准则\par
+
+Fast：快速\par
+Analysis：分析\par
+Shared：共享\par
+Multidimensional：多维\par
+Information：信息\par
+
+\end{document}
