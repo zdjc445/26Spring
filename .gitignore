@@ -1,5 +1,6 @@
 # Local extraction, browser, and rendering artifacts
 tmp/
+.miktex/
 
 # LaTeX intermediate files
 output/pdf/**/*.aux
