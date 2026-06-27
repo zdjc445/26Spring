@@ -1,0 +1,277 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\IfFontExistsTF{Microsoft YaHei}{\setCJKmainfont{Microsoft YaHei}}{\setCJKmainfont{SimSun}[BoldFont=SimHei]}
+\IfFontExistsTF{Microsoft YaHei UI}{\setCJKsansfont{Microsoft YaHei UI}}{}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}}{}
+\definecolor{linkblue}{RGB}{30,80,145}
+\hypersetup{colorlinks=true,linkcolor=linkblue,urlcolor=linkblue,pdfborder={0 0 0}}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+\linespread{1.16}
+\setlist{itemsep=0.2em,topsep=0.35em,leftmargin=2.5em}
+\pagestyle{plain}
+
+\title{09\_平摊分析}
+
+\author{}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{09 平摊分析}
+
+\subsection*{题目原文}
+
+能解释平摊分析的含义，能采用平摊分析解决经典问题：MultiPop Stack、DeleteLargerHalf 和栈模拟队列问题
+
+\subsection*{考查类型}
+
+概念题和分析题。
+
+\subsection*{平摊分析含义}
+
+平摊分析研究一串操作的总成本，再把总成本分摊到每次操作上。
+
+它不依赖输入概率分布，因此不同于平均复杂度。
+
+若任意 $m$ 次操作的总成本为 $O(m)$，则每次操作的平摊成本为：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax O(1)\\
+\end{quote}
+
+\subsection*{三种常见方法}
+
+聚合分析：
+
+直接证明一串操作总成本的上界。
+
+记账法：
+
+给某些操作多收费用，把多收的费用存起来支付后续昂贵操作。
+
+势能法：
+
+定义势能函数 \texttt{Phi(D)}，用结构状态中保存的势能解释未来成本。
+
+平摊代价：
+
+\[amortized cost = actual cost + Phi(after) - Phi(before)\]
+
+\subsection*{MultiPop Stack}
+
+操作：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax Push(x)\\
+\relax Pop()\\
+\relax MultiPop(k)\\
+\end{quote}
+
+\texttt{MultiPop(k)} 连续弹出最多 \texttt{k} 个元素，实际成本与弹出数量有关。
+
+聚合分析：
+
+每个元素最多被压栈一次，也最多被弹出一次。无论由 \texttt{Pop} 弹出，还是由 \texttt{MultiPop} 弹出，同一个元素只会支付一次弹出成本。
+
+因此，在 $m$ 次操作中，总压栈次数不超过 $m$，总弹出次数也不超过 $m$。
+
+总成本：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax O(m)\\
+\end{quote}
+
+每次操作平摊：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax O(1)\\
+\end{quote}
+
+\subsection*{DeleteLargerHalf}
+
+PDF 未给出完整操作定义。以下小节只分析本文件采用的练习模型：当前规模为 $m$ 时，删除 $\lfloor m/2 \rfloor$ 个较大元素；一次操作的成本按本次扫描元素数或删除元素数计。课堂定义不同，则需要按课堂定义重写该小节。
+
+分析要点：
+
+\begin{enumerate}
+\item 一次 DeleteLargerHalf 看起来很贵。
+\item 但它会使当前元素数量从 $m$ 变为 $\lceil m/2 \rceil$。
+\item 对一段连续删除操作，总规模形成几何级数。
+\end{enumerate}
+
+若开始时有 $n$ 个元素，连续执行 DeleteLargerHalf 的总删除规模满足：
+
+\[n/2 + n/4 + n/8 + ... \le  n\]
+
+因此总成本为：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax O(n)\\
+\end{quote}
+
+若操作序列中还包含插入操作，可以把删除成本分摊给被删除元素；每个元素在被插入后最多被删除一次，所以整段操作仍可用聚合分析或记账法处理。
+
+\subsection*{两个栈模拟队列}
+
+使用两个栈：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax S\_in\ \ \ 负责入队\\
+\relax S\_out\ \ 负责出队\\
+\end{quote}
+
+入队：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax push\ 到\ S\_in\\
+\end{quote}
+
+出队：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax if\ S\_out\ 非空:\\
+\relax \ \ \ \ pop\ S\_out\\
+\relax else:\\
+\relax \ \ \ \ 把\ S\_in\ 中所有元素依次弹出并压入\ S\_out\\
+\relax \ \ \ \ pop\ S\_out\\
+\end{quote}
+
+单次出队在转移时成本为 $O(n)$，但每个元素只会：
+
+\begin{enumerate}
+\item 压入 $S_in$ 一次。
+\item 从 $S_in$ 弹出一次。
+\item 压入 $S_out$ 一次。
+\item 从 $S_out$ 弹出一次。
+\end{enumerate}
+
+所以每个元素总共承担常数次栈操作。
+
+任意 $m$ 次队列操作总成本：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax O(m)\\
+\end{quote}
+
+每次操作平摊：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax O(1)\\
+\end{quote}
+
+\subsection*{例题}
+
+\subsubsection*{例题 1}
+
+题目：分析下面栈操作序列的总成本：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax Push(1),\ Push(2),\ Push(3),\ MultiPop(2),\ Push(4),\ Pop()\\
+\end{quote}
+
+解答：
+
+逐项成本：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax Push(1)\ \ \ \ \ \ 1\\
+\relax Push(2)\ \ \ \ \ \ 1\\
+\relax Push(3)\ \ \ \ \ \ 1\\
+\relax MultiPop(2)\ \ 2\\
+\relax Push(4)\ \ \ \ \ \ 1\\
+\relax Pop()\ \ \ \ \ \ \ \ 1\\
+\end{quote}
+
+总成本：
+
+\[1 + 1 + 1 + 2 + 1 + 1 = 7\]
+
+共有 6 次操作，单次实际成本并不都相同，但总成本与操作数同阶。对任意操作序列，每个元素最多压入一次、弹出一次，因此平摊成本为 $O(1)$。
+
+\subsubsection*{例题 2}
+
+题目：一个集合开始有 16 个元素。每次 \texttt{DeleteLargerHalf} 扫描当前全部元素，并删除较大的一半。连续执行直到只剩 1 个元素，求总扫描成本。
+
+解答：
+
+每次操作前的规模为：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 16,\ 8,\ 4,\ 2\\
+\end{quote}
+
+总扫描成本为：
+
+\[16 + 8 + 4 + 2 = 30\]
+
+因为：
+
+\[16 + 8 + 4 + 2 < 32 = 2\cdot 16\]
+
+所以连续删除操作的总成本为 $O(n)$。
+
+\subsubsection*{例题 3}
+
+题目：用两个栈模拟队列，分析下面操作序列的栈操作次数：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax Enqueue(1),\ Enqueue(2),\ Enqueue(3),\ Dequeue(),\ Dequeue(),\ Enqueue(4),\ Dequeue()\\
+\end{quote}
+
+解答：
+
+前三次入队各做一次压栈，共 \texttt{3} 次栈操作。
+
+第一次出队时 $S_out$ 为空，需要把 $S_in$ 中 3 个元素转移到 $S_out$，再弹出队首：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 3\ 次从\ S\_in\ 弹出\\
+\relax 3\ 次压入\ S\_out\\
+\relax 1\ 次从\ S\_out\ 弹出\\
+\end{quote}
+
+共 \texttt{7} 次栈操作。
+
+第二次出队直接从 $S_out$ 弹出，成本 \texttt{1}。
+
+\texttt{Enqueue(4)} 成本 \texttt{1}。
+
+第三次出队直接从 $S_out$ 弹出，成本 \texttt{1}。
+
+总栈操作次数：
+
+\[3 + 7 + 1 + 1 + 1 = 13\]
+
+每个入队元素只在两个栈之间移动一次，因此任意长序列的平摊成本为 $O(1)$。
+
+\subsection*{常见误区}
+
+平摊复杂度不是平均复杂度。平摊分析不需要概率。
+
+某一次操作实际成本可以很高。平摊结论描述的是整段操作序列的均摊成本。
+
+\end{document}

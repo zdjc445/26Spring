@@ -1,0 +1,243 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\IfFontExistsTF{Microsoft YaHei}{\setCJKmainfont{Microsoft YaHei}}{\setCJKmainfont{SimSun}[BoldFont=SimHei]}
+\IfFontExistsTF{Microsoft YaHei UI}{\setCJKsansfont{Microsoft YaHei UI}}{}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}}{}
+\definecolor{linkblue}{RGB}{30,80,145}
+\hypersetup{colorlinks=true,linkcolor=linkblue,urlcolor=linkblue,pdfborder={0 0 0}}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+\linespread{1.16}
+\setlist{itemsep=0.2em,topsep=0.35em,leftmargin=2.5em}
+\pagestyle{plain}
+
+\title{11\_贪心法}
+
+\author{}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{11 贪心法}
+
+\subsection*{题目原文}
+
+贪心法的思想和特点，用贪心法解决经典问题并能给出证明思路：换硬币、单源最短路径。
+
+\subsection*{考查类型}
+
+概念题、算法设计题和证明题。
+
+\subsection*{贪心法思想}
+
+贪心法在每一步都做当前看来最优的选择，并希望这些局部选择组合成全局最优解。
+
+适用贪心法通常需要两个性质：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 贪心选择性质\\
+\relax 最优子结构\\
+\end{quote}
+
+贪心选择性质表示存在一个全局最优解包含当前的局部最优选择。
+
+最优子结构表示做出一次选择后，剩余问题的最优解可以和当前选择组合成原问题最优解。
+
+\subsection*{证明思路}
+
+常用证明方法有两类。
+
+交换论证：
+
+从任意最优解出发，把它逐步替换成包含贪心选择的最优解，同时不降低解的质量。
+
+领先性证明：
+
+证明贪心算法在每一步都不差于任何最优解的对应前缀。
+
+\subsection*{换硬币问题}
+
+目标是在给定币值系统下，用尽量少的硬币凑出金额 \texttt{N}。
+
+贪心策略：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 每次选择不超过剩余金额的最大面值硬币\\
+\end{quote}
+
+重要点：
+
+不是所有币值系统都能用贪心得到最优解。答题时必须结合题目给出的币值系统证明贪心选择性质。
+
+证明结构：
+
+\begin{enumerate}
+\item 说明贪心第一步选取最大可用面值。
+\item 证明存在一个最优解也包含这枚硬币。
+\item 删除这枚硬币后，剩余金额构成同类子问题。
+\item 对子问题重复使用同样论证。
+\end{enumerate}
+
+若题目给出标准币值系统，需要用该系统的面值关系证明“大面值替换多个小面值不会增加硬币数”。
+
+\subsection*{单源最短路径}
+
+单源最短路径的典型贪心算法是 Dijkstra 算法。它要求边权非负。
+
+算法思想：
+
+\begin{enumerate}
+\item 维护源点到各点的当前最短估计 \texttt{dist[v]}。
+\item 每次从未确定顶点中取 \texttt{dist} 最小的顶点 \texttt{u}。
+\item 将 \texttt{u} 标记为已确定。
+\item 用 \texttt{u} 的出边松弛相邻顶点。
+\end{enumerate}
+
+伪代码：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax Dijkstra(G,\ s):\\
+\relax \ \ \ \ for\ each\ vertex\ v:\\
+\relax \ \ \ \ \ \ \ \ dist[v]\ =\ ∞\\
+\relax \ \ \ \ dist[s]\ =\ 0\\
+\end{quote}
+\[Q = all vertices\]
+\begin{quote}
+\small\ttfamily\raggedright
+\mbox{}\\
+\relax \ \ \ \ while\ Q\ is\ not\ empty:\\
+\relax \ \ \ \ \ \ \ \ u\ =\ vertex\ in\ Q\ with\ minimum\ dist[u]\\
+\relax \ \ \ \ \ \ \ \ remove\ u\ from\ Q\\
+\relax \ \ \ \ \ \ \ \ for\ each\ edge\ (u,\ v):\\
+\relax \ \ \ \ \ \ \ \ \ \ \ \ if\ dist[v]\ >\ dist[u]\ +\ w(u,\ v):\\
+\relax \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist[v]\ =\ dist[u]\ +\ w(u,\ v)\\
+\end{quote}
+
+\subsection*{Dijkstra 正确性证明}
+
+关键命题：
+
+每次取出的 \texttt{dist} 最小未确定顶点 \texttt{u}，其 \texttt{dist[u]} 已经等于源点到 \texttt{u} 的真实最短距离。
+
+证明思路：
+
+若存在一条更短路径从源点到 \texttt{u}，考虑这条路径上第一个未确定顶点 \texttt{y}，以及它前一个已确定顶点 \texttt{x}。由于 \texttt{x} 已经确定，边 \texttt{(x, y)} 已经被松弛，因此 \texttt{dist[y]} 不会大于该路径到 \texttt{y} 的长度。边权非负，所以到 \texttt{y} 的长度不大于到 \texttt{u} 的长度。这会与 \texttt{u} 是未确定顶点中 \texttt{dist} 最小者矛盾。
+
+因此贪心选择正确。
+
+\subsection*{例题}
+
+\subsubsection*{例题 1}
+
+题目：币值为：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 1,\ 2,\ 4,\ 8,\ 16\\
+\end{quote}
+
+用贪心法凑出金额 \texttt{23}，并说明最优性。
+
+解答：
+
+贪心选择：
+
+\[23 = 16 + 4 + 2 + 1\]
+
+共用 4 枚硬币。
+
+这些币值都是 2 的幂。金额 \texttt{23} 的二进制表示为：
+
+\[23 = 16 + 4 + 2 + 1\]
+
+每个二进制位对应一枚硬币。使用更小面值替代其中任意一枚硬币，都不会减少硬币数。因此该贪心解是最优解。
+
+\subsubsection*{例题 2}
+
+题目：对下面非负权图从源点 \texttt{s} 运行 Dijkstra 算法：
+
+\[s->a: 1\]
+\[s->b: 4\]
+\[a->b: 2\]
+\[a->c: 5\]
+\[b->c: 1\]
+\[b->d: 7\]
+\[c->d: 3\]
+
+求从 \texttt{s} 到各点的最短距离。
+
+解答：
+
+初始化：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dist[s]\ =\ 0\\
+\relax dist[a]\ =\ ∞\\
+\relax dist[b]\ =\ ∞\\
+\relax dist[c]\ =\ ∞\\
+\relax dist[d]\ =\ ∞\\
+\end{quote}
+
+从 \texttt{s} 松弛：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dist[a]\ =\ 1\\
+\relax dist[b]\ =\ 4\\
+\end{quote}
+
+取出 \texttt{a}，松弛：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dist[b]\ =\ min(4,\ 1\ +\ 2)\ =\ 3\\
+\relax dist[c]\ =\ 1\ +\ 5\ =\ 6\\
+\end{quote}
+
+取出 \texttt{b}，松弛：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dist[c]\ =\ min(6,\ 3\ +\ 1)\ =\ 4\\
+\relax dist[d]\ =\ 3\ +\ 7\ =\ 10\\
+\end{quote}
+
+取出 $c$，松弛：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dist[d]\ =\ min(10,\ 4\ +\ 3)\ =\ 7\\
+\end{quote}
+
+最终结果：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dist[s]\ =\ 0\\
+\relax dist[a]\ =\ 1\\
+\relax dist[b]\ =\ 3\\
+\relax dist[c]\ =\ 4\\
+\relax dist[d]\ =\ 7\\
+\end{quote}
+
+\subsection*{常见误区}
+
+贪心算法必须证明正确性，不能只写“每一步取最优”。
+
+Dijkstra 算法不能直接用于含负权边的图。
+
+换硬币问题不能默认所有币值系统都适合贪心。
+
+\end{document}

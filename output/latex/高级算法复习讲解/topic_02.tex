@@ -1,0 +1,174 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\IfFontExistsTF{Microsoft YaHei}{\setCJKmainfont{Microsoft YaHei}}{\setCJKmainfont{SimSun}[BoldFont=SimHei]}
+\IfFontExistsTF{Microsoft YaHei UI}{\setCJKsansfont{Microsoft YaHei UI}}{}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}}{}
+\definecolor{linkblue}{RGB}{30,80,145}
+\hypersetup{colorlinks=true,linkcolor=linkblue,urlcolor=linkblue,pdfborder={0 0 0}}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+\linespread{1.16}
+\setlist{itemsep=0.2em,topsep=0.35em,leftmargin=2.5em}
+\pagestyle{plain}
+
+\title{02\_渐进符号定义与证明}
+
+\author{}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{02 渐进符号定义与证明}
+
+\subsection*{题目原文}
+
+$O$、$\Omega$、$\Theta$ 的定义和相关函数证明
+
+\subsection*{考查类型}
+
+概念题和证明题。
+
+\subsection*{三个定义}
+
+设 $f(n)$ 和 $g(n)$ 是非负函数。
+
+$f(n) = O(g(n))$ 表示 $f$ 被 $g$ 渐进上界控制：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 存在正常数\ c\ 和\ n₀，使得对所有\ n\ ≥\ n₀，有\ 0\ ≤\ f(n)\ ≤\ c\ g(n)\\
+\end{quote}
+
+$f(n) = \Omega(g(n))$ 表示 $f$ 被 $g$ 渐进下界控制：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 存在正常数\ c\ 和\ n₀，使得对所有\ n\ ≥\ n₀，有\ 0\ ≤\ c\ g(n)\ ≤\ f(n)\\
+\end{quote}
+
+$f(n) = \Theta(g(n))$ 表示二者同阶：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 存在正常数\ c₁,\ c₂\ 和\ n₀，使得对所有\ n\ ≥\ n₀，有\ 0\ ≤\ c₁\ g(n)\ ≤\ f(n)\ ≤\ c₂\ g(n)\\
+\end{quote}
+
+等价地：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax f(n)\ =\ Θ(g(n))\ 当且仅当\ f(n)\ =\ O(g(n))\ 且\ f(n)\ =\ Ω(g(n))\\
+\end{quote}
+
+\subsection*{证明方法}
+
+证明 $O$：找到一个常数 $c$，让 $f(n) \le c g(n)$ 在足够大的 $n$ 上成立。
+
+证明 $\Omega$：找到一个常数 $c$，让 $f(n) \ge c g(n)$ 在足够大的 $n$ 上成立。
+
+证明 $\Theta$：同时证明上界和下界。
+
+\subsection*{示例}
+
+证明 $3n^2 + 5n + 7 = O(n^2)$。
+
+当 $n \ge 1$ 时：
+
+\[3n^{2} + 5n + 7 \le  3n^{2} + 5n^{2} + 7n^{2} = 15n^{2}\]
+
+取 $c = 15, n_0 = 1$，定义满足，因此结论成立。
+
+证明 $3n^2 + 5n + 7 = \Omega(n^2)$。
+
+当 $n \ge 1$ 时：
+
+\[3n^{2} + 5n + 7 \ge  3n^{2}\]
+
+取 $c = 3, n_0 = 1$，定义满足，因此结论成立。
+
+由上界和下界同时成立，得到：
+
+\[3n^{2} + 5n + 7 = \Theta(n^{2})\]
+
+\subsection*{常用性质}
+
+传递性：
+
+\[f = O(g), g = O(h) \Rightarrow  f = O(h)\]
+
+同阶对称性：
+
+\[f = \Theta(g) \Rightarrow  g = \Theta(f)\]
+
+多项式主项支配：
+
+\[a_d n^{d} + ... + a_{1} n + a_{0} = \Theta(n^{d})\]
+
+这里要求最高次项系数 $a_d > 0$。
+
+\subsection*{例题}
+
+\subsubsection*{例题 1}
+
+题目：用定义证明：
+
+\[5n^{3} + 2n^{2} + 7 = O(n^{3})\]
+
+解答：
+
+当 $n \ge 1$ 时：
+
+\[5n^{3} + 2n^{2} + 7 \le  5n^{3} + 2n^{3} + 7n^{3} = 14n^{3}\]
+
+取：
+
+\[c = 14\]
+\[n_{0} = 1\]
+
+由 $O$ 的定义，结论成立。
+
+\subsubsection*{例题 2}
+
+题目：用定义证明：
+
+\[5n^{3} + 2n^{2} + 7 = \Theta(n^{3})\]
+
+解答：
+
+上界由例题 1 得到：
+
+\[5n^{3} + 2n^{2} + 7 \le  14n^{3}\]
+
+下界为：
+
+\[5n^{3} + 2n^{2} + 7 \ge  5n^{3}\]
+
+取：
+
+\[c_{1} = 5\]
+\[c_{2} = 14\]
+\[n_{0} = 1\]
+
+满足：
+
+\[c_{1} n^{3} \le  5n^{3} + 2n^{2} + 7 \le  c_{2} n^{3}\]
+
+所以：
+
+\[5n^{3} + 2n^{2} + 7 = \Theta(n^{3})\]
+
+\subsection*{常见误区}
+
+不要只代入几个数值说明渐进关系。渐进证明必须给出常数和阈值。
+
+不要把 $O$ 当成等号意义上的相等。$O$ 表示上界关系，不表示精确增长。
+
+\end{document}

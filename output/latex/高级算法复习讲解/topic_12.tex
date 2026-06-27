@@ -1,0 +1,359 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\IfFontExistsTF{Microsoft YaHei}{\setCJKmainfont{Microsoft YaHei}}{\setCJKmainfont{SimSun}[BoldFont=SimHei]}
+\IfFontExistsTF{Microsoft YaHei UI}{\setCJKsansfont{Microsoft YaHei UI}}{}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}}{}
+\definecolor{linkblue}{RGB}{30,80,145}
+\hypersetup{colorlinks=true,linkcolor=linkblue,urlcolor=linkblue,pdfborder={0 0 0}}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+\linespread{1.16}
+\setlist{itemsep=0.2em,topsep=0.35em,leftmargin=2.5em}
+\pagestyle{plain}
+
+\title{12\_动态规划}
+
+\author{}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{12 动态规划}
+
+\subsection*{题目原文}
+
+动态规划的思想和特点，针对经典问题能写出子问题的递归式，描述算法思想和伪代码：最长公共子序列相关问题、抽牌拿取最大值问题、回文判断/分割相关问题。
+
+\subsection*{考查类型}
+
+概念题和算法设计题。
+
+\subsection*{动态规划思想}
+
+动态规划用于具有以下性质的问题：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 最优子结构\\
+\relax 重叠子问题\\
+\end{quote}
+
+做法是先定义状态，再写状态转移，最后确定计算顺序。
+
+答题四步：
+
+\begin{enumerate}
+\item 定义 \texttt{dp} 状态含义。
+\item 写初始条件。
+\item 写状态转移方程。
+\item 说明遍历顺序和最终答案。
+\end{enumerate}
+
+\subsection*{最长公共子序列}
+
+给定字符串 \texttt{X[1..m]} 和 \texttt{Y[1..n]}，令：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[i][j]\ =\ X[1..i]\ 和\ Y[1..j]\ 的最长公共子序列长度\\
+\end{quote}
+
+初始条件：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[0][j]\ =\ 0\\
+\relax dp[i][0]\ =\ 0\\
+\end{quote}
+
+状态转移：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax if\ X[i]\ ==\ Y[j]:\\
+\relax \ \ \ \ dp[i][j]\ =\ dp[i-1][j-1]\ +\ 1\\
+\relax else:\\
+\relax \ \ \ \ dp[i][j]\ =\ max(dp[i-1][j],\ dp[i][j-1])\\
+\end{quote}
+
+答案：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[m][n]\\
+\end{quote}
+
+时间复杂度：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax O(mn)\\
+\end{quote}
+
+空间复杂度：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax O(mn)\\
+\end{quote}
+
+若只要求长度，可以滚动数组优化为 $O(n)$ 空间。
+
+\subsection*{抽牌拿取最大值问题}
+
+PDF 未给出完整题面。以下小节只分析本文件采用的练习模型：一排牌，每次只能从左端或右端取一张，两人都采用最优策略，求先手能取得的最大收益或最大分差。课堂题面不同，则需要按课堂题面重写该小节。
+
+定义：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[i][j]\ =\ 当前行动者面对区间\ cards[i..j]\ 时，相对对手最多领先多少分\\
+\end{quote}
+
+状态转移：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[i][j]\ =\ max(\\
+\relax \ \ \ \ cards[i]\ -\ dp[i+1][j],\\
+\relax \ \ \ \ cards[j]\ -\ dp[i][j-1]\\
+\relax )\\
+\end{quote}
+
+含义：
+
+当前行动者若取左端 \texttt{cards[i]}，接下来对手面对 \texttt{[i+1..j]}，对手相对当前行动者的领先为 \texttt{dp[i+1][j]}，所以当前行动者净领先为 \texttt{cards[i] - dp[i+1][j]}。
+
+初始条件：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[i][i]\ =\ cards[i]\\
+\end{quote}
+
+计算顺序：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 区间长度从\ 1\ 到\ n\\
+\end{quote}
+
+答案：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[0][n-1]\\
+\end{quote}
+
+若需要先手最大总分，可结合总分 $S$ 得到：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax first\ =\ (S\ +\ dp[0][n-1])\ /\ 2\\
+\end{quote}
+
+\subsection*{回文判断}
+
+给定字符串 \texttt{s[0..n-1]}，令：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax pal[i][j]\ =\ s[i..j]\ 是否为回文串\\
+\end{quote}
+
+初始和转移：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax pal[i][i]\ =\ true\\
+\relax pal[i][i+1]\ =\ (s[i]\ ==\ s[i+1])\\
+\mbox{}\\
+\relax if\ s[i]\ ==\ s[j]\ and\ pal[i+1][j-1]:\\
+\relax \ \ \ \ pal[i][j]\ =\ true\\
+\relax else:\\
+\relax \ \ \ \ pal[i][j]\ =\ false\\
+\end{quote}
+
+计算顺序：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 按区间长度从短到长\\
+\end{quote}
+
+\subsection*{回文分割}
+
+目标：将字符串切成若干回文子串，求最少切割次数。
+
+先用上面的 \texttt{pal[i][j]} 预处理任意区间是否回文。
+
+令：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax cut[i]\ =\ s[0..i]\ 的最少切割次数\\
+\end{quote}
+
+转移：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax if\ pal[0][i]:\\
+\relax \ \ \ \ cut[i]\ =\ 0\\
+\relax else:\\
+\relax \ \ \ \ cut[i]\ =\ min(cut[j]\ +\ 1)\ for\ 0\ ≤\ j\ <\ i\ and\ pal[j+1][i]\\
+\end{quote}
+
+时间复杂度：
+
+\[O(n^{2})\]
+
+\subsection*{例题}
+
+\subsubsection*{例题 1}
+
+题目：求字符串 $X = ABCBDAB$ 和 $Y = BDCABA$ 的最长公共子序列长度。
+
+解答：
+
+令：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[i][j]\ =\ X[1..i]\ 和\ Y[1..j]\ 的最长公共子序列长度\\
+\end{quote}
+
+按转移方程填表后得到：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[7][6]\ =\ 4\\
+\end{quote}
+
+因此最长公共子序列长度为 \texttt{4}。一个长度为 4 的公共子序列为：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax BCBA\\
+\end{quote}
+
+\subsubsection*{例题 2}
+
+题目：一排牌为：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax [3,\ 9,\ 1,\ 2]\\
+\end{quote}
+
+每次只能从左端或右端取牌，两人都采用最优策略。求先手最终得分。
+
+解答：
+
+沿用上文定义：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[i][j]\ =\ 当前行动者面对\ cards[i..j]\ 时，相对对手最多领先多少分\\
+\end{quote}
+
+单元素区间：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[0][0]\ =\ 3\\
+\relax dp[1][1]\ =\ 9\\
+\relax dp[2][2]\ =\ 1\\
+\relax dp[3][3]\ =\ 2\\
+\end{quote}
+
+长度为 2：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[0][1]\ =\ max(3\ -\ 9,\ 9\ -\ 3)\ =\ 6\\
+\relax dp[1][2]\ =\ max(9\ -\ 1,\ 1\ -\ 9)\ =\ 8\\
+\relax dp[2][3]\ =\ max(1\ -\ 2,\ 2\ -\ 1)\ =\ 1\\
+\end{quote}
+
+长度为 3：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[0][2]\ =\ max(3\ -\ 8,\ 1\ -\ 6)\ =\ -5\\
+\relax dp[1][3]\ =\ max(9\ -\ 1,\ 2\ -\ 8)\ =\ 8\\
+\end{quote}
+
+长度为 4：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax dp[0][3]\ =\ max(3\ -\ 8,\ 2\ -\ (-5))\ =\ 7\\
+\end{quote}
+
+总分为：
+
+\[3 + 9 + 1 + 2 = 15\]
+
+先手得分为：
+
+\[(15 + 7) / 2 = 11\]
+
+\subsubsection*{例题 3}
+
+题目：对字符串 \texttt{aab} 求最少回文分割次数。
+
+解答：
+
+回文子串包括：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax a\\
+\relax a\\
+\relax b\\
+\relax aa\\
+\end{quote}
+
+最优分割为：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax aa\ |\ b\\
+\end{quote}
+
+切割次数为：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax 1\\
+\end{quote}
+
+用 \texttt{cut} 表示：
+
+\begin{quote}
+\small\ttfamily\raggedright
+\relax cut[0]\ =\ 0\ \ \ \ \ \ \ \ a\\
+\relax cut[1]\ =\ 0\ \ \ \ \ \ \ \ aa\\
+\relax cut[2]\ =\ cut[1]\ +\ 1\ =\ 1\\
+\end{quote}
+
+所以答案为 \texttt{1}。
+
+\subsection*{常见误区}
+
+动态规划不是只写递归式。完整答案还要说明状态含义、边界条件、计算顺序和最终答案。
+
+区间动态规划要按区间长度递增计算，避免使用尚未计算出的状态。
+
+最长公共子序列不是最长公共子串。子序列允许不连续，子串必须连续。
+
+\end{document}

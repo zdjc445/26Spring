@@ -1,0 +1,228 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\IfFontExistsTF{Microsoft YaHei}{\setCJKmainfont{Microsoft YaHei}}{\setCJKmainfont{SimSun}[BoldFont=SimHei]}
+\IfFontExistsTF{Microsoft YaHei UI}{\setCJKsansfont{Microsoft YaHei UI}}{}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}}{}
+\definecolor{linkblue}{RGB}{30,80,145}
+\hypersetup{colorlinks=true,linkcolor=linkblue,urlcolor=linkblue,pdfborder={0 0 0}}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+\linespread{1.16}
+\setlist{itemsep=0.2em,topsep=0.35em,leftmargin=2.5em}
+\pagestyle{plain}
+
+\title{04\_平滑函数与主定理}
+
+\author{}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{04 平滑函数与主定理}
+
+\subsection*{题目原文}
+
+了解平滑函数性质，应用主定理求解一般式：
+
+\[T(n) = bT(n/c) + f(n)\]
+
+\subsection*{考查类型}
+
+概念题和递推分析题。
+
+\subsection*{递推含义}
+
+递推式：
+
+\[T(n) = bT(n/c) + f(n)\]
+
+表示一个规模为 $n$ 的问题被分成 \texttt{b} 个规模为 \texttt{n/c} 的子问题，合并或额外处理代价为 $f(n)$。
+
+其中通常有：
+
+\[b \ge  1\]
+\[c > 1\]
+
+关键比较对象是：
+
+\[n^{\log_c b}\]
+
+它表示递归树中叶子层的总规模量级。
+
+\subsection*{主定理三种情形}
+
+令：
+
+\[\alpha = \log_c b\]
+
+第一种：$f(n)$ 比 $n^\alpha$ 多项式意义下更小。
+
+\[f(n) = O(n^{\alpha - \varepsilon})\]
+
+其中 $\varepsilon > 0$，则：
+
+\[T(n) = \Theta(n^\alpha)\]
+
+第二种：$f(n)$ 与 $n^\alpha$ 同阶。
+
+\[f(n) = \Theta(n^\alpha)\]
+
+则：
+
+\[T(n) = \Theta(n^\alpha \log n)\]
+
+第三种：$f(n)$ 比 $n^\alpha$ 多项式意义下更大，并满足正则条件。
+
+\[f(n) = \Omega(n^{\alpha + \varepsilon})\]
+
+且存在常数 $q < 1$，使得：
+
+\[b f(n/c) \le  q f(n)\]
+
+则：
+
+\[T(n) = \Theta(f(n))\]
+
+\subsection*{平滑函数的作用}
+
+在主定理相关证明中，平滑性质用于处理 $n$ 不是 $c$ 的整数幂时的情况，并保证函数在按常数比例缩放时增长不发生剧烈跳变。
+
+常见的平滑函数包括：
+
+\[n^{d}\]
+\[n^{d} \log^{k} n\]
+
+其中 \texttt{d} 和 \texttt{k} 是常数，且函数在讨论区间内非负。
+
+这些函数满足按常数倍缩放时仍保持同一量级：
+
+\[f(cn) = \Theta(f(n))\]
+
+\subsection*{例子}
+
+归并排序：
+
+\[T(n) = 2T(n/2) + n\]
+
+这里：
+
+\[b = 2\]
+\[c = 2\]
+\[\alpha = \log_2 2 = 1\]
+\[f(n) = n = \Theta(n^{1})\]
+
+属于第二种情形：
+
+\[T(n) = \Theta(n \log n)\]
+
+二分查找：
+
+\[T(n) = T(n/2) + 1\]
+
+这里：
+
+\[b = 1\]
+\[c = 2\]
+\[\alpha = \log_2 1 = 0\]
+\[f(n) = 1 = \Theta(n^{0})\]
+
+属于第二种情形：
+
+\[T(n) = \Theta(\log n)\]
+
+\subsection*{答题模板}
+
+\begin{enumerate}
+\item 写出 \texttt{b}、$c$、$f(n)$。
+\item 计算 $\alpha = \log_c b$。
+\item 比较 $f(n)$ 和 $n^\alpha$。
+\item 判断主定理情形。
+\item 写出 $T(n)$ 的 $\Theta$ 结果。
+\end{enumerate}
+
+\subsection*{例题}
+
+\subsubsection*{例题 1}
+
+题目：求解：
+
+\[T(n) = 3T(n/2) + n\]
+
+解答：
+
+这里：
+
+\[b = 3\]
+\[c = 2\]
+\[\alpha = \log_2 3\]
+\[f(n) = n\]
+
+因为：
+
+\[n = O(n^{\log_2 3 - \varepsilon})\]
+
+可取 $\varepsilon = \log_2 3 - 1$。因此属于主定理第一种情形：
+
+\[T(n) = \Theta(n^{\log_2 3})\]
+
+\subsubsection*{例题 2}
+
+题目：求解：
+
+\[T(n) = 4T(n/2) + n^{2}\]
+
+解答：
+
+这里：
+
+\[b = 4\]
+\[c = 2\]
+\[\alpha = \log_2 4 = 2\]
+\[f(n) = n^{2}\]
+
+因为：
+
+\[f(n) = \Theta(n^\alpha)\]
+
+属于主定理第二种情形：
+
+\[T(n) = \Theta(n^{2} \log n)\]
+
+\subsubsection*{例题 3}
+
+题目：求解：
+
+\[T(n) = 2T(n/2) + n^{2}\]
+
+解答：
+
+这里：
+
+\[b = 2\]
+\[c = 2\]
+\[\alpha = \log_2 2 = 1\]
+\[f(n) = n^{2}\]
+
+$f(n)$ 多项式意义下大于 $n^\alpha$。检查正则条件：
+
+\[2f(n/2) = 2(n/2)^{2} = n^{2}/2 \le  (1/2)f(n)\]
+
+取 $q = 1/2$，正则条件成立。属于主定理第三种情形：
+
+\[T(n) = \Theta(n^{2})\]
+
+\subsection*{常见误区}
+
+第三种情形不能只比较大小，还要检查正则条件。
+
+第二种情形要求同阶。若出现 $n^\alpha \log^k n$，需要按课堂给出的扩展主定理处理。
+
+\end{document}

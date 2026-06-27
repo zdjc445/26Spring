@@ -1,0 +1,194 @@
+\documentclass[UTF8,zihao=-4]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\IfFontExistsTF{Microsoft YaHei}{\setCJKmainfont{Microsoft YaHei}}{\setCJKmainfont{SimSun}[BoldFont=SimHei]}
+\IfFontExistsTF{Microsoft YaHei UI}{\setCJKsansfont{Microsoft YaHei UI}}{}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}}{}
+\definecolor{linkblue}{RGB}{30,80,145}
+\hypersetup{colorlinks=true,linkcolor=linkblue,urlcolor=linkblue,pdfborder={0 0 0}}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.25em}
+\linespread{1.16}
+\setlist{itemsep=0.2em,topsep=0.35em,leftmargin=2.5em}
+\pagestyle{plain}
+
+\title{03\_二阶线性递归关系求解}
+
+\author{}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{03 二阶线性递归关系求解}
+
+\subsection*{题目原文}
+
+递归关系求解：
+
+\[a_{n} = r_{1} a_{n-1} + r_{2} a_{n-2}\]
+
+形似斐波拉契数列。
+
+\subsection*{考查类型}
+
+证明和计算题。
+
+\subsection*{解题思路}
+
+这是二阶线性齐次递推。标准方法是写出特征方程：
+
+\[x^{2} = r_{1} x + r_{2}\]
+
+整理为：
+
+\[x^{2} - r_{1} x - r_{2} = 0\]
+
+求出特征根后，再根据根的情况写通解。
+
+\subsection*{两个不同特征根}
+
+若特征根为 $\alpha$ 和 $\beta$，且 $\alpha \ne \beta$，则通解为：
+
+\[a_{n} = A \alpha^{n} + B \beta^{n}\]
+
+其中 \texttt{A} 和 \texttt{B} 由初始条件决定，例如 $a_0$ 和 $a_1$。
+
+\subsection*{重根}
+
+若特征方程只有一个重根 $\alpha$，则通解为：
+
+\[a_{n} = (A + Bn) \alpha^{n}\]
+
+同样用初始条件求出 \texttt{A} 和 \texttt{B}。
+
+\subsection*{斐波拉契数列例子}
+
+斐波拉契数列满足：
+
+\[F_{n} = F_{n-1} + F_{n-2}\]
+
+对应 $r_1 = 1, r_2 = 1$，特征方程为：
+
+\[x^{2} - x - 1 = 0\]
+
+两个根为：
+
+\[\varphi = (1 + \sqrt{5}) / 2\]
+\[\psi = (1 - \sqrt{5}) / 2\]
+
+所以：
+
+\[F_{n} = A \varphi^{n} + B \psi^{n}\]
+
+再由初始条件确定 \texttt{A} 和 \texttt{B}。
+
+\subsection*{渐进复杂度判断}
+
+如果两个根的绝对值不相等，且主导根对应系数不为 0，则 $a_n$ 的增长由绝对值最大的根控制。
+
+例如斐波拉契数列中：
+
+\[|\varphi| > |\psi|\]
+
+因此：
+
+\[F_{n} = \Theta(\varphi^{n})\]
+
+\subsection*{答题模板}
+
+\begin{enumerate}
+\item 写特征方程 $x^2 - r_1 x - r_2 = 0$。
+\item 求特征根。
+\item 按不同根或重根写通解。
+\item 代入初始条件求常数。
+\item 如题目要求渐进阶，比较特征根绝对值。
+\end{enumerate}
+
+\subsection*{例题}
+
+\subsubsection*{例题 1}
+
+题目：求解递推：
+
+\[a_{n} = 3a_{n-1} - 2a_{n-2}\]
+\[a_{0} = 1\]
+\[a_{1} = 3\]
+
+解答：
+
+特征方程为：
+
+\[x^{2} - 3x + 2 = 0\]
+
+分解得：
+
+\[(x - 1)(x - 2) = 0\]
+
+两个不同特征根为 \texttt{1} 和 \texttt{2}，所以：
+
+\[a_{n} = A\cdot 1^{n} + B\cdot 2^{n} = A + B2^{n}\]
+
+代入初始条件：
+
+\[A + B = 1\]
+\[A + 2B = 3\]
+
+解得：
+
+\[A = -1\]
+\[B = 2\]
+
+因此：
+
+\[a_{n} = 2^{n+1} - 1\]
+
+\subsubsection*{例题 2}
+
+题目：求解递推：
+
+\[a_{n} = 2a_{n-1} - a_{n-2}\]
+\[a_{0} = 1\]
+\[a_{1} = 2\]
+
+解答：
+
+特征方程为：
+
+\[x^{2} - 2x + 1 = 0\]
+
+即：
+
+\[(x - 1)^{2} = 0\]
+
+特征根 \texttt{1} 是重根，通解为：
+
+\[a_{n} = (A + Bn)1^{n} = A + Bn\]
+
+代入初始条件：
+
+\[A = 1\]
+\[A + B = 2\]
+
+解得：
+
+\[A = 1\]
+\[B = 1\]
+
+因此：
+
+\[a_{n} = n + 1\]
+
+\subsection*{常见误区}
+
+不要把所有二阶递推都直接写成斐波拉契形式。只有 $r_1 = 1, r_2 = 1$ 且初始条件对应时，才是标准斐波拉契数列。
+
+不要漏掉重根情形。重根时必须出现 $n \alpha^n$ 项。
+
+\end{document}
