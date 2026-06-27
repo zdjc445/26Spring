@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>操作系统复习工作台</title>
+<style>
+:root {
+  --bg: #f5f7f9;
+  --surface: #ffffff;
+  --surface-soft: #eef3f5;
+  --line: #d9e1e5;
+  --text: #16222b;
+  --muted: #5f6f7a;
+  --green: #178a62;
+  --green-soft: #e5f4ee;
+  --blue: #2f6fb0;
+  --blue-soft: #e6f0fa;
+  --amber: #b56b13;
+  --amber-soft: #fff1d8;
+  --red: #b84036;
+  --red-soft: #ffe8e4;
+  --violet: #6b58a8;
+  --violet-soft: #eeeafd;
+  --shadow: 0 10px 24px rgba(25, 39, 52, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+button, input {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr) 300px;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 22px 18px;
+  background: #14212a;
+  color: #f4f7f8;
+  border-right: 1px solid #1e333f;
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2e9d72, #2f6fb0);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: white;
+}
+
+.brand-title {
+  display: grid;
+  gap: 2px;
+}
+
+.brand-title strong {
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.brand-title span {
+  font-size: 12px;
+  color: #b8c6ce;
+}
+
+.nav-block {
+  margin: 18px 0;
+}
+
+.nav-label {
+  color: #9fb0ba;
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+
+.nav-list {
+  display: grid;
+  gap: 4px;
+}
+
+.nav-link {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: #e8eef1;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link small {
+  color: #a9bac3;
+}
+
+.sidebar-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.side-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fbfc;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.side-button.primary {
+  background: #1f9a70;
+  border-color: #1f9a70;
+  color: white;
+}
+
+.content {
+  min-width: 0;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(245, 247, 249, 0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  padding: 16px 26px;
+}
+
+.topbar-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+}
+
+.search input {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 14px 0 38px;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+}
+
+.search input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(47, 111, 176, 0.13);
+}
+
+.search::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--muted);
+  border-radius: 50%;
+  transform: translateY(-55%);
+}
+
+.search::after {
+  content: "";
+  position: absolute;
+  left: 27px;
+  top: 27px;
+  width: 8px;
+  height: 2px;
+  background: var(--muted);
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.segment {
+  min-height: 38px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.segment.active {
+  border-color: var(--text);
+  color: var(--text);
+  background: #eef0f2;
+  font-weight: 700;
+}
+
+.main-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 26px;
+}
+
+.page-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.page-title h1 {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.page-title p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  max-width: 760px;
+}
+
+.status-pill {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.metric {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 96px;
+}
+
+.metric strong {
+  display: block;
+  font-size: 26px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.metric span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.band {
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+
+.band:first-of-type {
+  border-top: 0;
+}
+
+.band-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.band h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 3px 9px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tag.choice { background: var(--blue-soft); color: var(--blue); }
+.tag.short { background: var(--green-soft); color: var(--green); }
+.tag.calc { background: var(--amber-soft); color: var(--amber); }
+.tag.concurrent { background: var(--violet-soft); color: var(--violet); }
+.tag.year { background: var(--red-soft); color: var(--red); }
+.tag.sprint { background: #e9edf0; color: #43515b; }
+
+.summary {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.note {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--blue);
+  border-radius: 8px;
+  padding: 13px 14px;
+  min-height: 62px;
+}
+
+.note.green { border-left-color: var(--green); }
+.note.amber { border-left-color: var(--amber); }
+.note.red { border-left-color: var(--red); }
+.note.violet { border-left-color: var(--violet); }
+
+.note strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.note p,
+.note ul,
+.note ol {
+  margin: 0;
+  color: var(--muted);
+}
+
+.note ul,
+.note ol {
+  padding-left: 18px;
+}
+
+.formula {
+  display: grid;
+  gap: 8px;
+}
+
+.formula-row {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.formula-row code {
+  display: inline-block;
+  white-space: normal;
+  word-break: break-word;
+  color: #26343e;
+}
+
+code, pre {
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+}
+
+pre {
+  margin: 10px 0 0;
+  padding: 14px;
+  overflow: auto;
+  background: #14212a;
+  color: #eaf2f5;
+  border-radius: 8px;
+  line-height: 1.55;
+}
+
+.process-diagram {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.state-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.state {
+  min-height: 52px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-weight: 700;
+}
+
+.state.accent { background: var(--green-soft); color: var(--green); border-color: #b9ddcf; }
+.state.warn { background: var(--amber-soft); color: var(--amber); border-color: #edd4a9; }
+
+.timeline {
+  display: grid;
+  gap: 9px;
+}
+
+.year-row {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.year-row strong {
+  color: var(--red);
+  font-size: 15px;
+}
+
+.year-row p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.rightbar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 20px 18px;
+  background: #fbfcfd;
+  border-left: 1px solid var(--line);
+  overflow-y: auto;
+}
+
+.tool {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+
+.tool h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.flashcard {
+  min-height: 178px;
+  display: grid;
+  gap: 10px;
+}
+
+.flashcard-kind {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.flashcard-question {
+  font-weight: 700;
+}
+
+.flashcard-answer {
+  display: none;
+  color: var(--muted);
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+}
+
+.flashcard-answer.show {
+  display: block;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.button {
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.button:hover {
+  border-color: var(--blue);
+}
+
+.button.primary {
+  background: var(--text);
+  color: white;
+  border-color: var(--text);
+}
+
+.checklist {
+  display: grid;
+  gap: 8px;
+}
+
+.check-item {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.check-item input {
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+  accent-color: var(--green);
+}
+
+.check-item.done {
+  color: #84919a;
+  text-decoration: line-through;
+}
+
+.progress {
+  height: 8px;
+  background: #e6ebee;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--green), var(--blue));
+  transition: width 0.25s ease;
+}
+
+.empty-state {
+  display: none;
+  padding: 28px 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+mark {
+  background: #ffef99;
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+@media (max-width: 1160px) {
+  .app-shell {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .rightbar {
+    grid-column: 1 / -1;
+    position: static;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .tool {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 820px) {
+  .app-shell {
+    display: block;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+  }
+
+  .nav-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .topbar {
+    position: static;
+  }
+
+  .topbar-row,
+  .page-title {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .metrics,
+  .note-grid,
+  .rightbar {
+    grid-template-columns: 1fr;
+  }
+
+  .state-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .formula-row,
+  .year-row {
+    grid-template-columns: 1fr;
+  }
+
+  .main-wrap {
+    padding: 20px 16px;
+  }
+}
+
+@media print {
+  .sidebar,
+  .topbar,
+  .rightbar {
+    display: none;
+  }
+
+  .app-shell {
+    display: block;
+  }
+
+  .main-wrap {
+    max-width: none;
+    padding: 0;
+  }
+
+  .band {
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">OS</div>
+      <div class="brand-title">
+        <strong>操作系统复习</strong>
+        <span>Exam + Mooc</span>
+      </div>
+    </div>
+
+    <div class="nav-block">
+      <p class="nav-label">目录</p>
+      <div id="navList" class="nav-list"></div>
+    </div>
+
+    <div class="nav-block">
+      <p class="nav-label">工具</p>
+      <div class="sidebar-actions">
+        <a class="side-button primary" href="Mooc/quiz.html">题库练习</a>
+        <button class="side-button" id="printButton" type="button">打印讲义</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="topbar">
+      <div class="topbar-row">
+        <label class="search" aria-label="关键词">
+          <input id="searchInput" type="search" placeholder="关键词">
+        </label>
+        <div class="segmented" id="typeFilter"></div>
+      </div>
+    </div>
+
+    <div class="main-wrap">
+      <div class="page-title">
+        <div>
+          <h1>操作系统复习工作台</h1>
+          <p>按当前分支的讲义内容重排，保留重点、模板、年份复盘和冲刺清单。</p>
+        </div>
+        <span id="resultCount" class="status-pill">全部内容</span>
+      </div>
+
+      <section class="metrics" aria-label="统计">
+        <div class="metric"><strong>15</strong><span>资料文件纳入范围</span></div>
+        <div class="metric"><strong>100</strong><span>MOOC 题库题量</span></div>
+        <div class="metric"><strong>9</strong><span>历年期末与回忆卷</span></div>
+        <div class="metric"><strong>3</strong><span>冲刺复习轮次</span></div>
+      </section>
+
+      <div id="sectionHost"></div>
+      <div id="emptyState" class="empty-state">没有匹配内容</div>
+    </div>
+  </main>
+
+  <aside class="rightbar">
+    <section class="tool">
+      <h3>速记抽卡</h3>
+      <div class="flashcard">
+        <div id="flashKind" class="flashcard-kind"></div>
+        <div id="flashQuestion" class="flashcard-question"></div>
+        <div id="flashAnswer" class="flashcard-answer"></div>
+        <div class="button-row">
+          <button class="button primary" id="showAnswer" type="button">显示答案</button>
+          <button class="button" id="prevCard" type="button">上一张</button>
+          <button class="button" id="nextCard" type="button">下一张</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="tool">
+      <h3>冲刺进度</h3>
+      <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
+      <div id="checklist" class="checklist"></div>
+    </section>
+  </aside>
+</div>
+
+<script>
+const TYPE_LABELS = [
+  { id: "all", label: "全部" },
+  { id: "choice", label: "选择题" },
+  { id: "short", label: "简答" },
+  { id: "calc", label: "计算" },
+  { id: "concurrent", label: "并发" },
+  { id: "year", label: "年份" },
+  { id: "sprint", label: "冲刺" }
+];
+
+const SECTIONS = [
+  {
+    id: "source",
+    type: "sprint",
+    title: "资料范围",
+    tag: "冲刺",
+    summary: "来自当前分支的 Exam 与 Mooc 目录，图片型 PDF 只纳入能人工确认的题型。",
+    notes: [
+      { tone: "green", title: "已覆盖文件", body: "2013、2014、2015-期中、2015、2016、2019、2020、2021、2022、2025、期末分类汇编、MOOC 合集、选择题分类汇编、quiz.html。" },
+      { tone: "amber", title: "2015 期末卷", body: "图片型 PDF；可确认题型为选择题、进程调度、OPT/LRU、银行家算法、读者写者 PV、哲学家管程、作业调度。" },
+      { tone: "red", title: "答案来源处理", body: "带有“答案不保证正确”说明的汇编只用于考点归纳，讲义不把这些答案作为唯一标准。" }
+    ]
+  },
+  {
+    id: "priority",
+    type: "sprint",
+    title: "复习优先级",
+    tag: "冲刺",
+    summary: "先拿高频计算题和可背模板，再补选择题细节。",
+    notes: [
+      { tone: "red", title: "第一优先级", body: "进程状态模型、调度、页面置换、文件索引、磁盘调度、银行家算法、PV 和管程。" },
+      { tone: "amber", title: "第二优先级", body: "系统调用、陷入机制、内核态/用户态、I/O 软件层次、DMA、SPOOLing、目录项、inode、open/create。" },
+      { tone: "blue", title: "第三优先级", body: "操作系统分类、多线程模型、存储碎片、分页/分段/固定分区/可变分区/段页式。" }
+    ]
+  },
+  {
+    id: "choice-os",
+    type: "choice",
+    title: "高频选择题速记",
+    tag: "选择题",
+    summary: "覆盖操作系统概述、系统调用、进程线程、存储、设备、文件管理。",
+    notes: [
+      { tone: "blue", title: "操作系统概述", body: "操作系统管理计算机资源；配置操作系统后的机器称为虚拟计算机；分时系统支持多终端交互；实时系统强调规定时间、可靠性、安全性。" },
+      { tone: "green", title: "多道程序设计", body: "在一台处理机上并发运行多个程序，提高 CPU 和外部设备利用率；前提之一是中断功能。" },
+      { tone: "amber", title: "系统调用", body: "系统调用是操作系统向用户程序提供的接口；用户程序的输入输出操作实际由操作系统完成。" },
+      { tone: "red", title: "内核态", body: "CPU 执行操作系统内核代码时处于管态/核心态；输入/输出指令必须在管态/核心态下执行。" },
+      { tone: "violet", title: "进程与线程", body: "进程映像包括程序块、数据块、核心栈、PCB；引入线程后，进程仍是资源分配基本单位，线程是调度基本单位。" },
+      { tone: "green", title: "状态转换", body: "等待态不能直接到运行态；时间片用完是运行态到就绪态；等待事件发生是阻塞态到就绪态；唤醒后进入就绪状态。" },
+      { tone: "blue", title: "fork", body: "每次 fork() 调用都会使当前所有进程各复制一次；连续 3 次 fork() 后总进程数为 8，新产生进程数为 7。" },
+      { tone: "amber", title: "碎片", body: "分段存储管理不会产生内部碎片；分页存储管理不会产生外部碎片；段式存储的段是不定长连续区域。" },
+      { tone: "red", title: "页面替换", body: "FIFO 可能产生 Belady 异常；LRU 基于最近最少使用；虚存可行性基础是局部性原理。" },
+      { tone: "violet", title: "设备管理", body: "DMA 不经过 CPU 传输；通道用于主存与 I/O 设备之间传输；SPOOLing 将独占设备转化为共享设备。" },
+      { tone: "green", title: "文件管理", body: "Unix 文件索引结构存放在 inode 节点；目录项实现按名存取；open 输入包含文件名，返回文件描述符；create 返回文件描述符。" }
+    ]
+  },
+  {
+    id: "short-state",
+    type: "short",
+    title: "进程状态模型",
+    tag: "简答",
+    summary: "三状态、五状态、七状态都要能画出并解释转换含义。",
+    notes: [
+      { tone: "green", title: "三状态", body: "就绪、运行、等待/阻塞。就绪到运行是被调度选中；运行到就绪是时间片到或被抢占；运行到等待是等待 I/O 或事件；等待到就绪是等待事件完成。" },
+      { tone: "blue", title: "五状态", body: "新建、就绪、运行、等待/阻塞、终止。新建到就绪是提交/接纳；运行到终止是进程完成或被撤销。" },
+      { tone: "amber", title: "七状态", body: "在五状态基础上增加挂起就绪、挂起等待。挂起等待在事件完成后转为挂起就绪，解除挂起后回到就绪或等待。" }
+    ],
+    diagram: true
+  },
+  {
+    id: "short-syscall",
+    type: "short",
+    title: "系统调用过程",
+    tag: "简答",
+    summary: "2020 回忆卷明确考过概念、陷入机制、执行过程和原理图。",
+    ordered: [
+      "用户程序通过系统调用接口提出服务请求。",
+      "执行访管/陷入指令，从用户态切换到核心态。",
+      "保存现场，根据系统调用号进入系统调用处理程序。",
+      "内核检查参数和权限，执行对应服务。",
+      "将返回值放入约定位置，恢复现场，返回用户态继续执行。"
+    ],
+    notes: [
+      { tone: "blue", title: "图示顺序", body: "用户程序 -> 系统调用接口 -> 陷入/中断入口 -> 系统调用分派 -> 内核服务例程 -> 返回用户态。" }
+    ]
+  },
+  {
+    id: "short-feedback",
+    type: "short",
+    title: "多级反馈队列",
+    tag: "简答",
+    summary: "2021、2022、2025 都围绕反馈队列模型、原理、优缺点和调度序列出题。",
+    notes: [
+      { tone: "green", title: "模型", body: "多个就绪队列，优先级从高到低；高优先级时间片短，低优先级时间片长；新进程通常进入最高优先级队列。" },
+      { tone: "blue", title: "规则", body: "用完时间片未完成则降入下一队列；高优先级队列为空时才调度低优先级队列。" },
+      { tone: "amber", title: "优势", body: "短作业和交互型作业更容易快速完成；长作业逐步下沉，减少对短作业响应时间的影响。" },
+      { tone: "red", title: "改进", body: "长作业可能长期等待；可用老化或周期性提升优先级缓解饥饿。" }
+    ]
+  },
+  {
+    id: "calc-schedule",
+    type: "calc",
+    title: "进程调度时间轴",
+    tag: "计算",
+    summary: "FCFS、RR、SRT、HRRN、多级反馈队列都按时间单位写执行序列。",
+    ordered: [
+      "按到达时间建立事件点。",
+      "每个时间单位写当前可运行进程集合。",
+      "FCFS 先到先服务，不抢占。",
+      "RR 按就绪队列轮转，时间片用完且未完成则排到队尾。",
+      "SRT 选择剩余时间最短，发生更短进程到达时抢占。",
+      "HRRN 使用 R = 1 + 等待时间 / 服务时间。",
+      "多级反馈先看最高非空队列，时间片用完降级。"
+    ],
+    notes: [
+      { tone: "red", title: "同时事件", body: "题目给出时间片结束与新进程到达同时发生时的入队顺序时，必须按题目规则执行。" },
+      { tone: "amber", title: "2016 特殊规则", body: "就绪队列为空时，正在运行进程不被抢占，继续适用下一段时间片。" }
+    ]
+  },
+  {
+    id: "calc-page",
+    type: "calc",
+    title: "页面置换",
+    tag: "计算",
+    summary: "表格列为访问串、页框 0、页框 1、页框 2、缺页标记。",
+    notes: [
+      { tone: "green", title: "FIFO", body: "淘汰最早调入的页；可能产生 Belady 异常。" },
+      { tone: "blue", title: "LRU", body: "淘汰最近最久未使用的页。" },
+      { tone: "amber", title: "OPT", body: "淘汰未来最长时间不再访问的页。" },
+      { tone: "violet", title: "Clock", body: "命中时引用位置 1；缺页时从指针处扫描，遇到 1 置 0 并前移，遇到 0 替换。" },
+      { tone: "red", title: "固定数据", body: "2013/2014 访问串 4,3,2,1,4,3,5,4,3,2,1,5；材料中 LRU 缺页 10 次，Clock 缺页 9 次。" }
+    ]
+  },
+  {
+    id: "calc-banker",
+    type: "calc",
+    title: "银行家算法",
+    tag: "计算",
+    summary: "先写 Need，再做安全性检查；Request 题先试分配再检查。",
+    ordered: [
+      "写出 Need = Claim - Allocation。",
+      "初始化 Work = Available，所有进程 Finish = false。",
+      "找到 Need <= Work 的进程，让它完成并释放资源。",
+      "重复直到所有进程完成，得到安全序列。",
+      "Request 题先检查 Request <= Need 和 Request <= Available。",
+      "试分配后重新做安全性检查，安全才允许分配。"
+    ],
+    notes: [
+      { tone: "blue", title: "重复数据", body: "2013、2014、2016、2020 都出现过 A/B/C/D 四类资源、P0-P4 的银行家算法数据。" },
+      { tone: "amber", title: "2015 图片卷", body: "出现 A/B/C 三类资源、P1-P5，要求判断 T0 安全状态，以及 P4、P1 的请求能否分配。" }
+    ]
+  },
+  {
+    id: "calc-disk",
+    type: "calc",
+    title: "磁盘调度",
+    tag: "计算",
+    summary: "先确认方向，再写访问序列，最后求相邻距离之和。",
+    notes: [
+      { tone: "green", title: "SCAN/电梯", body: "沿当前方向服务请求，到端点或无请求后反向；题目区分端点处理规则时按题面。" },
+      { tone: "blue", title: "C-SCAN", body: "只沿一个方向服务，到端点后回到另一端，再继续同方向。" },
+      { tone: "amber", title: "SSTF", body: "每次选择距离当前磁头最近的请求。" },
+      { tone: "red", title: "2013 C-SCAN", body: "当前 100，刚完成 80，方向向大号磁道；序列 150、160、184、199、0、18、38、39、55、58、90；移动总量 388。" }
+    ]
+  },
+  {
+    id: "calc-inode",
+    type: "calc",
+    title: "i-node 多级索引",
+    tag: "计算",
+    summary: "先算每个索引块可存地址数 N，再判断直接、一级、二级、三级层级。",
+    formulas: [
+      ["地址项数", "N = 盘块大小 / 地址项大小"],
+      ["直接块容量", "直接地址项数 * 盘块大小"],
+      ["一级间接容量", "N * 盘块大小"],
+      ["二级间接容量", "N^2 * 盘块大小"],
+      ["三级间接容量", "N^3 * 盘块大小"],
+      ["最大文件长度", "(直接地址项数 + N + N^2 + N^3) * 盘块大小"]
+    ],
+    notes: [
+      { tone: "blue", title: "2013/2016/2019", body: "12 个直接地址，盘块 1024B，每块可放 256 个盘块地址。" },
+      { tone: "green", title: "2025", body: "块大小 4KB，指针大小 4B，10 个直接块，一级、二级、三级索引各一个，N = 1024。" },
+      { tone: "amber", title: "访问次数", body: "直接块访问数据块；一级间接访问一级索引块和数据块；二级间接多访问二级索引块；三级间接再多一层。" }
+    ]
+  },
+  {
+    id: "concurrent-pv",
+    type: "concurrent",
+    title: "PV 操作模板",
+    tag: "并发",
+    summary: "先列互斥对象和资源数量，再写 P/V 顺序。",
+    notes: [
+      { tone: "green", title: "三类信号量", body: "互斥信号量保护共享缓冲区或计数变量；空槽资源信号量表示还能放多少；产品资源信号量表示已有产品数量。" },
+      { tone: "blue", title: "复杂生产链", body: "Q 取两个 A 生产一个 B 时，连续 P(fullA) 两次；R 取三个 B 时，连续 P(fullB) 三次。" },
+      { tone: "amber", title: "读者写者写优先", body: "一旦有写者等待，后来的读者不能继续进入；需要记录 read_count、write_count，并保护计数变量。" },
+      { tone: "red", title: "哲学家 PV", body: "可用至多 4 人同时尝试拿筷子、奇偶拿筷子顺序不同、服务员统一授权等方式防死锁。" }
+    ],
+    code: `semaphore mutex = 1;
+semaphore empty = n;
+semaphore full = 0;
+
+producer:
+while true:
+    produce item
+    P(empty)
+    P(mutex)
+    put item
+    V(mutex)
+    V(full)
+
+consumer:
+while true:
+    P(full)
+    P(mutex)
+    take item
+    V(mutex)
+    V(empty)
+    consume item`
+  },
+  {
+    id: "concurrent-monitor",
+    type: "concurrent",
+    title: "Hoare 管程模板",
+    tag: "并发",
+    summary: "共享状态变量、条件变量、入口过程、wait/signal 是得分骨架。",
+    notes: [
+      { tone: "green", title: "管程要素", body: "共享状态变量、条件变量、入口过程；互斥由管程自动保证；条件不满足时 wait，状态变化后 signal。" },
+      { tone: "violet", title: "哲学家就餐", body: "state[i] 为 thinking、hungry、eating；pickup 设置 hungry 并 test；putdown 设置 thinking 并 test 左右邻居。" },
+      { tone: "amber", title: "读者写者写优先", body: "读者进入条件是没有写者正在写且没有写者等待；写者离开时优先唤醒写者。" }
+    ],
+    code: `monitor DiningPhilosophers
+    enum {thinking, hungry, eating} state[5]
+    condition self[5]
+
+    procedure pickup(i):
+        state[i] = hungry
+        test(i)
+        if state[i] != eating:
+            wait(self[i])
+
+    procedure putdown(i):
+        state[i] = thinking
+        test((i + 4) % 5)
+        test((i + 1) % 5)
+
+    procedure test(i):
+        if state[i] == hungry
+           and state[(i + 4) % 5] != eating
+           and state[(i + 1) % 5] != eating:
+              state[i] = eating
+              signal(self[i])
+end monitor`
+  },
+  {
+    id: "year-review",
+    type: "year",
+    title: "按年份看大题重复",
+    tag: "年份",
+    summary: "调度、页面、银行家、PV、管程、i-node、磁盘调度在历年中反复出现。",
+    years: [
+      ["2013", "C-SCAN、i-node、五状态、页表项/反置页表、RR/Feedback、LRU/Clock、银行家、吸烟者 PV、哲学家管程、作业调度。"],
+      ["2014", "i-node、SCAN/电梯、操作系统三大抽象、RR/Feedback、LRU/Clock、银行家、哲学家 PV、生产者消费者管程、作业调度。"],
+      ["2015 期中", "七状态、FCFS/RR/SRT/HRRN/Feedback、作业调度。"],
+      ["2015 期末", "RR、OPT/LRU、银行家、读者写者 PV、哲学家管程、作业调度。"],
+      ["2016", "进程映像、电梯调度、三状态、i-node、RR/Feedback、LRU/Clock、银行家、作业调度、吸烟者 PV、哲学家管程。"],
+      ["2019", "I/O 四层、磁盘调度、fork 进程树、i-node 50M/100M、虚存分页、RR/Feedback、LRU/Clock、作业调度、PV、管程。"],
+      ["2020", "系统调用、open、操作系统中断驱动、电梯调度、盘块数量、LRU/Clock、进程调度、银行家、生产者消费者 PV、读者写者写优先管程。"],
+      ["2021", "多级反馈、inode、FIFO/Clock、移臂调度、作业调度、生产者消费者 PV、哲学家管程。"],
+      ["2022", "Feedback、create、间接盘块、磁盘调度、缺页置换、进程调度、生产链 PV、哲学家管程。"],
+      ["2025", "电梯算法、进程映像、七状态、索引块和读磁盘次数、三级队列调度、页面替换物理地址、SPOOLing、银行家、PV、写优先读者写者管程。"]
+    ]
+  },
+  {
+    id: "sprint",
+    type: "sprint",
+    title: "最后两天复习清单",
+    tag: "冲刺",
+    summary: "先背概念，再手算模型，最后默写并发模板。",
+    notes: [
+      { tone: "green", title: "第一遍", body: "系统调用、特权指令、用户态/核心态、进程映像、PCB、进程状态转换、I/O 四层、DMA、SPOOLing、inode、目录项、open/create。" },
+      { tone: "amber", title: "第二遍", body: "进程调度、页面置换、银行家算法、磁盘调度、i-node 多级索引。" },
+      { tone: "red", title: "第三遍", body: "生产者消费者 PV、吸烟者问题 PV、读者写者写优先、哲学家就餐管程。" }
+    ]
+  }
+];
+
+const FLASHCARDS = [
+  ["选择题", "系统调用是什么？", "操作系统向用户程序提供的接口。"],
+  ["选择题", "连续 3 次 fork() 后新产生多少个进程？", "新产生 7 个，总进程数 8 个。"],
+  ["选择题", "哪种页面替换算法可能产生 Belady 异常？", "FIFO。"],
+  ["简答", "进程映像包括哪些组成部分？", "程序块、数据块、核心栈、进程控制块 PCB。"],
+  ["简答", "I/O 软件自顶向下四层是什么？", "用户空间 I/O 软件、独立于设备的 I/O 软件、设备驱动程序、中断处理程序。"],
+  ["计算", "HRRN 响应比公式是什么？", "R = 1 + 等待时间 / 服务时间。"],
+  ["计算", "i-node 中每个索引块可存地址数 N 怎么算？", "N = 盘块大小 / 地址项大小。"],
+  ["计算", "2013 C-SCAN 例题移动总量是多少？", "388。"],
+  ["并发", "生产者消费者中 empty、full 的初值分别是什么？", "empty 初值为缓冲区容量 n，full 初值为 0。"],
+  ["并发", "写优先读者写者问题中读者进入的附加限制是什么？", "没有写者等待。"],
+  ["年份", "2025 新增明显考点是什么？", "索引块和读磁盘次数、三级队列调度、页面替换物理地址。"]
+];
+
+const CHECK_ITEMS = [
+  "背系统调用、特权指令、用户态/核心态",
+  "背进程映像、PCB、状态转换",
+  "背 I/O 四层、DMA、SPOOLing",
+  "背 inode、目录项、open/create",
+  "手算进程调度 2013、2016、2025",
+  "手算页面置换 2013/2014、2015、2025",
+  "手算银行家算法两组数据",
+  "手算磁盘调度 2013、2016",
+  "手算 i-node 两组参数",
+  "默写生产者消费者 PV",
+  "默写读者写者写优先",
+  "默写哲学家就餐管程"
+];
+
+let activeType = "all";
+let activeCard = 0;
+const checkedKey = "os-review-checklist";
+let checkedItems = loadChecks();
+
+const navList = document.getElementById("navList");
+const sectionHost = document.getElementById("sectionHost");
+const searchInput = document.getElementById("searchInput");
+const typeFilter = document.getElementById("typeFilter");
+const resultCount = document.getElementById("resultCount");
+const emptyState = document.getElementById("emptyState");
+const checklist = document.getElementById("checklist");
+const progressFill = document.getElementById("progressFill");
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function highlight(text, keyword) {
+  const safe = escapeHtml(text);
+  if (!keyword) return safe;
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return safe.replace(new RegExp(escaped, "gi"), match => `<mark>${match}</mark>`);
+}
+
+function sectionText(section) {
+  return JSON.stringify(section).toLowerCase();
+}
+
+function typeName(type) {
+  const item = TYPE_LABELS.find(entry => entry.id === type);
+  return item ? item.label : type;
+}
+
+function renderTypeFilter() {
+  typeFilter.innerHTML = TYPE_LABELS.map(item => (
+    `<button class="segment ${item.id === activeType ? "active" : ""}" type="button" data-type="${item.id}">${item.label}</button>`
+  )).join("");
+}
+
+function renderNav(visibleSections) {
+  navList.innerHTML = visibleSections.map(section => (
+    `<button class="nav-link" type="button" data-target="${section.id}">
+      <span>${escapeHtml(section.title)}</span>
+      <small>${escapeHtml(typeName(section.type))}</small>
+    </button>`
+  )).join("");
+}
+
+function noteHtml(note, keyword) {
+  return `<article class="note ${note.tone || ""}">
+    <strong>${highlight(note.title, keyword)}</strong>
+    <p>${highlight(note.body, keyword)}</p>
+  </article>`;
+}
+
+function orderedHtml(items, keyword) {
+  if (!items || !items.length) return "";
+  return `<div class="note green"><strong>步骤</strong><ol>${items.map(item => `<li>${highlight(item, keyword)}</li>`).join("")}</ol></div>`;
+}
+
+function formulasHtml(items, keyword) {
+  if (!items || !items.length) return "";
+  return `<div class="formula">${items.map(([label, formula]) => (
+    `<div class="formula-row"><strong>${highlight(label, keyword)}</strong><code>${highlight(formula, keyword)}</code></div>`
+  )).join("")}</div>`;
+}
+
+function yearsHtml(items, keyword) {
+  if (!items || !items.length) return "";
+  return `<div class="timeline">${items.map(([year, body]) => (
+    `<div class="year-row"><strong>${highlight(year, keyword)}</strong><p>${highlight(body, keyword)}</p></div>`
+  )).join("")}</div>`;
+}
+
+function processDiagramHtml() {
+  return `<div class="process-diagram" aria-label="进程状态">
+    <div class="state-row">
+      <div class="state">新建</div>
+      <div class="state accent">就绪</div>
+      <div class="state accent">运行</div>
+      <div class="state warn">等待</div>
+      <div class="state">终止</div>
+    </div>
+    <div class="state-row">
+      <div class="state">挂起就绪</div>
+      <div class="state">挂起等待</div>
+      <div class="state">提交</div>
+      <div class="state">唤醒</div>
+      <div class="state">撤销</div>
+    </div>
+  </div>`;
+}
+
+function renderSections() {
+  const keyword = searchInput.value.trim().toLowerCase();
+  const visible = SECTIONS.filter(section => {
+    const byType = activeType === "all" || section.type === activeType;
+    const bySearch = !keyword || sectionText(section).includes(keyword);
+    return byType && bySearch;
+  });
+
+  sectionHost.innerHTML = visible.map(section => {
+    const notes = section.notes ? section.notes.map(note => noteHtml(note, keyword)).join("") : "";
+    const ordered = orderedHtml(section.ordered, keyword);
+    const formulas = formulasHtml(section.formulas, keyword);
+    const years = yearsHtml(section.years, keyword);
+    const code = section.code ? `<pre><code>${escapeHtml(section.code)}</code></pre>` : "";
+    const diagram = section.diagram ? processDiagramHtml() : "";
+    return `<section class="band" id="${section.id}" data-type="${section.type}">
+      <div class="band-head">
+        <h2>${highlight(section.title, keyword)}</h2>
+        <span class="tag ${section.type}">${escapeHtml(section.tag)}</span>
+      </div>
+      <p class="summary">${highlight(section.summary, keyword)}</p>
+      ${diagram}
+      ${formulas}
+      <div class="note-grid">${ordered}${notes}</div>
+      ${years}
+      ${code}
+    </section>`;
+  }).join("");
+
+  renderNav(visible);
+  emptyState.style.display = visible.length ? "none" : "block";
+  resultCount.textContent = visible.length === SECTIONS.length ? "全部内容" : `${visible.length} 项内容`;
+}
+
+function renderFlashcard() {
+  const card = FLASHCARDS[activeCard];
+  document.getElementById("flashKind").textContent = `${card[0]} ${activeCard + 1}/${FLASHCARDS.length}`;
+  document.getElementById("flashQuestion").textContent = card[1];
+  const answer = document.getElementById("flashAnswer");
+  answer.textContent = card[2];
+  answer.classList.remove("show");
+}
+
+function loadChecks() {
+  try {
+    const raw = localStorage.getItem(checkedKey);
+    return raw ? JSON.parse(raw) : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveChecks() {
+  localStorage.setItem(checkedKey, JSON.stringify(checkedItems));
+}
+
+function renderChecklist() {
+  checklist.innerHTML = CHECK_ITEMS.map((item, index) => {
+    const done = Boolean(checkedItems[index]);
+    return `<label class="check-item ${done ? "done" : ""}">
+      <input type="checkbox" data-check="${index}" ${done ? "checked" : ""}>
+      <span>${escapeHtml(item)}</span>
+    </label>`;
+  }).join("");
+  const doneCount = CHECK_ITEMS.filter((_, index) => checkedItems[index]).length;
+  progressFill.style.width = `${Math.round(doneCount / CHECK_ITEMS.length * 100)}%`;
+}
+
+typeFilter.addEventListener("click", event => {
+  const button = event.target.closest("[data-type]");
+  if (!button) return;
+  activeType = button.dataset.type;
+  renderTypeFilter();
+  renderSections();
+});
+
+navList.addEventListener("click", event => {
+  const button = event.target.closest("[data-target]");
+  if (!button) return;
+  const target = document.getElementById(button.dataset.target);
+  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+searchInput.addEventListener("input", renderSections);
+
+document.getElementById("showAnswer").addEventListener("click", () => {
+  document.getElementById("flashAnswer").classList.toggle("show");
+});
+
+document.getElementById("prevCard").addEventListener("click", () => {
+  activeCard = (activeCard - 1 + FLASHCARDS.length) % FLASHCARDS.length;
+  renderFlashcard();
+});
+
+document.getElementById("nextCard").addEventListener("click", () => {
+  activeCard = (activeCard + 1) % FLASHCARDS.length;
+  renderFlashcard();
+});
+
+checklist.addEventListener("change", event => {
+  const input = event.target.closest("[data-check]");
+  if (!input) return;
+  checkedItems[input.dataset.check] = input.checked;
+  saveChecks();
+  renderChecklist();
+});
+
+document.getElementById("printButton").addEventListener("click", () => window.print());
+
+renderTypeFilter();
+renderSections();
+renderFlashcard();
+renderChecklist();
+</script>
+</body>
+</html>
